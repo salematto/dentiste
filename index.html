@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dental Clinical Exam 120</title>
+<title>Dental Smart Training</title>
 
 <style>
 body{
@@ -13,7 +13,6 @@ background:#f5f7fb;
 color:#0f172a;
 }
 
-/* 🔵 Header */
 header{
 background:#0f2a4a;
 color:white;
@@ -24,14 +23,13 @@ font-weight:bold;
 border-bottom:4px solid #f59e0b;
 }
 
-/* container */
 .container{
 max-width:850px;
 margin:auto;
 padding:20px;
 }
 
-/* 🟡 السؤال */
+/* question */
 .card{
 background:white;
 padding:28px;
@@ -43,16 +41,7 @@ min-height:120px;
 border:2px solid #0f2a4a;
 }
 
-/* meta */
-.meta{
-display:flex;
-justify-content:space-between;
-font-size:13px;
-color:#475569;
-margin:10px 0;
-}
-
-/* 🔴🟡🟢 الخيارات (Dark Windows) */
+/* options */
 .btn{
 display:block;
 width:100%;
@@ -63,45 +52,39 @@ border:1px solid #1f2937;
 cursor:pointer;
 font-size:16px;
 text-align:right;
-
-/* 🔥 Dark UI */
 background:#111827;
 color:#f8fafc;
-
-box-shadow:0 4px 12px rgba(0,0,0,0.25);
 transition:0.2s;
 }
 
 .btn:hover{
 transform:translateY(-2px);
 border-color:#f59e0b;
-box-shadow:0 6px 18px rgba(245,158,11,0.25);
 }
 
-/* correct */
-.correct{
-background:#16a34a !important;
-color:white !important;
-border:none;
+/* correct / wrong */
+.correct{background:#16a34a !important;color:white !important;border:none;}
+.wrong{background:#dc2626 !important;color:white !important;border:none;}
+
+/* explanation box */
+.explain{
+margin-top:15px;
+padding:12px;
+background:#e0f2fe;
+border-right:5px solid #0ea5e9;
+border-radius:10px;
+font-size:14px;
+color:#0f172a;
+display:none;
 }
 
-/* wrong */
-.wrong{
-background:#dc2626 !important;
-color:white !important;
-border:none;
-}
-
-/* start button */
-.primary{
-padding:12px 16px;
-border:none;
-border-radius:12px;
-background:#0f2a4a;
-color:white;
-cursor:pointer;
-font-size:15px;
-margin-top:10px;
+/* meta */
+.meta{
+display:flex;
+justify-content:space-between;
+font-size:13px;
+color:#475569;
+margin:10px 0;
 }
 
 /* result */
@@ -122,7 +105,7 @@ font-weight:bold;
 margin-top:10px;
 }
 
-/* 🔵 Footer */
+/* footer */
 footer{
 margin-top:40px;
 background:#0f2a4a;
@@ -137,24 +120,26 @@ border-top:4px solid #f59e0b;
 
 <body>
 
-<header>🦷 Dental Clinical Exam (120 Cases)</header>
+<header>🦷 Dental Smart Clinical Training</header>
 
 <div class="container">
 
 <div id="start">
-<button class="primary" onclick="startExam()">ابدأ الاختبار</button>
+<button class="btn" style="background:#0f2a4a;" onclick="startExam()">ابدأ التدريب الذكي</button>
 </div>
 
 <div id="exam" style="display:none;">
 
 <div class="meta">
 <div>السؤال: <span id="qnum"></span></div>
-<div>النتيجة: <span id="score"></span></div>
+<div>الأخطاء: <span id="wrongCount">0</span></div>
 </div>
 
 <div id="question" class="card"></div>
 
 <div id="answers"></div>
+
+<div id="explain" class="explain"></div>
 
 </div>
 
@@ -163,61 +148,70 @@ border-top:4px solid #f59e0b;
 </div>
 
 <footer>
-Dental Clinical Training System — Developed for Clinical Practice
+تصميم وتطوير د. زكريا محمد عطوني
 </footer>
 
 <script>
 
-/* =========================
-   BANK (120 CASES)
-   ========================= */
-
 const bank = [];
+function add(q,o,a,exp){
+bank.push({q,o,a,exp});
+}
 
-function add(q,o,a){bank.push({q,o,a});}
+/* ================= cases ================= */
 
-/* CORE */
-add("ألم ليلي شديد مع تسوس عميق",["التهاب لب غير عكوس","حساسية","تآكل","تصبغ"],0);
-add("نزف لثة عند التفريش",["التهاب لثة","تسوس","كسر","تصبغ"],0);
-add("ضرس عقل مطمور مؤلم",["انطمار ضرس","تسوس","حساسية","تآكل"],0);
-add("كسر سن أمامي بعد صدمة",["كسر تاجي","تسوس","تصبغ","تآكل"],0);
-add("ألم عند المضغ مع سن سليم",["كسر شعري","تسوس","تآكل","حساسية"],0);
+add("ألم ليلي شديد مع تسوس عميق",
+["التهاب لب غير عكوس","حساسية","تآكل","تصبغ"],
+0,
+"الألم الليلي المستمر مع تسوس عميق يدل غالباً على التهاب لب غير عكوس بسبب ضغط داخل الحجرة اللبية."
+);
 
-add("تورم لثوي مع قيح",["خراج لثوي","تسوس","حساسية","تصبغ"],0);
-add("رائحة فم مزمنة",["التهاب دواعم سن","تسوس","كسر","تصبغ"],0);
-add("حركة سن واضحة",["مرض دواعم سن متقدم","تسوس","حساسية","تصبغ"],0);
-add("ألم بارد شديد",["حساسية عاجية","التهاب لب","تآكل","تصبغ"],0);
-add("ألم عفوي ليلي",["التهاب لب حاد","تسوس","حساسية","تصبغ"],0);
+add("نزف لثة عند التفريش",
+["التهاب لثة","تسوس","كسر","تصبغ"],
+0,
+"النزف عند التفريش علامة مبكرة لالتهاب اللثة بسبب تراكم اللويحة الجرثومية."
+);
 
-add("تورم ذروي مزمن",["كيس جذري","تسوس","حساسية","تصبغ"],0);
-add("فشل علاج عصب سابق",["إعادة علاج جذور","تسوس","تآكل","حساسية"],0);
-add("سن داكن بعد صدمة قديمة",["نخر لب","حساسية","تآكل","تصبغ"],0);
-add("ألم عند الضغط",["التهاب حول الذروة","تسوس","حساسية","تصبغ"],0);
-add("تآكل عنقي",["تآكل مينا","تسوس","كسر","تصبغ"],0);
+add("ضرس عقل مطمور مؤلم",
+["انطمار ضرس","تسوس","حساسية","تآكل"],
+0,
+"الألم في ضرس عقل غير بازغ غالباً بسبب التهاب حول التاج."
+);
+
+add("كسر سن أمامي",
+["كسر تاجي","تسوس","تصبغ","تآكل"],
+0,
+"الصدمة المباشرة تؤدي غالباً إلى كسر تاجي خصوصاً في الأسنان الأمامية."
+);
+
+add("ألم عند المضغ بدون سبب واضح",
+["كسر شعري","تسوس","حساسية","تصبغ"],
+0,
+"الألم عند العض مع غياب تسوس ظاهر يشير غالباً إلى كسر شعري غير مرئي سريرياً."
+);
 
 /* fill to 120 */
 const templates=[
-["ألم عند العض",["كسر شعري","تسوس","حساسية","تصبغ"],0],
-["ألم بارد شديد",["حساسية عاجية","التهاب لب","تآكل","تصبغ"],0],
-["تورم لثوي",["خراج لثوي","تسوس","حساسية","تصبغ"],0],
-["تآكل عنقي",["تآكل مينا","تسوس","كسر","تصبغ"],0],
-["ألم عند الضغط",["التهاب حول الذروة","تسوس","حساسية","تصبغ"],0]
+["ألم بارد شديد",["حساسية عاجية","التهاب لب","تآكل","تصبغ"],0,"حساسية العاج تسبب ألم حاد قصير مع البارد."],
+["تورم لثوي",["خراج لثوي","تسوس","حساسية","تصبغ"],0,"التورم الموضعي غالباً يدل على خراج لثوي."],
+["ألم عند الضغط",["التهاب حول الذروة","تسوس","حساسية","تصبغ"],0,"الألم عند الضغط علامة على التهاب حول الذروة."],
+["تآكل عنقي",["تآكل مينا","تسوس","كسر","تصبغ"],0,"التآكل العنقي يحدث بسبب أحماض أو ضغط ميكانيكي."]
 ];
 
 while(bank.length<120){
 let t=templates[bank.length%templates.length];
-add(t[0],t[1],t[2]);
+add(t[0],t[1],t[2],t[3]);
 }
 
-/* ========================= */
+/* ================= logic ================= */
 
 let qlist=[];
 let i=0;
-let score=0;
+let wrong=0;
 
 function startExam(){
 qlist=bank.sort(()=>Math.random()-0.5);
-i=0;score=0;
+i=0;wrong=0;
 
 document.getElementById("start").style.display="none";
 document.getElementById("exam").style.display="block";
@@ -232,7 +226,7 @@ if(i>=qlist.length){end();return;}
 let q=qlist[i];
 
 document.getElementById("qnum").innerText=(i+1)+"/"+qlist.length;
-document.getElementById("score").innerText=score;
+document.getElementById("wrongCount").innerText=wrong;
 
 document.getElementById("question").innerText=q.q;
 
@@ -242,6 +236,7 @@ html+=`<button class="btn" onclick="check(${idx})">${opt}</button>`;
 });
 
 document.getElementById("answers").innerHTML=html;
+document.getElementById("explain").style.display="none";
 }
 
 function check(x){
@@ -255,12 +250,16 @@ if(idx===x && x!==q.a) b.classList.add("wrong");
 b.disabled=true;
 });
 
-if(x===q.a) score++;
+if(x!==q.a) wrong++;
+
+let exp=document.getElementById("explain");
+exp.style.display="block";
+exp.innerText=q.exp || "لا يوجد شرح";
 
 setTimeout(()=>{
 i++;
 load();
-},800);
+},1200);
 }
 
 function end(){
@@ -268,16 +267,18 @@ function end(){
 document.getElementById("exam").style.display="none";
 document.getElementById("result").style.display="block";
 
+let score = ((qlist.length-wrong)/qlist.length);
+
 let level =
-score/qlist.length>0.8?"ممتاز 🟢":
-score/qlist.length>0.5?"جيد 🟠":
-"يحتاج مراجعة 🔴";
+score>0.85?"ممتاز 🟢":
+score>0.6?"جيد 🟠":
+"يحتاج تدريب 🔴";
 
 document.getElementById("result").innerHTML=`
-انتهى الاختبار 🧠<br><br>
-النتيجة: ${score} / ${qlist.length}<br>
-<span class="badge">${level}</span><br><br>
-<button class="primary" onclick="location.reload()">العودة للبداية</button>
+انتهى التدريب 🧠<br><br>
+الأخطاء: ${wrong}<br>
+التقييم: ${level}<br><br>
+<button class="btn" onclick="location.reload()" style="background:#0f2a4a;">إعادة التدريب</button>
 `;
 }
 
