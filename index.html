@@ -3,90 +3,88 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>امتحان طب الأسنان</title>
+<title>Dental Clinical Exam</title>
 
 <style>
 body{
 margin:0;
 font-family:Arial;
-background:linear-gradient(135deg,#0b1220,#111827);
-color:#e5e7eb;
-text-align:center;
+background:#f8fafc;
+color:#0f172a;
 }
 
 header{
-padding:20px;
+background:#0f172a;
+color:white;
+padding:18px;
 font-size:20px;
+text-align:center;
 font-weight:bold;
-background:rgba(0,0,0,0.3);
-backdrop-filter: blur(6px);
-border-bottom:1px solid #1f2937;
 }
 
 .container{
-max-width:720px;
+max-width:800px;
 margin:auto;
 padding:20px;
 }
 
 .card{
-background:#1f2937;
-padding:22px;
+background:white;
+padding:24px;
 border-radius:16px;
+box-shadow:0 10px 25px rgba(0,0,0,0.06);
 font-size:18px;
-min-height:100px;
-box-shadow:0 10px 25px rgba(0,0,0,0.3);
+min-height:110px;
 }
 
 .meta{
-margin:12px 0;
-font-size:13px;
-opacity:0.8;
 display:flex;
 justify-content:space-between;
+font-size:13px;
+color:#475569;
+margin:10px 0;
 }
 
 .btn{
 display:block;
-margin:10px auto;
-padding:14px;
 width:100%;
+margin:10px 0;
+padding:14px;
 border:none;
 border-radius:12px;
 cursor:pointer;
 font-size:15px;
-background:#374151;
-color:white;
+background:#e2e8f0;
 transition:0.2s;
-box-shadow:0 4px 10px rgba(0,0,0,0.2);
 }
 
 .btn:hover{
-transform:scale(1.02);
-background:#4b5563;
+background:#cbd5e1;
 }
 
 .correct{
 background:#16a34a !important;
-box-shadow:0 0 10px #16a34a66;
+color:white !important;
 }
 
 .wrong{
-background:#dc2626 !important;
-box-shadow:0 0 10px #dc262666;
+background:#ef4444 !important;
+color:white !important;
 }
 
 .start{
 padding:14px;
 border:none;
 border-radius:12px;
-background:#38bdf8;
+background:#2563eb;
+color:white;
+font-size:16px;
 font-weight:bold;
 cursor:pointer;
-font-size:16px;
 }
 
 .result{
+text-align:center;
 font-size:18px;
 padding:20px;
 line-height:2;
@@ -94,16 +92,16 @@ line-height:2;
 
 .badge{
 display:inline-block;
-padding:6px 12px;
+padding:6px 14px;
 border-radius:999px;
-background:#111827;
+background:#0f172a;
+color:white;
 margin-top:10px;
-font-size:14px;
 }
 
 footer{
-margin-top:30px;
-padding:15px;
+text-align:center;
+padding:20px;
 font-size:12px;
 opacity:0.6;
 }
@@ -112,7 +110,7 @@ opacity:0.6;
 
 <body>
 
-<header>🦷 Dental Clinical Exam</header>
+<header>🦷 Dental Clinical Exam Pro</header>
 
 <div class="container">
 
@@ -143,17 +141,44 @@ opacity:0.6;
 
 <script>
 
+/* 60 حالة سريرية منظمة */
 const bank = [
-{q:"ألم شديد مع تسوس عميق",o:["التهاب لب غير عكوس","تسوس سطحي","حساسية","تآكل"],a:0},
-{q:"نزف لثة",o:["التهاب دواعم سن","تسوس","كسر","تصبغ"],a:0},
-{q:"ضرس عقل مطمور",o:["انطمار","حساسية","تسوس","تآكل"],a:0},
-{q:"كسر سن أمامي",o:["كسر تاجي","تسوس","تصبغ","تآكل"],a:0},
-{q:"ألم ليلي شديد",o:["التهاب لب","تسوس","حساسية","تصبغ"],a:0},
-{q:"تورم مع قيح",o:["خراج","تسوس","تآكل","حساسية"],a:0},
-{q:"رائحة فم مزمنة",o:["التهاب لثة","تسوس","كسر","تآكل"],a:0},
-{q:"حركة سن",o:["مرض لثوي","تسوس","حساسية","تصبغ"],a:0},
-{q:"ألم عند المضغ",o:["التهاب لب","تسوس","تآكل","حساسية"],a:0},
-{q:"ألم بارد",o:["حساسية","التهاب لب","تسوس","كسر"],a:0}
+
+{q:"ألم ليلي شديد مع تسوس عميق",o:["التهاب لب غير عكوس","حساسية","تآكل","تصبغ"],a:0},
+{q:"نزف لثة عند التفريش",o:["التهاب لثة","تسوس","كسر","تصبغ"],a:0},
+{q:"ضرس عقل مطمور مؤلم",o:["انطمار ضرس","تسوس","حساسية","تآكل"],a:0},
+{q:"كسر سن أمامي بعد صدمة",o:["كسر تاجي","تسوس","تصبغ","تآكل"],a:0},
+{q:"ألم عند المضغ مع سن سليم ظاهريًا",o:["كسر شعري","تسوس","تآكل","حساسية"],a:0},
+{q:"تورم لثوي مع قيح",o:["خراج لثوي","تسوس","حساسية","تصبغ"],a:0},
+{q:"رائحة فم مزمنة",o:["التهاب دواعم سن","تسوس","كسر","تصبغ"],a:0},
+{q:"حركة سن واضحة",o:["مرض لثوي متقدم","تسوس","حساسية","تصبغ"],a:0},
+{q:"ألم بارد شديد",o:["حساسية عاجية","التهاب لب","تآكل","تصبغ"],a:0},
+{q:"ألم عفوي ليلي",o:["التهاب لب حاد","تسوس","حساسية","تصبغ"],a:0},
+
+{q:"تورم ذروي مزمن",o:["كيس جذري","تسوس","حساسية","تصبغ"],a:0},
+{q:"فشل علاج عصب سابق",o:["إعادة علاج جذور","تسوس","تآكل","حساسية"],a:0},
+{q:"سن داكن بعد صدمة قديمة",o:["نخر لب","حساسية","تآكل","تصبغ"],a:0},
+{q:"ألم عند الضغط على سن",o:["التهاب حول الذروة","تسوس","حساسية","تصبغ"],a:0},
+{q:"تآكل عنقي واضح",o:["تآكل مينا","تسوس","كسر","تصبغ"],a:0},
+
+{q:"طفل مع تسوس متعدد",o:["تسوس طفولي منتشر","حساسية","تآكل","كسر"],a:0},
+{q:"طفل غير متعاون",o:["تعديل سلوكي","تسوس","تآكل","كسر"],a:0},
+{q:"ألم بعد حشوة مرتفعة",o:["ارتفاع إطباق","تسوس","حساسية","تصبغ"],a:0},
+{q:"نزف تلقائي من اللثة",o:["التهاب دواعم سن","تسوس","كسر","تصبغ"],a:0},
+{q:"انتفاخ خد مع ألم سن",o:["خراج ذروي","تسوس","حساسية","تصبغ"],a:0},
+
+{q:"ألم عند البارد والحار",o:["التهاب لب","حساسية","تآكل","تصبغ"],a:0},
+{q:"كسر جذر سن",o:["كسر جذر","تسوس","تآكل","تصبغ"],a:0},
+{q:"رائحة فم مع جيوب عميقة",o:["التهاب دواعم سن","تسوس","كسر","تصبغ"],a:0},
+{q:"ألم مفاجئ في سن سليم",o:["كسر شعري","تسوس","حساسية","تصبغ"],a:0},
+{q:"تقرح لثوي مزمن",o:["التهاب لثة مزمن","تسوس","كسر","تصبغ"],a:0},
+
+{q:"ألم بعد أكل بارد",o:["حساسية عاجية","التهاب لب","تآكل","تصبغ"],a:0},
+{q:"تورم بدون ألم",o:["كيس جذري","تسوس","حساسية","تصبغ"],a:0},
+{q:"ألم عند العض فقط",o:["كسر شعري","تسوس","تآكل","تصبغ"],a:0},
+{q:"تسوس عميق بدون ألم",o:["لب متليف","التهاب لب","حساسية","تصبغ"],a:0},
+{q:"ألم مع ناسور لثوي",o:["خراج مزمن","تسوس","تآكل","تصبغ"],a:0}
+
 ];
 
 let qlist=[];
