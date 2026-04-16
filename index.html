@@ -9,17 +9,18 @@
 body{
 margin:0;
 font-family:Arial;
-background:#f8fafc;
+background:#f3f6fb;
 color:#0f172a;
+text-align:center;
 }
 
 header{
-background:#0f172a;
+background:#1e3a8a;
 color:white;
 padding:18px;
 font-size:20px;
-text-align:center;
 font-weight:bold;
+border-bottom:4px solid #facc15;
 }
 
 .container{
@@ -29,12 +30,13 @@ padding:20px;
 }
 
 .card{
-background:white;
+background:#ffffff;
 padding:24px;
 border-radius:16px;
-box-shadow:0 10px 25px rgba(0,0,0,0.06);
+box-shadow:0 8px 20px rgba(30,58,138,0.12);
 font-size:18px;
 min-height:110px;
+border:1px solid #e5e7eb;
 }
 
 .meta{
@@ -50,33 +52,37 @@ display:block;
 width:100%;
 margin:10px 0;
 padding:14px;
-border:none;
+border:1px solid #cbd5e1;
 border-radius:12px;
 cursor:pointer;
 font-size:15px;
-background:#e2e8f0;
+background:#f8fafc;
+color:#0f172a;
 transition:0.2s;
 }
 
 .btn:hover{
-background:#cbd5e1;
+background:#e2e8f0;
+border-color:#1e3a8a;
 }
 
 .correct{
-background:#16a34a !important;
+background:#22c55e !important;
 color:white !important;
+border:none;
 }
 
 .wrong{
 background:#ef4444 !important;
 color:white !important;
+border:none;
 }
 
 .start{
 padding:14px;
 border:none;
 border-radius:12px;
-background:#2563eb;
+background:#1e3a8a;
 color:white;
 font-size:16px;
 font-weight:bold;
@@ -94,16 +100,18 @@ line-height:2;
 display:inline-block;
 padding:6px 14px;
 border-radius:999px;
-background:#0f172a;
-color:white;
+background:#facc15;
+color:#0f172a;
 margin-top:10px;
+font-size:14px;
+font-weight:bold;
 }
 
 footer{
 text-align:center;
 padding:20px;
 font-size:12px;
-opacity:0.6;
+opacity:0.7;
 }
 </style>
 </head>
@@ -141,9 +149,7 @@ opacity:0.6;
 
 <script>
 
-/* 60 حالة سريرية منظمة */
 const bank = [
-
 {q:"ألم ليلي شديد مع تسوس عميق",o:["التهاب لب غير عكوس","حساسية","تآكل","تصبغ"],a:0},
 {q:"نزف لثة عند التفريش",o:["التهاب لثة","تسوس","كسر","تصبغ"],a:0},
 {q:"ضرس عقل مطمور مؤلم",o:["انطمار ضرس","تسوس","حساسية","تآكل"],a:0},
@@ -178,7 +184,6 @@ const bank = [
 {q:"ألم عند العض فقط",o:["كسر شعري","تسوس","تآكل","تصبغ"],a:0},
 {q:"تسوس عميق بدون ألم",o:["لب متليف","التهاب لب","حساسية","تصبغ"],a:0},
 {q:"ألم مع ناسور لثوي",o:["خراج مزمن","تسوس","تآكل","تصبغ"],a:0}
-
 ];
 
 let qlist=[];
@@ -187,7 +192,8 @@ let score=0;
 
 function startExam(){
 qlist=bank.sort(()=>Math.random()-0.5);
-i=0;score=0;
+i=0;
+score=0;
 
 document.getElementById("start").style.display="none";
 document.getElementById("exam").style.display="block";
