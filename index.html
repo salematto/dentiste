@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dental Quiz Trainer</title>
+<title>مدرب طب الأسنان</title>
 
 <style>
 body{
@@ -23,6 +23,8 @@ font-weight:bold;
 
 .container{
 padding:20px;
+max-width:600px;
+margin:auto;
 }
 
 .case{
@@ -37,8 +39,7 @@ font-size:18px;
 display:block;
 margin:10px auto;
 padding:12px;
-width:90%;
-max-width:400px;
+width:100%;
 border:none;
 border-radius:10px;
 cursor:pointer;
@@ -47,17 +48,10 @@ background:#374151;
 color:white;
 }
 
-.btn:hover{
-background:#4b5563;
-}
+.btn:hover{background:#4b5563;}
 
-.correct{
-background:#16a34a !important;
-}
-
-.wrong{
-background:#dc2626 !important;
-}
+.correct{background:#16a34a !important;}
+.wrong{background:#dc2626 !important;}
 
 .next{
 margin-top:15px;
@@ -70,14 +64,30 @@ cursor:pointer;
 display:none;
 }
 
+.score{
+margin:10px 0;
+font-size:16px;
+opacity:0.8;
+}
+
+footer{
+margin-top:30px;
+padding:15px;
+font-size:12px;
+opacity:0.6;
+}
 </style>
 </head>
 
 <body>
 
-<header>🦷 Dental Quiz Trainer</header>
+<header>🦷 مدرب طب الأسنان التفاعلي</header>
 
 <div class="container">
+
+<div class="score">
+النقاط: <span id="score">0</span> / <span id="total"></span>
+</div>
 
 <div id="question" class="case"></div>
 
@@ -85,74 +95,76 @@ display:none;
 
 <button class="next" id="nextBtn" onclick="nextQ()">السؤال التالي</button>
 
+<div id="end" style="display:none;font-size:18px;margin-top:20px;"></div>
+
 </div>
+
+<footer>
+تصميم وتطوير: د. زكريا عطوني - سوريا
+</footer>
 
 <script>
 
 const data = [
 {
-q:"مريض يعاني من ألم شديد مع تسوس عميق",
-options:[
-"التهاب لب غير عكوس",
-"التهاب لثة بسيط",
-"تآكل مينا"
-],
+q:"مريض ألم شديد مع تسوس عميق",
+options:["التهاب لب غير عكوس","التهاب لثة بسيط","تآكل مينا"],
 answer:0
 },
 {
 q:"نزف لثة + جيوب 5mm",
-options:[
-"التهاب دواعم سن مزمن",
-"تسوس سطحي",
-"كسر تاجي"
-],
+options:["التهاب دواعم سن مزمن","تسوس سطحي","كسر تاجي"],
 answer:0
 },
 {
-q:"ألم ضرس عقل مع انطمار",
-options:[
-"انطمار ضرس عقل",
-"التهاب جيوب أنفية",
-"تسوس عنقي"
-],
+q:"ضرس عقل مطمور",
+options:["انطمار ضرس عقل","التهاب جيوب","تسوس عنقي"],
 answer:0
 },
 {
 q:"طفل مع تسوس متعدد",
-options:[
-"تسوس طفولي منتشر",
-"حساسية عاجية",
-"تآكل ميكانيكي"
-],
+options:["تسوس طفولي منتشر","حساسية عاجية","تآكل"],
 answer:0
 },
 {
 q:"كسر سن أمامي",
-options:[
-"كسر تاجي",
-"التهاب لثة",
-"خراج أنفي"
-],
+options:["كسر تاجي","التهاب لثة","خراج"],
 answer:0
 },
 {
-q:"رائحة فم + ترسبات",
-options:[
-"التهاب لثة مزمن",
-"تسوس بسيط",
-"كسر جذر"
-],
+q:"رائحة فم مزمنة",
+options:["التهاب لثة مزمن","تسوس بسيط","كسر جذر"],
+answer:0
+},
+{
+q:"ألم عند المضغ + سن متغير اللون",
+options:["نخر لب","التهاب جيوب","حساسية بسيطة"],
+answer:0
+},
+{
+q:"حركة سن واضحة",
+options:["مرض لثوي متقدم","تسوس سطح","تآكل"],
 answer:0
 }
 ];
 
-let current = 0;
+let current=0;
+let score=0;
+
+document.getElementById("total").innerText=data.length;
 
 function loadQ(){
-document.getElementById("nextBtn").style.display="none";
-let q = data[current];
 
-document.getElementById("question").innerText = q.q;
+if(current>=data.length){
+end();
+return;
+}
+
+document.getElementById("nextBtn").style.display="none";
+
+let q=data[current];
+
+document.getElementById("question").innerText=q.q;
 
 let html="";
 q.options.forEach((opt,i)=>{
@@ -163,6 +175,7 @@ document.getElementById("answers").innerHTML=html;
 }
 
 function check(i){
+
 let buttons=document.querySelectorAll(".btn");
 let correct=data[current].answer;
 
@@ -172,13 +185,25 @@ if(idx===i && i!==correct) b.classList.add("wrong");
 b.disabled=true;
 });
 
+if(i===correct) score++;
+
+document.getElementById("score").innerText=score;
 document.getElementById("nextBtn").style.display="inline-block";
 }
 
 function nextQ(){
 current++;
-if(current>=data.length) current=0;
 loadQ();
+}
+
+function end(){
+document.getElementById("question").style.display="none";
+document.getElementById("answers").style.display="none";
+document.getElementById("nextBtn").style.display="none";
+
+document.getElementById("end").style.display="block";
+document.getElementById("end").innerHTML=
+"انتهى الاختبار 🧠<br>نتيجتك: " + score + " / " + data.length;
 }
 
 loadQ();
