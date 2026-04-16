@@ -1,215 +1,133 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#0f172a">
-<title>Dental Clinical Trainer V13</title>
+<title>Dental Trainer</title>
 
 <style>
 body{
-margin:0;
-font-family:system-ui;
-background:linear-gradient(135deg,#070b18,#0b1220);
-color:#fff;
+    margin:0;
+    font-family: Arial, sans-serif;
+    background:#0f172a;
+    color:#e2e8f0;
 }
 
-.header{
-display:flex;
-align-items:center;
-justify-content:center;
-gap:10px;
-padding:18px;
-background:#0f172a;
-border-bottom:1px solid #1f2937;
+header{
+    padding:20px;
+    text-align:center;
+    background:#1e293b;
+    font-size:22px;
+    font-weight:bold;
 }
 
-.logo{
-width:34px;height:34px;border-radius:10px;
-background:#22c55e;
-display:flex;align-items:center;justify-content:center;
-font-weight:bold;color:#0b1220;
+.container{
+    padding:15px;
+    display:grid;
+    gap:12px;
 }
-
-.title{font-size:16px;font-weight:600}
-
-.wrap{max-width:900px;margin:auto;padding:20px;padding-bottom:140px}
 
 .card{
-background:#111827;
-padding:16px;
-border-radius:14px;
-margin-top:12px;
-border:1px solid #1f2937;
+    background:#1e293b;
+    padding:15px;
+    border-radius:12px;
+    cursor:pointer;
+    transition:0.2s;
 }
 
-.btn{
-background:#1f2937;
-padding:12px;
-margin-top:10px;
-border-radius:10px;
-cursor:pointer;
+.card:hover{
+    transform:scale(1.02);
+    background:#334155;
 }
 
-.ok{background:#16a34a!important}
-.bad{background:#dc2626!important}
-
-.meta{
-text-align:center;
-color:#facc15;
-margin-top:10px;
-font-size:13px;
+.hidden{
+    display:none;
 }
 
-.score{
-text-align:center;
-margin-top:10px;
-color:#38bdf8;
+button{
+    margin-top:10px;
+    padding:10px;
+    border:none;
+    border-radius:8px;
+    background:#38bdf8;
+    color:black;
+    font-weight:bold;
+    cursor:pointer;
 }
 
-.footer{
-position:fixed;
-bottom:0;
-width:100%;
-background:#0f172a;
-text-align:center;
-padding:12px;
-color:#9ca3af;
-font-size:12px;
-border-top:1px solid #1f2937;
+.back{
+    background:#ef4444;
+    color:white;
 }
 </style>
 </head>
 
 <body>
 
-<div class="header">
-<div class="logo">🦷</div>
-<div class="title">Clinical Trainer V13</div>
+<header>🦷 Dental Trainer Pro</header>
+
+<div class="container" id="menu">
+
+<div class="card" onclick="openCase('endo')">
+Endodontics (علاج الجذور)
 </div>
 
-<div class="wrap">
-
-<div class="meta" id="meta"></div>
-
-<div class="card">
-<div id="q"></div>
+<div class="card" onclick="openCase('peri')">
+Periodontology (اللثة)
 </div>
 
-<div class="card" id="opts"></div>
+<div class="card" onclick="openCase('surg')">
+Oral Surgery (الجراحة)
+</div>
 
-<div class="score" id="score"></div>
+<div class="card" onclick="openCase('rest')">
+Restorative (الترميم)
+</div>
 
 </div>
 
-<div class="footer">
-تصميم و تطوير الدكتور زكريا محمد عطوني - سوريا
+<div class="container hidden" id="caseBox">
+
+<h3 id="title"></h3>
+
+<p id="content"></p>
+
+<button class="back" onclick="back()">رجوع</button>
+
 </div>
 
 <script>
 
-const DB = [
-
-{q:"ألم بارد يزول فورًا",a:"لب عكوس",area:"Endo"},
-{q:"ألم بارد يستمر",a:"لب غير عكوس",area:"Endo"},
-{q:"ألم ليلي نابض",a:"لب غير عكوس",area:"Endo"},
-{q:"ألم حراري خفيف",a:"لب عكوس",area:"Endo"},
-{q:"ألم بعد تسوس عميق",a:"لب غير عكوس",area:"Endo"},
-{q:"ألم عند الحلو",a:"لب عكوس",area:"Endo"},
-{q:"ألم طويل بعد البارد",a:"لب غير عكوس",area:"Endo"},
-{q:"ألم عفوي ليلي",a:"لب غير عكوس",area:"Endo"},
-
-{q:"ألم عند العض",a:"كسر سن",area:"Trauma"},
-{q:"ألم عند تحرير الضغط",a:"كسر سن",area:"Trauma"},
-{q:"شق غير مرئي",a:"كسر سن",area:"Trauma"},
-{q:"ألم مع المضغ",a:"كسر سن",area:"Trauma"},
-{q:"ألم جهة واحدة",a:"كسر سن",area:"Trauma"},
-{q:"ألم متقطع",a:"كسر سن",area:"Trauma"},
-
-{q:"تورم مع قيح",a:"خراج",area:"Infection"},
-{q:"ألم نابض",a:"خراج",area:"Infection"},
-{q:"حمى مع ألم سن",a:"خراج",area:"Infection"},
-{q:"تورم منتشر",a:"خراج",area:"Infection"},
-{q:"رائحة فم كريهة",a:"خراج",area:"Infection"},
-
-{q:"آفة شعاعية صامتة",a:"كيس",area:"Lesion"},
-{q:"توسع عظمي بطيء",a:"كيس",area:"Lesion"},
-{q:"انتفاخ غير مؤلم",a:"كيس",area:"Lesion"},
-{q:"اكتشاف عرضي",a:"كيس",area:"Lesion"}
-
-];
-
-let session = {
-i:0,
-score:0,
-used:[]
-};
-
-const q=document.getElementById("q");
-const opts=document.getElementById("opts");
-const scoreDiv=document.getElementById("score");
-const meta=document.getElementById("meta");
-
-function getNext(){
-let available = DB.filter((_,i)=>!session.used.includes(i));
-if(available.length===0) return null;
-let pick = available[Math.floor(Math.random()*available.length)];
-let index = DB.indexOf(pick);
-session.used.push(index);
-return pick;
+const cases = {
+endo:{
+title:"Endodontics",
+content:"Case 1: Pain on biting + deep caries → Diagnosis: irreversible pulpitis → Treatment: RCT"
+},
+peri:{
+title:"Periodontology",
+content:"Case 2: Bleeding gums + pocket depth 6mm → Diagnosis: chronic periodontitis → Scaling + root planing"
+},
+surg:{
+title:"Oral Surgery",
+content:"Case 3: impacted 3rd molar → surgical extraction indicated"
+},
+rest:{
+title:"Restorative",
+content:"Case 4: fractured tooth → composite restoration or crown"
+}
 }
 
-function makeOptions(correct){
-let pool=["لب عكوس","لب غير عكوس","كسر سن","خراج","كيس","التهاب حول ذروي"];
-let arr=[correct];
-while(arr.length<4){
-let r=pool[Math.floor(Math.random()*pool.length)];
-if(!arr.includes(r)) arr.push(r);
-}
-return arr.sort(()=>Math.random()-0.5);
+function openCase(type){
+document.getElementById('menu').classList.add('hidden');
+document.getElementById('caseBox').classList.remove('hidden');
+document.getElementById('title').innerText = cases[type].title;
+document.getElementById('content').innerText = cases[type].content;
 }
 
-function render(){
-let c = getNext();
-if(!c){
-finish();
-return;
+function back(){
+document.getElementById('menu').classList.remove('hidden');
+document.getElementById('caseBox').classList.add('hidden');
 }
-
-meta.innerHTML=`السؤال ${session.i+1}`;
-
-q.innerHTML=c.q;
-
-opts.innerHTML="";
-
-scoreDiv.innerHTML=`النقاط: ${session.score}`;
-
-makeOptions(c.a).forEach(x=>{
-let b=document.createElement("div");
-b.className="btn";
-b.textContent=x;
-
-b.onclick=()=>{
-if(x===c.a){
-b.classList.add("ok");
-session.score++;
-}else{
-b.classList.add("bad");
-}
-session.i++;
-setTimeout(render,600);
-};
-opts.appendChild(b);
-});
-}
-
-function finish(){
-q.innerHTML="انتهى الاختبار";
-opts.innerHTML="";
-scoreDiv.innerHTML=`النتيجة: ${session.score}/${session.used.length}`;
-}
-
-render();
 
 </script>
 
