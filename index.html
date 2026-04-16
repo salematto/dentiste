@@ -3,130 +3,162 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dental Trainer</title>
+<title>Dental AI Trainer</title>
 
 <style>
 body{
-    margin:0;
-    font-family: Arial, sans-serif;
-    background:#0f172a;
-    color:#e2e8f0;
+margin:0;
+font-family:Arial;
+background:#0b1220;
+color:#e5e7eb;
 }
 
 header{
-    padding:20px;
-    text-align:center;
-    background:#1e293b;
-    font-size:22px;
-    font-weight:bold;
+background:#111827;
+padding:20px;
+text-align:center;
+font-size:20px;
+font-weight:bold;
+letter-spacing:1px;
+}
+
+.logo{
+font-size:14px;
+opacity:0.7;
+margin-top:5px;
 }
 
 .container{
-    padding:15px;
-    display:grid;
-    gap:12px;
+display:grid;
+gap:12px;
+padding:15px;
 }
 
 .card{
-    background:#1e293b;
-    padding:15px;
-    border-radius:12px;
-    cursor:pointer;
-    transition:0.2s;
+background:#1f2937;
+padding:15px;
+border-radius:12px;
+cursor:pointer;
+transition:0.2s;
 }
 
 .card:hover{
-    transform:scale(1.02);
-    background:#334155;
+background:#374151;
+transform:scale(1.02);
 }
 
-.hidden{
-    display:none;
+.page{
+display:none;
+padding:15px;
 }
 
 button{
-    margin-top:10px;
-    padding:10px;
-    border:none;
-    border-radius:8px;
-    background:#38bdf8;
-    color:black;
-    font-weight:bold;
-    cursor:pointer;
+margin-top:15px;
+padding:10px;
+border:none;
+border-radius:8px;
+background:#38bdf8;
+font-weight:bold;
+cursor:pointer;
 }
 
-.back{
-    background:#ef4444;
-    color:white;
+footer{
+text-align:center;
+padding:15px;
+font-size:12px;
+opacity:0.6;
+margin-top:30px;
 }
 </style>
 </head>
 
 <body>
 
-<header>🦷 Dental Trainer Pro</header>
+<header>
+🦷 Dental AI Trainer
+<div class="logo">Clinical Learning System</div>
+</header>
 
-<div class="container" id="menu">
+<div id="home" class="container">
 
-<div class="card" onclick="openCase('endo')">
-Endodontics (علاج الجذور)
-</div>
-
-<div class="card" onclick="openCase('peri')">
-Periodontology (اللثة)
-</div>
-
-<div class="card" onclick="openCase('surg')">
-Oral Surgery (الجراحة)
-</div>
-
-<div class="card" onclick="openCase('rest')">
-Restorative (الترميم)
-</div>
+<div class="card" onclick="openCase('endo')">Endodontics</div>
+<div class="card" onclick="openCase('peri')">Periodontology</div>
+<div class="card" onclick="openCase('surg')">Oral Surgery</div>
+<div class="card" onclick="openCase('rest')">Restorative</div>
+<div class="card" onclick="openCase('ped')">Pediatric Dentistry</div>
+<div class="card" onclick="openCase('prosth')">Prosthodontics</div>
 
 </div>
 
-<div class="container hidden" id="caseBox">
+<div id="page" class="page">
 
-<h3 id="title"></h3>
-
+<h2 id="title"></h2>
 <p id="content"></p>
 
-<button class="back" onclick="back()">رجوع</button>
+<button onclick="back()">رجوع</button>
 
 </div>
+
+<footer>
+تصميم وتطوير: الدكتور زكريا محمد عطوني - سوريا
+</footer>
 
 <script>
 
 const cases = {
-endo:{
-title:"Endodontics",
-content:"Case 1: Pain on biting + deep caries → Diagnosis: irreversible pulpitis → Treatment: RCT"
-},
-peri:{
-title:"Periodontology",
-content:"Case 2: Bleeding gums + pocket depth 6mm → Diagnosis: chronic periodontitis → Scaling + root planing"
-},
-surg:{
-title:"Oral Surgery",
-content:"Case 3: impacted 3rd molar → surgical extraction indicated"
-},
-rest:{
-title:"Restorative",
-content:"Case 4: fractured tooth → composite restoration or crown"
-}
+
+endo:[
+"Severe pain + deep caries → irreversible pulpitis → RCT",
+"Spontaneous pain + swelling → acute apical abscess → drainage + RCT",
+"Broken file during RCT → bypass or retrieval"
+],
+
+peri:[
+"Bleeding gums + pocket 5mm → chronic periodontitis → scaling",
+"Mobility grade II → advanced periodontitis → maintenance",
+"Halitosis + calculus → periodontal disease"
+],
+
+surg:[
+"Impacted 3rd molar → surgical extraction",
+"Facial swelling + trismus → infection → drainage + antibiotics",
+"Cystic lesion → surgical enucleation"
+],
+
+rest:[
+"Fractured cusp → composite restoration",
+"Extensive decay → full crown",
+"Old restoration failure → replacement"
+],
+
+ped:[
+"Child caries → pulpotomy",
+"Anxious child → behavior management",
+"Early caries → fluoride + sealants"
+],
+
+prosth:[
+"Missing teeth → partial denture",
+"Edentulous jaw → complete denture",
+"Implant case → implant planning"
+]
+
 }
 
 function openCase(type){
-document.getElementById('menu').classList.add('hidden');
-document.getElementById('caseBox').classList.remove('hidden');
-document.getElementById('title').innerText = cases[type].title;
-document.getElementById('content').innerText = cases[type].content;
+document.getElementById('home').style.display="none";
+document.getElementById('page').style.display="block";
+
+let list = cases[type];
+let random = list[Math.floor(Math.random()*list.length)];
+
+document.getElementById('title').innerText=type.toUpperCase();
+document.getElementById('content').innerText=random;
 }
 
 function back(){
-document.getElementById('menu').classList.remove('hidden');
-document.getElementById('caseBox').classList.add('hidden');
+document.getElementById('home').style.display="grid";
+document.getElementById('page').style.display="none";
 }
 
 </script>
