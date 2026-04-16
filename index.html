@@ -46,6 +46,7 @@ cursor:pointer;
 font-size:16px;
 background:#374151;
 color:white;
+transition:0.2s;
 }
 
 .btn:hover{background:#4b5563;}
@@ -64,12 +65,6 @@ cursor:pointer;
 display:none;
 }
 
-.score{
-margin:10px 0;
-font-size:16px;
-opacity:0.8;
-}
-
 footer{
 margin-top:30px;
 padding:15px;
@@ -81,19 +76,15 @@ opacity:0.6;
 
 <body>
 
-<header>🦷 مدرب طب الأسنان التفاعلي</header>
+<header>🦷 مدرب الحالات السريرية</header>
 
 <div class="container">
-
-<div class="score">
-النقاط: <span id="score">0</span> / <span id="total"></span>
-</div>
 
 <div id="question" class="case"></div>
 
 <div id="answers"></div>
 
-<button class="next" id="nextBtn" onclick="nextQ()">السؤال التالي</button>
+<button class="next" id="nextBtn" onclick="nextQ()">التالي ➜</button>
 
 <div id="end" style="display:none;font-size:18px;margin-top:20px;"></div>
 
@@ -108,50 +99,68 @@ opacity:0.6;
 const data = [
 {
 q:"مريض ألم شديد مع تسوس عميق",
-options:["التهاب لب غير عكوس","التهاب لثة بسيط","تآكل مينا"],
+options:[
+"التهاب لب غير عكوس",
+"التهاب لثة بسيط",
+"تآكل مينا",
+"حساسية عاجية"
+],
 answer:0
 },
 {
-q:"نزف لثة + جيوب 5mm",
-options:["التهاب دواعم سن مزمن","تسوس سطحي","كسر تاجي"],
+q:"نزف لثة مع جيوب 5mm",
+options:[
+"التهاب دواعم سن مزمن",
+"تسوس سطحي",
+"كسر تاجي",
+"تآكل عنقي"
+],
 answer:0
 },
 {
 q:"ضرس عقل مطمور",
-options:["انطمار ضرس عقل","التهاب جيوب","تسوس عنقي"],
+options:[
+"انطمار ضرس عقل",
+"التهاب جيوب",
+"تسوس عنقي",
+"كسر جذر"
+],
 answer:0
 },
 {
 q:"طفل مع تسوس متعدد",
-options:["تسوس طفولي منتشر","حساسية عاجية","تآكل"],
+options:[
+"تسوس طفولي منتشر",
+"حساسية عاجية",
+"تآكل",
+"صدمة إطباق"
+],
 answer:0
 },
 {
 q:"كسر سن أمامي",
-options:["كسر تاجي","التهاب لثة","خراج"],
+options:[
+"كسر تاجي",
+"التهاب لثة",
+"خراج",
+"تصبغ"
+],
 answer:0
 },
 {
-q:"رائحة فم مزمنة",
-options:["التهاب لثة مزمن","تسوس بسيط","كسر جذر"],
-answer:0
-},
-{
-q:"ألم عند المضغ + سن متغير اللون",
-options:["نخر لب","التهاب جيوب","حساسية بسيطة"],
-answer:0
-},
-{
-q:"حركة سن واضحة",
-options:["مرض لثوي متقدم","تسوس سطح","تآكل"],
+q:"ألم عند المضغ + سن داكن",
+options:[
+"نخر لب",
+"التهاب جيوب",
+"حساسية بسيطة",
+"تآكل مينا"
+],
 answer:0
 }
 ];
 
 let current=0;
 let score=0;
-
-document.getElementById("total").innerText=data.length;
 
 function loadQ(){
 
@@ -187,7 +196,6 @@ b.disabled=true;
 
 if(i===correct) score++;
 
-document.getElementById("score").innerText=score;
 document.getElementById("nextBtn").style.display="inline-block";
 }
 
