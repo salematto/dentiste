@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dental Advanced Training</title>
+<title>Dental Training Fixed</title>
 
 <style>
 body{
@@ -13,7 +13,6 @@ background:#f5f7fb;
 color:#0f172a;
 }
 
-/* 🔵 Header */
 header{
 background:#0f2a4a;
 color:white;
@@ -24,23 +23,20 @@ font-weight:bold;
 border-bottom:4px solid #f59e0b;
 }
 
-/* container */
 .container{
 max-width:850px;
 margin:auto;
 padding:20px;
 }
 
-/* 🟦 بطاقة السؤال (متناسقة الآن) */
+/* 🟦 السؤال */
 .card{
 background:linear-gradient(135deg,#0f2a4a,#1e3a8a);
 color:white;
 padding:28px;
 border-radius:16px;
-box-shadow:0 10px 25px rgba(0,0,0,0.15);
 font-size:22px;
 font-weight:600;
-min-height:120px;
 margin-bottom:15px;
 }
 
@@ -53,8 +49,8 @@ color:#475569;
 margin:10px 0;
 }
 
-/* 🟦 الخيارات */
-.btn{
+/* 🟩 الخيارات (نظام جديد بدون تعارض) */
+.option{
 display:block;
 width:100%;
 margin:12px 0;
@@ -69,20 +65,21 @@ color:#f8fafc;
 transition:0.2s;
 }
 
-.btn:hover{
+/* منع hover بعد التثبيت */
+.option:hover{
 transform:translateY(-2px);
 border-color:#f59e0b;
 }
 
-/* ✔ أخضر */
-.correct{
+/* ✔ صحيح */
+.option.correct{
 background:#16a34a !important;
 color:white !important;
 border:none;
 }
 
-/* ✖ أحمر */
-.wrong{
+/* ✖ خطأ */
+.option.wrong{
 background:#dc2626 !important;
 color:white !important;
 border:none;
@@ -101,15 +98,22 @@ cursor:pointer;
 font-size:15px;
 }
 
-/* تصنيف */
-.tag{
-display:inline-block;
-padding:4px 10px;
-border-radius:999px;
-font-size:12px;
-margin-top:10px;
-background:#e5e7eb;
-color:#111827;
+/* شرح */
+#explain{
+margin-top:15px;
+padding:12px;
+background:#e0f2fe;
+border-right:5px solid #0ea5e9;
+border-radius:10px;
+display:none;
+}
+
+/* نتيجة */
+.result{
+text-align:center;
+font-size:18px;
+line-height:2;
+padding:20px;
 }
 
 footer{
@@ -121,24 +125,19 @@ padding:16px;
 font-size:12px;
 border-top:4px solid #f59e0b;
 }
-
-.result{
-text-align:center;
-font-size:18px;
-line-height:2;
-padding:20px;
-}
 </style>
 </head>
 
 <body>
 
-<header>🦷 Dental Advanced Training</header>
+<header>🦷 Dental Training System</header>
 
 <div class="container">
 
 <div id="start">
-<button class="btn" style="background:#0f2a4a;" onclick="startExam()">ابدأ التدريب</button>
+<button onclick="startExam()" style="padding:14px;width:100%;background:#0f2a4a;color:white;border:none;border-radius:12px;">
+ابدأ التدريب
+</button>
 </div>
 
 <div id="exam" style="display:none;">
@@ -152,7 +151,7 @@ padding:20px;
 
 <div id="answers"></div>
 
-<div id="explain" style="display:none;margin-top:15px;padding:12px;background:#e0f2fe;border-right:5px solid #0ea5e9;border-radius:10px;"></div>
+<div id="explain"></div>
 
 </div>
 
@@ -173,7 +172,7 @@ bank.push({q,o,a,exp});
 
 /* cases */
 add("ألم ليلي مع تسوس عميق",["التهاب لب غير عكوس","حساسية","تآكل","تصبغ"],0,"التهاب لب غير عكوس بسبب ضغط داخلي.");
-add("نزف لثة عند التفريش",["التهاب لثة","تسوس","كسر","تصبغ"],0,"التهاب لثة بسبب اللويحة.");
+add("نزف لثة عند التفريش",["التهاب لثة","تسوس","كسر","تصبغ"],0,"التهاب لثة بسبب اللويحة الجرثومية.");
 
 const templates=[
 ["ألم بارد شديد",["حساسية","التهاب لب","تآكل","تصبغ"],0,"حساسية عاجية."],
@@ -213,17 +212,18 @@ document.getElementById("question").innerText=q.q;
 
 let html="";
 q.o.forEach((opt,idx)=>{
-html+=`<button class="btn" onclick="check(${idx})">${opt}</button>`;
+html+=`<button class="option" onclick="check(${idx})">${opt}</button>`;
 });
 
 document.getElementById("answers").innerHTML=html;
 document.getElementById("explain").style.display="none";
+document.getElementById("explain").innerHTML="";
 }
 
 function check(x){
 
 let q=qlist[i];
-let buttons=document.querySelectorAll(".btn");
+let buttons=document.querySelectorAll(".option");
 
 buttons.forEach((b,idx)=>{
 b.disabled=true;
@@ -233,13 +233,14 @@ if(idx===x && x!==q.a) b.classList.add("wrong");
 
 if(x!==q.a) wrong++;
 
-document.getElementById("explain").style.display="block";
-document.getElementById("explain").innerText=q.exp;
+let exp=document.getElementById("explain");
+exp.style.display="block";
+exp.innerHTML=q.exp;
 
 setTimeout(()=>{
 i++;
 load();
-},1000);
+},900);
 }
 
 function end(){
@@ -258,7 +259,9 @@ document.getElementById("result").innerHTML=`
 انتهى التدريب 🧠<br><br>
 الأخطاء: ${wrong}<br>
 التقييم: ${level}<br><br>
-<button class="btn" onclick="location.reload()" style="background:#0f2a4a;">إعادة التدريب</button>
+<button onclick="location.reload()" style="padding:12px;width:100%;background:#0f2a4a;color:white;border:none;border-radius:12px;">
+إعادة التدريب
+</button>
 `;
 }
 
