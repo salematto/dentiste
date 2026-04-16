@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dental Smart Training</title>
+<title>Dental Advanced Training</title>
 
 <style>
 body{
@@ -29,7 +29,6 @@ margin:auto;
 padding:20px;
 }
 
-/* question */
 .card{
 background:white;
 padding:28px;
@@ -41,7 +40,14 @@ min-height:120px;
 border:2px solid #0f2a4a;
 }
 
-/* options */
+.meta{
+display:flex;
+justify-content:space-between;
+font-size:13px;
+color:#475569;
+margin:10px 0;
+}
+
 .btn{
 display:block;
 width:100%;
@@ -62,32 +68,47 @@ transform:translateY(-2px);
 border-color:#f59e0b;
 }
 
-/* correct / wrong */
 .correct{background:#16a34a !important;color:white !important;border:none;}
 .wrong{background:#dc2626 !important;color:white !important;border:none;}
 
-/* explanation box */
-.explain{
+.nextBtn{
 margin-top:15px;
 padding:12px;
-background:#e0f2fe;
-border-right:5px solid #0ea5e9;
-border-radius:10px;
-font-size:14px;
-color:#0f172a;
-display:none;
+width:100%;
+border:none;
+border-radius:12px;
+background:#0f2a4a;
+color:white;
+cursor:pointer;
+font-size:15px;
 }
 
-/* meta */
-.meta{
-display:flex;
-justify-content:space-between;
-font-size:13px;
-color:#475569;
-margin:10px 0;
+.tag{
+display:inline-block;
+padding:4px 10px;
+border-radius:999px;
+font-size:12px;
+margin-top:10px;
+background:#e5e7eb;
+color:#111827;
 }
 
-/* result */
+.tag.endo{background:#dbeafe;color:#1e3a8a;}
+.tag.perio{background:#dcfce7;color:#166534;}
+.tag.surg{background:#fee2e2;color:#991b1b;}
+.tag.pedo{background:#fef9c3;color:#92400e;}
+.tag.prostho{background:#ede9fe;color:#5b21b6;}
+
+footer{
+margin-top:40px;
+background:#0f2a4a;
+color:white;
+text-align:center;
+padding:16px;
+font-size:12px;
+border-top:4px solid #f59e0b;
+}
+
 .result{
 text-align:center;
 font-size:18px;
@@ -102,44 +123,32 @@ border-radius:999px;
 background:#f59e0b;
 color:#0f172a;
 font-weight:bold;
-margin-top:10px;
-}
-
-/* footer */
-footer{
-margin-top:40px;
-background:#0f2a4a;
-color:white;
-text-align:center;
-padding:16px;
-font-size:12px;
-border-top:4px solid #f59e0b;
 }
 </style>
 </head>
 
 <body>
 
-<header>🦷 Dental Smart Clinical Training</header>
+<header>🦷 Dental Advanced Clinical Training</header>
 
 <div class="container">
 
 <div id="start">
-<button class="btn" style="background:#0f2a4a;" onclick="startExam()">ابدأ التدريب الذكي</button>
+<button class="btn" style="background:#0f2a4a;" onclick="startExam()">ابدأ التدريب</button>
 </div>
 
 <div id="exam" style="display:none;">
 
 <div class="meta">
 <div>السؤال: <span id="qnum"></span></div>
-<div>الأخطاء: <span id="wrongCount">0</span></div>
+<div>الأخطاء: <span id="wrongCount"></span></div>
 </div>
 
 <div id="question" class="card"></div>
 
 <div id="answers"></div>
 
-<div id="explain" class="explain"></div>
+<div id="explain" style="display:none;margin-top:15px;padding:12px;background:#e0f2fe;border-right:5px solid #0ea5e9;border-radius:10px;"></div>
 
 </div>
 
@@ -153,57 +162,58 @@ border-top:4px solid #f59e0b;
 
 <script>
 
-const bank = [];
-function add(q,o,a,exp){
-bank.push({q,o,a,exp});
+const bank=[];
+
+function add(q,o,a,exp,cat){
+bank.push({q,o,a,exp,cat});
 }
 
-/* ================= cases ================= */
+/* ---------------- CASES ---------------- */
 
 add("ألم ليلي شديد مع تسوس عميق",
 ["التهاب لب غير عكوس","حساسية","تآكل","تصبغ"],
 0,
-"الألم الليلي المستمر مع تسوس عميق يدل غالباً على التهاب لب غير عكوس بسبب ضغط داخل الحجرة اللبية."
-);
+"الألم الليلي يدل على التهاب لب غير عكوس بسبب ضغط داخل الحجرة اللبية.",
+"endo");
 
 add("نزف لثة عند التفريش",
 ["التهاب لثة","تسوس","كسر","تصبغ"],
 0,
-"النزف عند التفريش علامة مبكرة لالتهاب اللثة بسبب تراكم اللويحة الجرثومية."
-);
+"علامة مبكرة لالتهاب لثة بسبب اللويحة الجرثومية.",
+"perio");
 
 add("ضرس عقل مطمور مؤلم",
 ["انطمار ضرس","تسوس","حساسية","تآكل"],
 0,
-"الألم في ضرس عقل غير بازغ غالباً بسبب التهاب حول التاج."
-);
+"التهاب حول التاج هو السبب الأكثر شيوعاً.",
+"surg");
 
 add("كسر سن أمامي",
 ["كسر تاجي","تسوس","تصبغ","تآكل"],
 0,
-"الصدمة المباشرة تؤدي غالباً إلى كسر تاجي خصوصاً في الأسنان الأمامية."
-);
+"رض مباشر يؤدي لكسر تاجي غالباً.",
+"trauma");
 
-add("ألم عند المضغ بدون سبب واضح",
+add("ألم عند العض بدون سبب واضح",
 ["كسر شعري","تسوس","حساسية","تصبغ"],
 0,
-"الألم عند العض مع غياب تسوس ظاهر يشير غالباً إلى كسر شعري غير مرئي سريرياً."
-);
+"الألم مع غياب تسوس ظاهر يشير لكسر شعري.",
+"endo");
 
 /* fill to 120 */
 const templates=[
-["ألم بارد شديد",["حساسية عاجية","التهاب لب","تآكل","تصبغ"],0,"حساسية العاج تسبب ألم حاد قصير مع البارد."],
-["تورم لثوي",["خراج لثوي","تسوس","حساسية","تصبغ"],0,"التورم الموضعي غالباً يدل على خراج لثوي."],
-["ألم عند الضغط",["التهاب حول الذروة","تسوس","حساسية","تصبغ"],0,"الألم عند الضغط علامة على التهاب حول الذروة."],
-["تآكل عنقي",["تآكل مينا","تسوس","كسر","تصبغ"],0,"التآكل العنقي يحدث بسبب أحماض أو ضغط ميكانيكي."]
+["ألم بارد شديد",["حساسية عاجية","التهاب لب","تآكل","تصبغ"],0,"حساسية العاج.","endo"],
+["تورم لثوي",["خراج لثوي","تسوس","حساسية","تصبغ"],0,"خراج موضعي.","perio"],
+["ألم عند الضغط",["التهاب حول الذروة","تسوس","حساسية","تصبغ"],0,"التهاب حول الذروة.","endo"],
+["تآكل عنقي",["تآكل مينا","تسوس","كسر","تصبغ"],0,"تآكل بسبب أحماض.","prostho"]
 ];
 
 while(bank.length<120){
 let t=templates[bank.length%templates.length];
-add(t[0],t[1],t[2],t[3]);
+add(t[0],t[1],t[2],t[3],t[4]);
 }
 
-/* ================= logic ================= */
+/* ---------------- LOGIC ---------------- */
 
 let qlist=[];
 let i=0;
@@ -221,6 +231,7 @@ load();
 }
 
 function load(){
+
 if(i>=qlist.length){end();return;}
 
 let q=qlist[i];
@@ -245,21 +256,28 @@ let q=qlist[i];
 let buttons=document.querySelectorAll(".btn");
 
 buttons.forEach((b,idx)=>{
+b.disabled=true;
 if(idx===q.a) b.classList.add("correct");
 if(idx===x && x!==q.a) b.classList.add("wrong");
-b.disabled=true;
 });
 
 if(x!==q.a) wrong++;
 
 let exp=document.getElementById("explain");
 exp.style.display="block";
-exp.innerText=q.exp || "لا يوجد شرح";
 
-setTimeout(()=>{
+exp.innerHTML=`
+${q.exp}
+<br><br>
+<span class="tag ${q.cat}">${q.cat.toUpperCase()}</span>
+<br>
+<button class="nextBtn" onclick="nextQ()">السؤال التالي</button>
+`;
+}
+
+function nextQ(){
 i++;
 load();
-},1200);
 }
 
 function end(){
@@ -267,9 +285,9 @@ function end(){
 document.getElementById("exam").style.display="none";
 document.getElementById("result").style.display="block";
 
-let score = ((qlist.length-wrong)/qlist.length);
+let score=(qlist.length-wrong)/qlist.length;
 
-let level =
+let level=
 score>0.85?"ممتاز 🟢":
 score>0.6?"جيد 🟠":
 "يحتاج تدريب 🔴";
@@ -278,7 +296,7 @@ document.getElementById("result").innerHTML=`
 انتهى التدريب 🧠<br><br>
 الأخطاء: ${wrong}<br>
 التقييم: ${level}<br><br>
-<button class="btn" onclick="location.reload()" style="background:#0f2a4a;">إعادة التدريب</button>
+<button class="btn" style="background:#0f2a4a;" onclick="location.reload()">إعادة التدريب</button>
 `;
 }
 
