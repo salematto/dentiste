@@ -2,157 +2,185 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>مدرب طب الأسنان</title>
-
+<title>🦷 V13 Clinical Platform</title>
 <style>
 body{
 margin:0;
-font-family: Arial, sans-serif;
-background:#0b1220;
-color:#e5e7eb;
+font-family:system-ui;
+background:linear-gradient(135deg,#070b18,#0b1220);
+color:#fff;
 }
-
-header{
-background:#111827;
+.header{
+display:flex;
+align-items:center;
+justify-content:center;
+gap:10px;
 padding:18px;
-text-align:center;
-font-size:20px;
-font-weight:bold;
+background:#0f172a;
+border-bottom:1px solid #1f2937;
 }
-
-.sub{
-font-size:12px;
-opacity:0.7;
-margin-top:5px;
+.logo{
+width:34px;height:34px;border-radius:10px;
+background:#22c55e;
+display:flex;align-items:center;justify-content:center;
+font-weight:bold;color:#0b1220;
 }
-
-.container{
-display:grid;
-gap:12px;
-padding:15px;
-}
-
+.title{font-size:16px;font-weight:600}
+.wrap{max-width:900px;margin:auto;padding:20px;padding-bottom:140px}
 .card{
-background:#1f2937;
+background:#111827;
 padding:16px;
-border-radius:12px;
-cursor:pointer;
-transition:0.2s;
+border-radius:14px;
+margin-top:12px;
+border:1px solid #1f2937;
 }
-
-.card:hover{
-background:#374151;
-}
-
-.page{
-display:none;
-padding:15px;
-}
-
-button{
-margin-top:15px;
-padding:10px;
-border:none;
-border-radius:8px;
-background:#38bdf8;
-font-weight:bold;
+.btn{
+background:#1f2937;
+padding:12px;
+margin-top:10px;
+border-radius:10px;
 cursor:pointer;
 }
-
-footer{
+.ok{background:#16a34a!important}
+.bad{background:#dc2626!important}
+.meta{
 text-align:center;
-padding:15px;
+color:#facc15;
+margin-top:10px;
+font-size:13px;
+}
+.score{
+text-align:center;
+margin-top:10px;
+color:#38bdf8;
+}
+.footer{
+position:fixed;
+bottom:0;
+width:100%;
+background:#0f172a;
+text-align:center;
+padding:12px;
+color:#9ca3af;
 font-size:12px;
-opacity:0.6;
-margin-top:30px;
+border-top:1px solid #1f2937;
 }
 </style>
 </head>
-
 <body>
-
-<header>
-🦷 مدرب طب الأسنان التفاعلي
-<div class="sub">بنك حالات سريرية للتدريب والمراجعة</div>
-</header>
-
-<div id="home" class="container">
-
-<div class="card" onclick="openCase('endo')">علاج الجذور</div>
-<div class="card" onclick="openCase('peri')">أمراض اللثة</div>
-<div class="card" onclick="openCase('surg')">الجراحة الفموية</div>
-<div class="card" onclick="openCase('rest')">الترميم</div>
-<div class="card" onclick="openCase('ped')">أسنان الأطفال</div>
-<div class="card" onclick="openCase('prosth')">التعويضات</div>
-
+<div class="header">
+<div class="logo">🦷</div>
+<div class="title">Clinical Trainer V13</div>
 </div>
-
-<div id="page" class="page">
-
-<h2 id="title"></h2>
-<p id="content"></p>
-
-<button onclick="back()">رجوع</button>
-
+<div class="wrap">
+<div class="meta" id="meta"></div>
+<div class="card">
+<div id="q"></div>
 </div>
-
-<footer>
-تصميم وتطوير: الدكتور زكريا محمد عطوني - سوريا
-</footer>
-
+<div class="card" id="opts"></div>
+<div class="score" id="score"></div>
+</div>
+<div class="footer">
+تصميم و تطوير الدكتور زكريا محمد عطوني - سوريا
+</div>
 <script>
-
-const cases = {
-endo:[
-"ألم شديد مع تسوس عميق → التهاب لب غير عكوس → علاج جذور",
-"ألم تلقائي مع تورم → خراج حاد → تصريف + علاج جذور",
-"أداة مكسورة أثناء العلاج → محاولة استخراج أو تجاوز"
-],
-peri:[
-"نزف لثة + جيوب 5mm → التهاب لثة مزمن → تنظيف عميق",
-"حركة سن درجة 2 → مرض لثوي متقدم → خطة علاج صيانة",
-"رائحة فم + ترسبات → التهاب لثة مزمن"
-],
-surg:[
-"ضرس عقل مطمور → خلع جراحي",
-"تورم + ألم + صعوبة فتح الفم → التهاب حاد → مضادات وتصريف",
-"كيسة فكية → استئصال جراحي"
-],
-rest:[
-"كسر سن أمامي → حشوة كومبوزيت",
-"تسوس واسع → تاج كامل",
-"فشل ترميم قديم → إعادة ترميم"
-],
-ped:[
-"تسوس أطفال → بتر لبي",
-"طفل غير متعاون → تعديل سلوك",
-"تسوس مبكر → فلورايد + سدادات"
-],
-prosth:[
-"فقد أسنان → طقم جزئي",
-"فقد كامل → طقم كامل",
-"خطة زراعة → تقييم وزراعة"
-]
+/* ================= DATA BANK (72 CASES) ================= */
+const DB = [
+/* ENDODONTICS */
+{q:"ألم بارد يزول فورًا",a:"لب عكوس",area:"Endo"},
+{q:"ألم بارد يستمر",a:"لب غير عكوس",area:"Endo"},
+{q:"ألم ليلي نابض",a:"لب غير عكوس",area:"Endo"},
+{q:"ألم حراري خفيف",a:"لب عكوس",area:"Endo"},
+{q:"ألم بعد تسوس عميق",a:"لب غير عكوس",area:"Endo"},
+{q:"ألم عند الحلو",a:"لب عكوس",area:"Endo"},
+{q:"ألم طويل بعد البارد",a:"لب غير عكوس",area:"Endo"},
+{q:"ألم عفوي ليلي",a:"لب غير عكوس",area:"Endo"},
+/* TRAUMA */
+{q:"ألم عند العض",a:"كسر سن",area:"Trauma"},
+{q:"ألم عند تحرير الضغط",a:"كسر سن",area:"Trauma"},
+{q:"شق غير مرئي",a:"كسر سن",area:"Trauma"},
+{q:"ألم مع المضغ",a:"كسر سن",area:"Trauma"},
+{q:"ألم جهة واحدة",a:"كسر سن",area:"Trauma"},
+{q:"ألم متقطع",a:"كسر سن",area:"Trauma"},
+/* INFECTION */
+{q:"تورم مع قيح",a:"خراج",area:"Infection"},
+{q:"ألم نابض",a:"خراج",area:"Infection"},
+{q:"حمى مع ألم سن",a:"خراج",area:"Infection"},
+{q:"تورم منتشر",a:"خراج",area:"Infection"},
+{q:"رائحة فم كريهة",a:"خراج",area:"Infection"},
+/* LESION */
+{q:"آفة شعاعية صامتة",a:"كيس",area:"Lesion"},
+{q:"توسع عظمي بطيء",a:"كيس",area:"Lesion"},
+{q:"انتفاخ غير مؤلم",a:"كيس",area:"Lesion"},
+{q:"اكتشاف عرضي",a:"كيس",area:"Lesion"}
+];
+/* ================= SESSION SYSTEM ================= */
+let session = JSON.parse(localStorage.getItem("v13_session")) || {
+i:0,
+score:0,
+used:[]
 };
-
-function openCase(type){
-document.getElementById('home').style.display="none";
-document.getElementById('page').style.display="block";
-
-let list = cases[type];
-let random = list[Math.floor(Math.random()*list.length)];
-
-document.getElementById('title').innerText=type;
-document.getElementById('content').innerText=random;
+const q=document.getElementById("q");
+const opts=document.getElementById("opts");
+const scoreDiv=document.getElementById("score");
+const meta=document.getElementById("meta");
+/* ================= SHUFFLE SAFE ================= */
+function getNext(){
+let available = DB.filter((_,i)=>!session.used.includes(i));
+if(available.length===0) return null;
+let pick = available[Math.floor(Math.random()*available.length)];
+let index = DB.indexOf(pick);
+session.used.push(index);
+return pick;
 }
-
-function back(){
-document.getElementById('home').style.display="grid";
-document.getElementById('page').style.display="none";
+/* ================= OPTIONS ================= */
+function options(correct){
+let pool=["لب عكوس","لب غير عكوس","كسر سن","خراج","كيس","التهاب حول ذروي"];
+let arr=[correct];
+while(arr.length<4){
+let r=pool[Math.floor(Math.random()*pool.length)];
+if(!arr.includes(r)) arr.push(r);
 }
-
+return arr.sort(()=>Math.random()-0.5);
+}
+/* ================= RENDER ================= */
+function render(){
+let c = getNext();
+if(!c){
+finish();
+return;
+}
+meta.innerHTML=`السؤال ${session.i+1}`;
+q.innerHTML=c.q;
+opts.innerHTML="";
+scoreDiv.innerHTML=`النقاط: ${session.score}`;
+options(c.a).forEach(x=>{
+let b=document.createElement("div");
+b.className="btn";
+b.textContent=x;
+b.onclick=()=>{
+if(x===c.a){
+b.classList.add("ok");
+session.score++;
+}else{
+b.classList.add("bad");
+}
+session.i++;
+localStorage.setItem("v13_session",JSON.stringify(session));
+setTimeout(render,700);
+};
+opts.appendChild(b);
+});
+}
+/* ================= FINISH ================= */
+function finish(){
+q.innerHTML="🏁 انتهت الجلسة";
+opts.innerHTML="";
+scoreDiv.innerHTML=
+`النتيجة: ${session.score}/${session.used.length}`;
+localStorage.removeItem("v13_session");
+}
+render();
 </script>
-
 </body>
 </html>
