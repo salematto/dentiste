@@ -3,120 +3,139 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dental Smart Clinical Engine</title>
+<title>Dental Smart Exam</title>
 
 <style>
 body{
 margin:0;
 font-family:Arial;
-background:#f5f7fb;
+background:#f3f6fb;
 color:#0f172a;
+text-align:center;
 }
 
-/* Header */
 header{
-background:#0f2a4a;
+background:#1e3a8a;
 color:white;
 padding:18px;
-text-align:center;
 font-size:20px;
 font-weight:bold;
-border-bottom:4px solid #f59e0b;
+border-bottom:4px solid #facc15;
 }
 
-/* Container */
 .container{
-max-width:850px;
+max-width:800px;
 margin:auto;
 padding:20px;
 }
 
-/* Question */
 .card{
-background:linear-gradient(135deg,#0f2a4a,#1e3a8a);
-color:white;
-padding:28px;
+background:#fff;
+padding:24px;
 border-radius:16px;
-font-size:22px;
-font-weight:600;
-min-height:120px;
-margin-bottom:15px;
+box-shadow:0 8px 20px rgba(30,58,138,0.12);
+font-size:18px;
+min-height:110px;
+border:1px solid #e5e7eb;
 }
 
-/* Options */
-.option{
+.meta{
+display:flex;
+justify-content:space-between;
+font-size:13px;
+color:#475569;
+margin:10px 0;
+}
+
+.btn{
 display:block;
 width:100%;
-margin:12px 0;
-padding:16px;
-border-radius:14px;
-border:1px solid #1f2937;
+margin:10px 0;
+padding:14px;
+border:1px solid #cbd5e1;
+border-radius:12px;
 cursor:pointer;
-font-size:16px;
-text-align:right;
-background:#111827;
-color:#f8fafc;
-transition:0.2s;
+font-size:15px;
+background:#f8fafc;
 }
 
-.option:hover{
-transform:translateY(-2px);
-border-color:#f59e0b;
-}
+.correct{background:#22c55e !important;color:white;}
+.wrong{background:#ef4444 !important;color:white;}
 
-/* correct / wrong */
-.option.correct{background:#16a34a !important;color:white !important;border:none;}
-.option.wrong{background:#dc2626 !important;color:white !important;border:none;}
-
-/* explanation */
-#explain{
-margin-top:15px;
+.expl{
+margin-top:12px;
 padding:12px;
 background:#e0f2fe;
-border-right:5px solid #0ea5e9;
 border-radius:10px;
+font-size:14px;
+color:#0f172a;
+text-align:right;
 display:none;
 }
 
-/* result */
+.bad{
+margin-top:6px;
+background:#fee2e2;
+padding:6px;
+border-radius:8px;
+font-size:13px;
+display:none;
+}
+
+.start{
+padding:14px;
+border:none;
+border-radius:12px;
+background:#1e3a8a;
+color:white;
+font-size:16px;
+font-weight:bold;
+cursor:pointer;
+}
+
 .result{
 text-align:center;
 font-size:18px;
-line-height:2;
 padding:20px;
+line-height:2;
 }
 
-footer{
-margin-top:40px;
-background:#0f2a4a;
-color:white;
-text-align:center;
-padding:16px;
-font-size:12px;
-border-top:4px solid #f59e0b;
+.badge{
+display:inline-block;
+padding:6px 14px;
+border-radius:999px;
+background:#facc15;
+color:#0f172a;
+margin-top:10px;
+font-size:14px;
+font-weight:bold;
 }
+
 </style>
 </head>
 
 <body>
 
-<header>🦷 Dental Smart Clinical Engine</header>
+<header>🧠 Dental Smart Exam (تحليل ذكي)</header>
 
 <div class="container">
 
 <div id="start">
-<button onclick="startExam()" style="padding:14px;width:100%;background:#0f2a4a;color:white;border:none;border-radius:12px;">
-ابدأ التدريب الذكي
-</button>
+<button class="start" onclick="startExam()">ابدأ الاختبار</button>
 </div>
 
 <div id="exam" style="display:none;">
 
-<div class="card" id="question"></div>
+<div class="meta">
+<div>السؤال: <span id="qnum"></span></div>
+<div>النتيجة: <span id="score"></span></div>
+</div>
+
+<div id="question" class="card"></div>
 
 <div id="answers"></div>
 
-<div id="explain"></div>
+<div id="expl" class="expl"></div>
 
 </div>
 
@@ -124,92 +143,36 @@ border-top:4px solid #f59e0b;
 
 </div>
 
-<footer>
-تصميم وتطوير د. زكريا محمد عطوني
-</footer>
-
 <script>
 
-/* =========================
-   SMART ENGINE CORE
-   ========================= */
+/* بنك مختصر لكن قابل للتوسعة */
+const bank = [
+{q:"ألم ليلي مع تسوس عميق",o:["التهاب لب غير عكوس","حساسية","تآكل","تصبغ"],a:0,
+e:"الألم الليلي يدل على التهاب لب غير عكوس بسبب ضغط داخل الحجرة اللبية."},
 
-const bank = [];
-let used = new Set();
-let wrongBank = [];
-let categoryScore = {};
-let currentQ = null;
-let wrong = 0;
+{q:"نزف لثة عند التفريش",o:["التهاب لثة","تسوس","كسر","تصبغ"],a:0,
+e:"النزف العرضي مع التفريش علامة كلاسيكية لالتهاب اللثة."},
 
-/* helper */
-function add(q,o,a,exp,cat){
-bank.push({q,o,a,exp,cat});
-categoryScore[cat]=0;
-}
+{q:"ألم عند البارد يزول بسرعة",o:["حساسية عاجية","التهاب لب","كسر","خراج"],a:0,
+e:"اختفاء الألم بسرعة بعد البارد = حساسية وليست التهاب لب."},
 
-/* ---------------- CASES ---------------- */
+{q:"تورم مع قيح",o:["خراج","تسوس","تآكل","حساسية"],a:0,
+e:"وجود قيح يعني عدوى بكتيرية متقدمة (خراج)."},
 
-add("ألم ليلي مع تسوس عميق",
-["التهاب لب غير عكوس","حساسية","تآكل","تصبغ"],
-0,
-"التهاب لب غير عكوس بسبب ضغط داخل الحجرة اللبية.",
-"endo");
-
-add("نزف لثة عند التفريش",
-["التهاب لثة","تسوس","كسر","تصبغ"],
-0,
-"التهاب لثة بسبب اللويحة الجرثومية.",
-"perio");
-
-add("ضرس عقل مطمور مؤلم",
-["انطمار","تسوس","حساسية","تآكل"],
-0,
-"التهاب حول التاج شائع في الانطمار.",
-"surg");
-
-add("كسر سن أمامي",
-["كسر تاجي","تسوس","تصبغ","تآكل"],
-0,
-"رض مباشر يؤدي لكسر تاجي.",
-"trauma");
-
-add("ألم عند العض بدون سبب واضح",
-["كسر شعري","تسوس","حساسية","تصبغ"],
-0,
-"كسر شعري غالباً غير مرئي سريرياً.",
-"endo");
-
-/* fill to 120 */
-const templates=[
-["ألم بارد شديد",["حساسية","التهاب لب","تآكل","تصبغ"],0,"حساسية عاجية.","endo"],
-["تورم لثوي",["خراج","تسوس","حساسية","تصبغ"],0,"خراج موضعي.","perio"],
-["ألم عند الضغط",["التهاب حول الذروة","تسوس","حساسية","تصبغ"],0,"التهاب حول الذروة.","endo"]
+{q:"ألم عند المضغ في سن سليم",o:["كسر شعري","تسوس","تصبغ","حساسية"],a:0,
+e:"ألم عض بدون تسوس ظاهر يشير غالبًا إلى كسر شعري."}
 ];
 
-while(bank.length<120){
-let t=templates[bank.length%templates.length];
-add(t[0],t[1],t[2],t[3],t[4]);
-}
-
-/* ========================= */
-
-function getNextQuestion(){
-
-let pool = bank.filter(q=>!used.has(q.q));
-
-if(pool.length===0) return null;
-
-let q = pool[Math.floor(Math.random()*pool.length)];
-used.add(q.q);
-
-return q;
-}
+let qlist=[];
+let i=0;
+let score=0;
+let mistakes=[];
 
 function startExam(){
-
-used.clear();
-wrongBank=[];
-wrong=0;
+qlist=bank.sort(()=>Math.random()-0.5);
+i=0;
+score=0;
+mistakes=[];
 
 document.getElementById("start").style.display="none";
 document.getElementById("exam").style.display="block";
@@ -220,50 +183,52 @@ load();
 
 function load(){
 
-currentQ = getNextQuestion();
-
-if(!currentQ){
+if(i>=qlist.length){
 end();
 return;
 }
 
-document.getElementById("question").innerText=currentQ.q;
+let q=qlist[i];
+
+document.getElementById("qnum").innerText=(i+1)+"/"+qlist.length;
+document.getElementById("score").innerText=score;
+
+document.getElementById("question").innerText=q.q;
+
+document.getElementById("expl").style.display="none";
 
 let html="";
-currentQ.o.forEach((opt,idx)=>{
-html+=`<button class="option" onclick="check(${idx})">${opt}</button>`;
+q.o.forEach((opt,idx)=>{
+html+=`<button class="btn" onclick="check(${idx})">${opt}</button>`;
 });
 
 document.getElementById("answers").innerHTML=html;
-document.getElementById("explain").style.display="none";
 }
 
 function check(x){
 
-let q=currentQ;
-let buttons=document.querySelectorAll(".option");
+let q=qlist[i];
+let buttons=document.querySelectorAll(".btn");
 
 buttons.forEach((b,idx)=>{
-b.disabled=true;
-
 if(idx===q.a) b.classList.add("correct");
 if(idx===x && x!==q.a) b.classList.add("wrong");
+b.disabled=true;
 });
 
-if(x!==q.a){
-wrong++;
-wrongBank.push(q);
-categoryScore[q.cat]++;
+if(x===q.a){
+score++;
+}else{
+mistakes.push(q.q);
 }
 
-let exp=document.getElementById("explain");
-exp.style.display="block";
-exp.innerHTML=`
-${q.exp}<br><br>
-<b>التصنيف:</b> ${q.cat}
-`;
+document.getElementById("expl").style.display="block";
+document.getElementById("expl").innerText=q.e;
 
-setTimeout(()=>load(),900);
+setTimeout(()=>{
+i++;
+load();
+},1800);
 }
 
 function end(){
@@ -271,25 +236,20 @@ function end(){
 document.getElementById("exam").style.display="none";
 document.getElementById("result").style.display="block";
 
-let score = (bank.length - wrong)/bank.length;
-
-let weak = Object.entries(categoryScore)
-.sort((a,b)=>b[1]-a[1])[0] || ["none",0];
-
 let level =
-score>0.85?"ممتاز 🟢":
-score>0.6?"جيد 🟠":
-"يحتاج تدريب 🔴";
+score/qlist.length>0.8?"ممتاز 🟢":
+score/qlist.length>0.5?"جيد 🟠":
+"يحتاج تحسين 🔴";
 
-document.getElementById("result").innerHTML=`
-انتهى التدريب 🧠<br><br>
-الأخطاء: ${wrong}<br>
-التقييم: ${level}<br><br>
-أضعف مجال: <b>${weak[0]}</b><br><br>
-<button onclick="location.reload()" style="padding:12px;width:100%;background:#0f2a4a;color:white;border:none;border-radius:12px;">
-إعادة التدريب
-</button>
-`;
+let missText = mistakes.length
+? "<br><br>الأخطاء:<br>" + mistakes.map(m=>"• "+m).join("<br>")
+: "<br><br>بدون أخطاء 🎉";
+
+document.getElementById("result").innerHTML=
+"انتهى الاختبار 🧠<br><br>"+
+"النتيجة: "+score+" / "+qlist.length+
+"<br><span class='badge'>"+level+"</span>"+
+missText;
 }
 
 </script>
