@@ -13,6 +13,7 @@ background:#f5f7fb;
 color:#0f172a;
 }
 
+/* 🔵 Header */
 header{
 background:#0f2a4a;
 color:white;
@@ -23,23 +24,27 @@ font-weight:bold;
 border-bottom:4px solid #f59e0b;
 }
 
+/* container */
 .container{
 max-width:850px;
 margin:auto;
 padding:20px;
 }
 
+/* 🟦 بطاقة السؤال (متناسقة الآن) */
 .card{
-background:white;
+background:linear-gradient(135deg,#0f2a4a,#1e3a8a);
+color:white;
 padding:28px;
 border-radius:16px;
-box-shadow:0 10px 25px rgba(0,0,0,0.07);
+box-shadow:0 10px 25px rgba(0,0,0,0.15);
 font-size:22px;
 font-weight:600;
 min-height:120px;
-border:2px solid #0f2a4a;
+margin-bottom:15px;
 }
 
+/* meta */
 .meta{
 display:flex;
 justify-content:space-between;
@@ -48,6 +53,7 @@ color:#475569;
 margin:10px 0;
 }
 
+/* 🟦 الخيارات */
 .btn{
 display:block;
 width:100%;
@@ -68,9 +74,21 @@ transform:translateY(-2px);
 border-color:#f59e0b;
 }
 
-.correct{background:#16a34a !important;color:white !important;border:none;}
-.wrong{background:#dc2626 !important;color:white !important;border:none;}
+/* ✔ أخضر */
+.correct{
+background:#16a34a !important;
+color:white !important;
+border:none;
+}
 
+/* ✖ أحمر */
+.wrong{
+background:#dc2626 !important;
+color:white !important;
+border:none;
+}
+
+/* زر */
 .nextBtn{
 margin-top:15px;
 padding:12px;
@@ -83,6 +101,7 @@ cursor:pointer;
 font-size:15px;
 }
 
+/* تصنيف */
 .tag{
 display:inline-block;
 padding:4px 10px;
@@ -92,12 +111,6 @@ margin-top:10px;
 background:#e5e7eb;
 color:#111827;
 }
-
-.tag.endo{background:#dbeafe;color:#1e3a8a;}
-.tag.perio{background:#dcfce7;color:#166534;}
-.tag.surg{background:#fee2e2;color:#991b1b;}
-.tag.pedo{background:#fef9c3;color:#92400e;}
-.tag.prostho{background:#ede9fe;color:#5b21b6;}
 
 footer{
 margin-top:40px;
@@ -115,21 +128,12 @@ font-size:18px;
 line-height:2;
 padding:20px;
 }
-
-.badge{
-display:inline-block;
-padding:6px 14px;
-border-radius:999px;
-background:#f59e0b;
-color:#0f172a;
-font-weight:bold;
-}
 </style>
 </head>
 
 <body>
 
-<header>🦷 Dental Advanced Clinical Training</header>
+<header>🦷 Dental Advanced Training</header>
 
 <div class="container">
 
@@ -163,57 +167,24 @@ font-weight:bold;
 <script>
 
 const bank=[];
-
-function add(q,o,a,exp,cat){
-bank.push({q,o,a,exp,cat});
+function add(q,o,a,exp){
+bank.push({q,o,a,exp});
 }
 
-/* ---------------- CASES ---------------- */
+/* cases */
+add("ألم ليلي مع تسوس عميق",["التهاب لب غير عكوس","حساسية","تآكل","تصبغ"],0,"التهاب لب غير عكوس بسبب ضغط داخلي.");
+add("نزف لثة عند التفريش",["التهاب لثة","تسوس","كسر","تصبغ"],0,"التهاب لثة بسبب اللويحة.");
 
-add("ألم ليلي شديد مع تسوس عميق",
-["التهاب لب غير عكوس","حساسية","تآكل","تصبغ"],
-0,
-"الألم الليلي يدل على التهاب لب غير عكوس بسبب ضغط داخل الحجرة اللبية.",
-"endo");
-
-add("نزف لثة عند التفريش",
-["التهاب لثة","تسوس","كسر","تصبغ"],
-0,
-"علامة مبكرة لالتهاب لثة بسبب اللويحة الجرثومية.",
-"perio");
-
-add("ضرس عقل مطمور مؤلم",
-["انطمار ضرس","تسوس","حساسية","تآكل"],
-0,
-"التهاب حول التاج هو السبب الأكثر شيوعاً.",
-"surg");
-
-add("كسر سن أمامي",
-["كسر تاجي","تسوس","تصبغ","تآكل"],
-0,
-"رض مباشر يؤدي لكسر تاجي غالباً.",
-"trauma");
-
-add("ألم عند العض بدون سبب واضح",
-["كسر شعري","تسوس","حساسية","تصبغ"],
-0,
-"الألم مع غياب تسوس ظاهر يشير لكسر شعري.",
-"endo");
-
-/* fill to 120 */
 const templates=[
-["ألم بارد شديد",["حساسية عاجية","التهاب لب","تآكل","تصبغ"],0,"حساسية العاج.","endo"],
-["تورم لثوي",["خراج لثوي","تسوس","حساسية","تصبغ"],0,"خراج موضعي.","perio"],
-["ألم عند الضغط",["التهاب حول الذروة","تسوس","حساسية","تصبغ"],0,"التهاب حول الذروة.","endo"],
-["تآكل عنقي",["تآكل مينا","تسوس","كسر","تصبغ"],0,"تآكل بسبب أحماض.","prostho"]
+["ألم بارد شديد",["حساسية","التهاب لب","تآكل","تصبغ"],0,"حساسية عاجية."],
+["تورم لثوي",["خراج","تسوس","حساسية","تصبغ"],0,"خراج موضعي."],
+["ألم عند الضغط",["التهاب حول الذروة","تسوس","حساسية","تصبغ"],0,"التهاب حول الذروة."]
 ];
 
 while(bank.length<120){
 let t=templates[bank.length%templates.length];
-add(t[0],t[1],t[2],t[3],t[4]);
+add(t[0],t[1],t[2],t[3]);
 }
-
-/* ---------------- LOGIC ---------------- */
 
 let qlist=[];
 let i=0;
@@ -231,7 +202,6 @@ load();
 }
 
 function load(){
-
 if(i>=qlist.length){end();return;}
 
 let q=qlist[i];
@@ -263,21 +233,13 @@ if(idx===x && x!==q.a) b.classList.add("wrong");
 
 if(x!==q.a) wrong++;
 
-let exp=document.getElementById("explain");
-exp.style.display="block";
+document.getElementById("explain").style.display="block";
+document.getElementById("explain").innerText=q.exp;
 
-exp.innerHTML=`
-${q.exp}
-<br><br>
-<span class="tag ${q.cat}">${q.cat.toUpperCase()}</span>
-<br>
-<button class="nextBtn" onclick="nextQ()">السؤال التالي</button>
-`;
-}
-
-function nextQ(){
+setTimeout(()=>{
 i++;
 load();
+},1000);
 }
 
 function end(){
@@ -296,7 +258,7 @@ document.getElementById("result").innerHTML=`
 انتهى التدريب 🧠<br><br>
 الأخطاء: ${wrong}<br>
 التقييم: ${level}<br><br>
-<button class="btn" style="background:#0f2a4a;" onclick="location.reload()">إعادة التدريب</button>
+<button class="btn" onclick="location.reload()" style="background:#0f2a4a;">إعادة التدريب</button>
 `;
 }
 
