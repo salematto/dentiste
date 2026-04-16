@@ -1,29 +1,28 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dental AI Trainer</title>
+<title>مدرب طب الأسنان</title>
 
 <style>
 body{
 margin:0;
-font-family:Arial;
+font-family: Arial, sans-serif;
 background:#0b1220;
 color:#e5e7eb;
 }
 
 header{
 background:#111827;
-padding:20px;
+padding:18px;
 text-align:center;
 font-size:20px;
 font-weight:bold;
-letter-spacing:1px;
 }
 
-.logo{
-font-size:14px;
+.sub{
+font-size:12px;
 opacity:0.7;
 margin-top:5px;
 }
@@ -36,7 +35,7 @@ padding:15px;
 
 .card{
 background:#1f2937;
-padding:15px;
+padding:16px;
 border-radius:12px;
 cursor:pointer;
 transition:0.2s;
@@ -44,7 +43,6 @@ transition:0.2s;
 
 .card:hover{
 background:#374151;
-transform:scale(1.02);
 }
 
 .page{
@@ -75,18 +73,18 @@ margin-top:30px;
 <body>
 
 <header>
-🦷 Dental AI Trainer
-<div class="logo">Clinical Learning System</div>
+🦷 مدرب طب الأسنان التفاعلي
+<div class="sub">بنك حالات سريرية للتدريب والمراجعة</div>
 </header>
 
 <div id="home" class="container">
 
-<div class="card" onclick="openCase('endo')">Endodontics</div>
-<div class="card" onclick="openCase('peri')">Periodontology</div>
-<div class="card" onclick="openCase('surg')">Oral Surgery</div>
-<div class="card" onclick="openCase('rest')">Restorative</div>
-<div class="card" onclick="openCase('ped')">Pediatric Dentistry</div>
-<div class="card" onclick="openCase('prosth')">Prosthodontics</div>
+<div class="card" onclick="openCase('endo')">علاج الجذور</div>
+<div class="card" onclick="openCase('peri')">أمراض اللثة</div>
+<div class="card" onclick="openCase('surg')">الجراحة الفموية</div>
+<div class="card" onclick="openCase('rest')">الترميم</div>
+<div class="card" onclick="openCase('ped')">أسنان الأطفال</div>
+<div class="card" onclick="openCase('prosth')">التعويضات</div>
 
 </div>
 
@@ -106,44 +104,37 @@ margin-top:30px;
 <script>
 
 const cases = {
-
 endo:[
-"Severe pain + deep caries → irreversible pulpitis → RCT",
-"Spontaneous pain + swelling → acute apical abscess → drainage + RCT",
-"Broken file during RCT → bypass or retrieval"
+"ألم شديد مع تسوس عميق → التهاب لب غير عكوس → علاج جذور",
+"ألم تلقائي مع تورم → خراج حاد → تصريف + علاج جذور",
+"أداة مكسورة أثناء العلاج → محاولة استخراج أو تجاوز"
 ],
-
 peri:[
-"Bleeding gums + pocket 5mm → chronic periodontitis → scaling",
-"Mobility grade II → advanced periodontitis → maintenance",
-"Halitosis + calculus → periodontal disease"
+"نزف لثة + جيوب 5mm → التهاب لثة مزمن → تنظيف عميق",
+"حركة سن درجة 2 → مرض لثوي متقدم → خطة علاج صيانة",
+"رائحة فم + ترسبات → التهاب لثة مزمن"
 ],
-
 surg:[
-"Impacted 3rd molar → surgical extraction",
-"Facial swelling + trismus → infection → drainage + antibiotics",
-"Cystic lesion → surgical enucleation"
+"ضرس عقل مطمور → خلع جراحي",
+"تورم + ألم + صعوبة فتح الفم → التهاب حاد → مضادات وتصريف",
+"كيسة فكية → استئصال جراحي"
 ],
-
 rest:[
-"Fractured cusp → composite restoration",
-"Extensive decay → full crown",
-"Old restoration failure → replacement"
+"كسر سن أمامي → حشوة كومبوزيت",
+"تسوس واسع → تاج كامل",
+"فشل ترميم قديم → إعادة ترميم"
 ],
-
 ped:[
-"Child caries → pulpotomy",
-"Anxious child → behavior management",
-"Early caries → fluoride + sealants"
+"تسوس أطفال → بتر لبي",
+"طفل غير متعاون → تعديل سلوك",
+"تسوس مبكر → فلورايد + سدادات"
 ],
-
 prosth:[
-"Missing teeth → partial denture",
-"Edentulous jaw → complete denture",
-"Implant case → implant planning"
+"فقد أسنان → طقم جزئي",
+"فقد كامل → طقم كامل",
+"خطة زراعة → تقييم وزراعة"
 ]
-
-}
+};
 
 function openCase(type){
 document.getElementById('home').style.display="none";
@@ -152,7 +143,7 @@ document.getElementById('page').style.display="block";
 let list = cases[type];
 let random = list[Math.floor(Math.random()*list.length)];
 
-document.getElementById('title').innerText=type.toUpperCase();
+document.getElementById('title').innerText=type;
 document.getElementById('content').innerText=random;
 }
 
