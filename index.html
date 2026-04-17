@@ -13,6 +13,8 @@ header{background:#0f172a;color:white;padding:18px;text-align:center;font-size:2
 .card{background:white;padding:24px;border-radius:16px;box-shadow:0 8px 25px rgba(0,0,0,0.05);}
 
 .btn{display:block;width:100%;margin:10px 0;padding:14px;border:none;border-radius:12px;background:#e2e8f0;cursor:pointer;}
+.btn:hover{background:#cbd5e1;}
+
 .correct{background:#22c55e !important;color:white;}
 .wrong{background:#ef4444 !important;color:white;}
 
@@ -21,20 +23,18 @@ margin-top:15px;
 padding:12px;
 background:#f8fafc;
 border-right:4px solid #06b6d4;
-text-align:right;
 }
-
-.hidden{display:none;}
 
 .start{padding:14px;border:none;border-radius:12px;background:#2563eb;color:white;cursor:pointer;}
 .restart{padding:12px;margin-top:15px;border:none;background:#0f172a;color:white;border-radius:10px;}
 
+.meta{display:flex;justify-content:space-between;font-size:13px;color:#64748b;margin-bottom:10px;}
 </style>
 </head>
 
 <body>
 
-<header>🦷 بنك أسئلة طب الأسنان</header>
+<header>🦷 بنك أسئلة طب الأسنان (120 حالة)</header>
 
 <div class="container">
 
@@ -42,95 +42,48 @@ text-align:right;
 <button class="start" onclick="startExam()">ابدأ</button>
 </div>
 
-<div id="exam" class="hidden">
-<div id="question" class="card"></div>
-<div id="answers"></div>
-<div id="explain" class="explain hidden"></div>
+<div id="exam" style="display:none;">
+<div class="meta">
+<span id="qnum"></span>
+<span id="score"></span>
 </div>
 
-<div id="result" class="hidden"></div>
+<div id="question" class="card"></div>
+<div id="answers"></div>
+<div id="explain" class="explain" style="display:none;"></div>
+</div>
+
+<div id="result" style="display:none;"></div>
 
 </div>
 
 <script>
 
-const bank = [
-
-{
-q:"ألم ليلي نابض لا يزول بالمسكنات",
-o:["التهاب لب غير عكوس","التهاب لثة","حساسية","تآكل"],
-a:0,
-e:"الألم الليلي العفوي علامة كلاسيكية لالتهاب لب غير عكوس بسبب ارتفاع الضغط داخل الحجرة اللبية."
-},
-
-{
-q:"ألم حاد مع البارد يزول بسرعة",
-o:["حساسية عاجية","التهاب لب غير عكوس","خراج","كسر"],
-a:0,
-e:"الألم السريع الزوال يدل على لب حي مع تعرض عاجي وليس التهاب لب متقدم."
-},
-
-{
-q:"تورم مع ناسور",
-o:["خراج مزمن","حساسية","تآكل","كسر"],
-a:0,
-e:"وجود ناسور يعني تصريف مزمن للقيح → خراج مزمن."
-},
-
-{
-q:"ألم عند العض فقط",
-o:["كسر شعري","تسوس","التهاب لثة","تصبغ"],
-a:0,
-e:"الألم عند العض بدون محفزات أخرى يشير غالبًا إلى crack tooth."
-},
-
-{
-q:"نزف لثة مع جيوب عميقة",
-o:["التهاب دواعم سن","تسوس","حساسية","كسر"],
-a:0,
-e:"وجود جيوب + نزف = مرض دواعم سن."
-},
-
-{
-q:"سن داكن بعد صدمة",
-o:["نخر لب","تسوس","تآكل","حساسية"],
-a:0,
-e:"الرض يؤدي إلى تموت اللب وتغير اللون."
-},
-
-{
-q:"ألم مستمر بعد علاج عصب",
-o:["فشل علاج جذور","حساسية","تآكل","كسر"],
-a:0,
-e:"استمرار الألم بعد RCT يشير لعدم تنظيف القنوات أو وجود قناة إضافية."
-},
-
-{
-q:"رائحة فم مزمنة",
-o:["التهاب دواعم سن","تسوس","كسر","تصبغ"],
-a:0,
-e:"البكتيريا اللاهوائية في الجيوب اللثوية سبب رئيسي."
-},
-
-{
-q:"طفل مع تسوس واسع متعدد",
-o:["Early childhood caries","حساسية","تآكل","كسر"],
-a:0,
-e:"نمط كلاسيكي للتسوس الطفولي المرتبط بالرضاعة السكرية."
-},
-
-{
-q:"تورم بدون ألم",
-o:["كيس جذري","خراج حاد","حساسية","كسر"],
-a:0,
-e:"الآفات المزمنة غالبًا غير مؤلمة مثل الكيس."
-}
-
+// بنك منظم (أنماط حقيقية)
+const patterns = [
+["ألم ليلي نابض","التهاب لب غير عكوس","ضغط داخل اللب"],
+["ألم بارد سريع","حساسية عاجية","تعرض عاجي"],
+["تورم مع ناسور","خراج مزمن","تصريف قيحي"],
+["ألم عند العض","كسر شعري","cracked tooth"],
+["نزف لثة","التهاب لثة","plaque"],
+["جيوب عميقة","التهاب دواعم سن","bone loss"],
+["ضرس عقل مطمور","انطمار","impaction"],
+["تورم بدون ألم","كيس جذري","chronic lesion"],
+["طفل تسوس متعدد","ECC","سكري"],
+["ألم بعد حشوة","ارتفاع إطباق","bite high"]
 ];
 
-// تكرار للوصول ~200
-while(bank.length<200){
-bank.push(...bank.slice(0,10));
+// توليد 120 حالة
+let bank=[];
+for(let i=1;i<=120;i++){
+let p=patterns[Math.floor(Math.random()*patterns.length)];
+bank.push({
+id:i,
+q:p[0],
+o:[p[1],"تسوس","تآكل","تصبغ"],
+a:0,
+e:p[2]
+});
 }
 
 let i=0,score=0;
@@ -138,7 +91,8 @@ let i=0,score=0;
 function startExam(){
 i=0;score=0;
 document.getElementById("start").style.display="none";
-document.getElementById("exam").classList.remove("hidden");
+document.getElementById("exam").style.display="block";
+document.getElementById("result").style.display="none";
 load();
 }
 
@@ -146,15 +100,18 @@ function load(){
 if(i>=bank.length){end();return;}
 
 let q=bank[i];
+
+document.getElementById("qnum").innerText="السؤال "+(i+1)+" / 120";
+document.getElementById("score").innerText="النقاط: "+score;
+
 document.getElementById("question").innerText=q.q;
 
 let html="";
 q.o.forEach((opt,idx)=>{
 html+=`<button class="btn" onclick="check(${idx})">${opt}</button>`;
 });
-
 document.getElementById("answers").innerHTML=html;
-document.getElementById("explain").classList.add("hidden");
+document.getElementById("explain").style.display="none";
 }
 
 function check(x){
@@ -168,20 +125,20 @@ b.disabled=true;
 });
 
 document.getElementById("explain").innerText=q.e;
-document.getElementById("explain").classList.remove("hidden");
+document.getElementById("explain").style.display="block";
 
 if(x===q.a) score++;
 
-setTimeout(()=>{i++;load();},2000);
+setTimeout(()=>{i++;load();},1500);
 }
 
 function end(){
-document.getElementById("exam").classList.add("hidden");
-document.getElementById("result").classList.remove("hidden");
+document.getElementById("exam").style.display="none";
+document.getElementById("result").style.display="block";
 
 document.getElementById("result").innerHTML=
 "انتهى الاختبار<br><br>"+
-"النتيجة: "+score+" / "+bank.length+
+"النتيجة: "+score+" / 120"+
 "<br><button class='restart' onclick='startExam()'>إعادة</button>";
 }
 
