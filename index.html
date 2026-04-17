@@ -3,24 +3,24 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Clinical Dental Exam - Valid Core</title>
+<title>Dental Exam Fixed</title>
 
 <style>
 body{margin:0;font-family:system-ui;background:#0b1220;color:#fff}
-header{background:#0f172a;padding:16px;text-align:center;border-bottom:3px solid #facc15;font-weight:bold}
+header{background:#0f172a;padding:15px;text-align:center;border-bottom:3px solid #facc15}
 .container{max-width:900px;margin:auto;padding:20px}
-.card{background:#111827;padding:18px;border-radius:14px;margin-top:10px;border-left:4px solid #38bdf8}
-.btn{display:block;width:100%;padding:12px;margin:8px 0;border:none;border-radius:10px;background:#1f2937;color:white;cursor:pointer}
+.card{background:#111827;padding:16px;border-radius:12px;margin-top:10px}
+.btn{display:block;width:100%;padding:12px;margin:6px 0;border:none;border-radius:10px;background:#1f2937;color:white;cursor:pointer}
 .correct{background:#16a34a !important}
 .wrong{background:#dc2626 !important}
-.meta{display:flex;justify-content:space-between;color:#93c5fd;font-size:13px}
-.explanation{margin-top:10px;padding:12px;border-radius:10px;background:#0f172a;border-left:4px solid #facc15;color:#e2e8f0;font-size:14px}
+.meta{display:flex;justify-content:space-between;color:#93c5fd}
+.explanation{margin-top:10px;background:#0f172a;padding:10px;border-radius:10px}
 </style>
 </head>
 
 <body>
 
-<header>🦷 Clinical Dental Exam (Validated Core)</header>
+<header>🦷 Dental Exam (Fixed Logic)</header>
 
 <div class="container">
 
@@ -29,7 +29,6 @@ header{background:#0f172a;padding:16px;text-align:center;border-bottom:3px solid
 </div>
 
 <div id="exam" style="display:none">
-
 <div class="meta">
 <span id="progress"></span>
 <span id="score"></span>
@@ -38,264 +37,115 @@ header{background:#0f172a;padding:16px;text-align:center;border-bottom:3px solid
 <div id="question" class="card"></div>
 <div id="answers"></div>
 <div id="explanation"></div>
-
 </div>
 
-<div id="result" style="display:none"></div>
+<div id="result"></div>
 
 </div>
 
 <script>
 
-/* 🔴 حالات سريرية دقيقة */
+/* ✔ بنك صغير لكن صحيح */
 const bank = [
-
 {
-q:"مريض يشكو من ألم شديد نابض يوقظه ليلاً، يستمر بعد إزالة البارد، ويخف قليلاً بالمسكنات",
-o:[
-"التهاب لب غير عكوس عرضي",
-"التهاب لب عكوس",
-"تموت لبي",
-"خراج ذروي مزمن"
-],
+q:"ألم ليلي يستمر بعد البارد",
+o:["التهاب لب غير عكوس","حساسية","تموت لبي","التهاب لثة"],
 a:0,
-e:"الألم الليلي المستمر بعد إزالة المنبه سمة irreversible pulpitis"
+e:"الألم المستمر يدل على irreversible pulpitis"
 },
-
 {
-q:"ألم حاد سريع عند البارد يزول فوراً بدون ألم عفوي",
-o:[
-"حساسية عاجية",
-"التهاب لب غير عكوس",
-"تموت لبي",
-"خراج ذروي حاد"
-],
+q:"ألم بارد يزول فوراً",
+o:["حساسية عاجية","التهاب لب","خراج","تموت لبي"],
 a:0,
-e:"استجابة قصيرة وغير عفوية → dentin hypersensitivity"
+e:"استجابة قصيرة = hypersensitivity"
 },
-
 {
-q:"سن لا يستجيب لاختبار الحيوية مع وجود آفة شفافة ذروياً شعاعياً",
-o:[
-"تموت لبي مع آفة ذروية",
-"التهاب لب عكوس",
-"حساسية",
-"كسر تاجي"
-],
+q:"سن لا يستجيب + آفة ذروية",
+o:["تموت لبي","التهاب لب","حساسية","كسر"],
 a:0,
-e:"عدم الاستجابة + آفة شعاعية → necrotic pulp + apical lesion"
-},
-
-{
-q:"ألم عند العض يزداد عند تحرير الضغط (release pain)",
-o:[
-"Cracked tooth syndrome",
-"التهاب لثة",
-"تسوس سطحي",
-"حساسية"
-],
-a:0,
-e:"الألم عند التحرير علامة مميزة للكسر الشعري"
-},
-
-{
-q:"نزف لثوي مع لويحة دون فقدان عظم شعاعياً",
-o:[
-"التهاب لثة",
-"التهاب دواعم",
-"خراج",
-"كيس"
-],
-a:0,
-e:"gingivitis لا يظهر فقدان عظم"
-},
-
-{
-q:"جيوب عميقة + فقدان عظم شعاعي",
-o:[
-"التهاب دواعم السن",
-"التهاب لثة",
-"تسوس",
-"حساسية"
-],
-a:0,
-e:"periodontitis يتميز بفقدان دعم عظمي"
-},
-
-{
-q:"تورم حاد مؤلم مع حرارة وارتفاع سن",
-o:[
-"خراج ذروي حاد",
-"كيس جذري",
-"ورم حميد",
-"تآكل"
-],
-a:0,
-e:"acute apical abscess"
-},
-
-{
-q:"تورم بطيء غير مؤلم مع حدود واضحة شعاعياً",
-o:[
-"كيس جذري",
-"خراج حاد",
-"تسوس",
-"لثة"
-],
-a:0,
-e:"cystic lesion"
-},
-
-{
-q:"ألم شديد بعد القلع مع غياب الخثرة",
-o:[
-"Dry socket",
-"خراج",
-"كيس",
-"التهاب لثة"
-],
-a:0,
-e:"alveolar osteitis"
-},
-
-{
-q:"صعوبة فتح الفم مع التهاب حول ضرس عقل جزئي البزوغ",
-o:[
-"Pericoronitis",
-"كسر",
-"تسوس",
-"حساسية"
-],
-a:0,
-e:"التهاب حول التاج"
-},
-
-{
-q:"تسوس متعدد سريع في طفل يستخدم الرضاعة الليلية",
-o:[
-"Early childhood caries",
-"تآكل",
-"كسر",
-"تصبغ"
-],
-a:0,
-e:"نمط ECC"
-},
-
-{
-q:"ألم عند المضغ تحت تاج قديم مع تسوس ثانوي",
-o:[
-"تسوس ثانوي",
-"التهاب لثة",
-"كسر",
-"تآكل"
-],
-a:0,
-e:"secondary caries under crown"
-},
-
-{
-q:"سن حي مع ألم قصير للبارد دون ألم عفوي",
-o:[
-"التهاب لب عكوس",
-"تموت لبي",
-"خراج",
-"كسر"
-],
-a:0,
-e:"reversible pulpitis"
-},
-
-{
-q:"سن غير مؤلم لكن متغير اللون ولا يستجيب لاختبار الحيوية",
-o:[
-"تموت لبي",
-"التهاب لب",
-"حساسية",
-"لثة"
-],
-a:0,
-e:"necrosis without pain"
-},
-
-{
-q:"حركة سنية متزايدة مع فقدان عظم",
-o:[
-"التهاب دواعم متقدم",
-"تسوس",
-"كسر",
-"تصبغ"
-],
-a:0,
-e:"mobility due to bone loss"
+e:"necrotic pulp"
 }
-
 ];
 
-/* خلط الخيارات */
+/* ✔ خلط مع حفظ الإجابة */
 function shuffle(q){
 let arr=q.o.map((t,i)=>({t,correct:i===q.a}));
+
 for(let i=arr.length-1;i>0;i--){
 let j=Math.random()*(i+1)|0;
 [arr[i],arr[j]]=[arr[j],arr[i]];
 }
+
 return arr;
 }
 
-let i=0,score=0;
+let index=0,score=0;
+let currentOptions=[];
 
 function startExam(){
-i=0;score=0;
+index=0;
+score=0;
+
 document.getElementById("start").style.display="none";
 document.getElementById("exam").style.display="block";
+
 load();
 }
 
 function load(){
 
-if(i>=bank.length){
+if(index>=bank.length){
 document.getElementById("exam").style.display="none";
-document.getElementById("result").style.display="block";
-
 document.getElementById("result").innerHTML=
-`<div class="card">النتيجة ${score}/${bank.length}<br>
-<button class="btn" onclick="location.reload()">إعادة</button></div>`;
+`<div class="card">النتيجة ${score}/${bank.length}
+<br><button class="btn" onclick="location.reload()">إعادة</button></div>`;
 return;
 }
 
-let q=bank[i];
-let s=shuffle(q);
+let q=bank[index];
+currentOptions = shuffle(q);
 
-document.getElementById("progress").innerText=`${i+1}/${bank.length}`;
-document.getElementById("score").innerText=`${score}`;
+document.getElementById("progress").innerText=`${index+1}/${bank.length}`;
+document.getElementById("score").innerText=score;
 document.getElementById("question").innerText=q.q;
 document.getElementById("explanation").innerHTML="";
 
+/* ✔ رسم الخيارات داخل answers فقط */
 let html="";
-s.forEach((o,idx)=>{
-html+=`<button class="btn" onclick="check(${idx})">${o.t}</button>`;
+currentOptions.forEach((opt,i)=>{
+html+=`<button class="btn" onclick="check(${i})">${opt.t}</button>`;
 });
 
 document.getElementById("answers").innerHTML=html;
-
-window.correctIndex=s.findIndex(x=>x.correct);
-window.exp=q.e;
 }
 
-function check(x){
+function check(i){
 
-let btns=document.querySelectorAll(".btn");
-btns.forEach(b=>b.disabled=true);
+let buttons = document.getElementById("answers").querySelectorAll(".btn");
 
-btns[window.correctIndex].classList.add("correct");
-if(x!==window.correctIndex)btns[x].classList.add("wrong");
+/* ✔ الصحيح الحقيقي */
+let correctIndex = currentOptions.findIndex(x=>x.correct);
 
+/* ✔ تلوين مضبوط */
+buttons[correctIndex].classList.add("correct");
+if(i!==correctIndex){
+buttons[i].classList.add("wrong");
+}
+
+/* ✔ تعطيل */
+buttons.forEach(b=>b.disabled=true);
+
+/* ✔ شرح */
 document.getElementById("explanation").innerHTML=
-`<div class="explanation">${window.exp}</div>`;
+`<div class="explanation">${bank[index].e}</div>`;
 
-if(x===window.correctIndex)score++;
+if(i===correctIndex) score++;
 
-setTimeout(()=>{i++;load();},1500);
+setTimeout(()=>{
+index++;
+load();
+},1200);
+
 }
 
 </script>
