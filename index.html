@@ -296,13 +296,13 @@
 <script>
     (function() {
         // ------------------- قاعدة أسئلة فريدة (80 سؤالاً) -------------------
-        const questionsBank = [];
+        const originalQuestions = [];
 
         function addQ(question, options, correctIndex, explanation) {
-            questionsBank.push({ text: question, options: options, correct: correctIndex, explanation: explanation });
+            originalQuestions.push({ text: question, options: options, correct: correctIndex, explanation: explanation });
         }
 
-        // الأسئلة الفريدة (تم توزيع الإجابة الصحيحة على مؤشرات مختلفة، لكننا سنقوم بخلط الخيارات أثناء العرض)
+        // الأسئلة الفريدة (تم توزيع الإجابة الصحيحة على مؤشرات مختلفة)
         addQ("أي الأسنان يُعرف بـ 'سن العقل'؟",["الضرس الثالث الدائم","الضرس الثاني الدائم","الناب العلوي","القاطعة الجانبية"],0,"ضرس العقل هو الضرس الثالث الدائم، يظهر بين 17-25 سنة.");
         addQ("كم عدد الأسنان الدائمة عند الإنسان البالغ؟",["28","30","32","34"],2,"32 سناً: 16 في كل فك.");
         addQ("أي عضلة ترفع الفك السفلي للمضغ؟",["الماضغة","الذقنية","الوجنية","الجبهية"],0,"العضلة الماضغة (Masseter) هي المسؤولة الرئيسية عن الرفع.");
@@ -381,40 +381,44 @@
         addQ("البكتيريا المسببة الرئيسية لتسوس الأسنان؟",["Streptococcus mutans","Staphylococcus aureus","E. coli","Pseudomonas"],0,"S. mutans تحول السكروز إلى حمض لكتيك.");
         addQ("الإجراء النهائي لاستبدال الأسنان المفقودة كلياً في الفك؟",["الطقم الكامل أو زراعة كاملة (All-on-4)","الفلورايد","جسور ثابتة طويلة","لا شيء"],0,"الطقم الكامل أو الزراعة الكاملة هي الحلول النهائية.");
 
-        // التأكد من العدد 80 (بالفعل 80 سؤالاً فريداً)
-        while(questionsBank.length < 80) addQ("سؤال احتياطي: عدد الأسنان الدائمة؟",["28","30","32","34"],2,"32 سناً.");
-        if(questionsBank.length > 80) questionsBank.length = 80;
+        // التأكد من العدد 80
+        while(originalQuestions.length < 80) originalQuestions.push({ text: "سؤال احتياطي: عدد الأسنان الدائمة؟", options: ["28","30","32","34"], correct: 2, explanation: "32 سناً." });
+        if(originalQuestions.length > 80) originalQuestions.length = 80;
 
-        // ---------- دالة خلط الخيارات لكل سؤال مع الحفاظ على الإجابة الصحيحة ----------
-        function shuffleOptions(question) {
-            // نأخذ نسخة من الخيارات والمؤشر الصحيح
+        // ---------- دوال المساعدة ----------
+        function shuffleArray(arr) {
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        // خلط خيارات سؤال معين وإرجاع كائن جديد مع الإجابة الصحيحة المعدلة
+        function shuffleOptionsOfQuestion(question) {
             const options = [...question.options];
             const correctAnswerText = options[question.correct];
-            // إنشاء مصفوفة من الكائنات {text, originalIndex}
-            let mapped = options.map((text, idx) => ({ text, originalIndex: idx }));
-            // خلط
-            for (let i = mapped.length - 1; i > 0; i--) {
+            // خلط الخيارات
+            for (let i = options.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
-                [mapped[i], mapped[j]] = [mapped[j], mapped[i]];
+                [options[i], options[j]] = [options[j], options[i]];
             }
-            // الخيارات الجديدة
-            const newOptions = mapped.map(item => item.text);
-            // إيجاد المؤشر الجديد للإجابة الصحيحة
-            let newCorrectIndex = newOptions.findIndex(opt => opt === correctAnswerText);
+            const newCorrectIndex = options.findIndex(opt => opt === correctAnswerText);
             return {
                 text: question.text,
-                options: newOptions,
+                options: options,
                 correct: newCorrectIndex,
                 explanation: question.explanation
             };
         }
 
         // ---------- منطق الاختبار ----------
-        let shuffledQuestions = [];      // سيتم تخزين الأسئلة بعد خلط الخيارات لكل سؤال
+        let shuffledQuestionsOrder = [];   // ترتيب الأسئلة بعد الخلط (مرجع للأسئلة الأصلية)
         let currentIndex = 0;
         let answerLock = false;
         let autoTimer = null;
         let quizActive = false;
+        let currentQuestionObj = null;    // السؤال الحالي بعد خلط خياراته
 
         const coverScreen = document.getElementById('coverScreen');
         const quizScreen = document.getElementById('quizScreen');
@@ -426,29 +430,25 @@
         const explanationBox = document.getElementById('explanationBox');
         const autoNextMsgSpan = document.getElementById('autoNextMsg');
 
-        function shuffleArray(arr) {
-            for (let i = arr.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [arr[i], arr[j]] = [arr[j], arr[i]];
-            }
-            return arr;
-        }
-
         function loadQuestion() {
             if (!quizActive) return;
-            if (currentIndex >= shuffledQuestions.length) {
+            if (currentIndex >= shuffledQuestionsOrder.length) {
                 finishQuiz();
                 return;
             }
             answerLock = false;
             if (autoTimer) clearTimeout(autoTimer);
             autoNextMsgSpan.innerHTML = "";
-            const q = shuffledQuestions[currentIndex];
+            
+            // أخذ السؤال الأصلي من الترتيب المخزّن، ثم خلط خياراته بشكل جديد (لضمان عدم ثبات الموضع)
+            const originalQ = shuffledQuestionsOrder[currentIndex];
+            currentQuestionObj = shuffleOptionsOfQuestion(originalQ);
+            
             questionNumberSpan.innerText = `السؤال ${currentIndex+1}`;
-            progressCounterSpan.innerText = `${currentIndex+1} / ${shuffledQuestions.length}`;
-            questionTextDiv.innerText = q.text;
+            progressCounterSpan.innerText = `${currentIndex+1} / ${shuffledQuestionsOrder.length}`;
+            questionTextDiv.innerText = currentQuestionObj.text;
             optionsContainer.innerHTML = '';
-            q.options.forEach((opt, idx) => {
+            currentQuestionObj.options.forEach((opt, idx) => {
                 const btn = document.createElement('button');
                 btn.className = 'option-btn';
                 btn.innerText = `${String.fromCharCode(65+idx)}- ${opt}`;
@@ -466,16 +466,15 @@
         function handleAnswer(selectedIdx, clickedBtn) {
             if (answerLock || !quizActive) return;
             answerLock = true;
-            const currentQ = shuffledQuestions[currentIndex];
-            const isCorrect = (selectedIdx === currentQ.correct);
+            const isCorrect = (selectedIdx === currentQuestionObj.correct);
             const allBtns = document.querySelectorAll('.option-btn');
             allBtns.forEach((btn, i) => {
                 btn.disabled = true;
-                if (i === currentQ.correct) btn.classList.add('correct-highlight');
+                if (i === currentQuestionObj.correct) btn.classList.add('correct-highlight');
                 if (i === selectedIdx && !isCorrect) btn.classList.add('wrong-highlight');
             });
             if (isCorrect) clickedBtn.classList.add('correct-highlight');
-            explanationBox.innerHTML = `📖 ${currentQ.explanation}`;
+            explanationBox.innerHTML = `📖 ${currentQuestionObj.explanation}`;
             autoNextMsgSpan.innerHTML = "⏳ سيتم الانتقال للسؤال التالي تلقائياً خلال 3 ثوانٍ...";
             autoTimer = setTimeout(() => {
                 currentIndex++;
@@ -486,7 +485,7 @@
         function finishQuiz() {
             quizActive = false;
             if (autoTimer) clearTimeout(autoTimer);
-            explanationBox.innerHTML = `🎉 انتهى الاختبار! لقد أتممت ${shuffledQuestions.length} سؤالاً. شكراً لاجتهادك! ✅`;
+            explanationBox.innerHTML = `🎉 انتهى الاختبار! لقد أتممت ${shuffledQuestionsOrder.length} سؤالاً. شكراً لاجتهادك! ✅`;
             optionsContainer.innerHTML = `<div style="grid-column:1/-1; text-align:center;"><button class="restart-btn" id="restartBtn">🔄 إعادة الاختبار من البداية</button></div>`;
             questionTextDiv.innerText = "🏆 تهانينا! لقد أكملت اختبار طبيب الأسنان بنجاح.";
             autoNextMsgSpan.innerHTML = "";
@@ -496,15 +495,13 @@
         }
 
         function initQuiz() {
-            // خلط ترتيب الأسئلة أولاً
-            const baseShuffled = shuffleArray([...questionsBank]);
-            // لكل سؤال نقوم بخلط خياراته عشوائياً
-            shuffledQuestions = baseShuffled.map(q => shuffleOptions(q));
+            // خلط ترتيب الأسئلة الأصلية
+            shuffledQuestionsOrder = shuffleArray([...originalQuestions]);
             currentIndex = 0;
             answerLock = false;
             if (autoTimer) clearTimeout(autoTimer);
             quizActive = true;
-            loadQuestion();
+            loadQuestion();  // loadQuestion ستقوم بخلط الخيارات لكل سؤال عند عرضه
         }
 
         if (startBtn) {
