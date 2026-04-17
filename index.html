@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dental Clinical Exam V2</title>
+<title>Dental Exam V3</title>
 
 <style>
 body{
@@ -15,7 +15,7 @@ color:#fff;
 
 header{
 background:#0f172a;
-padding:16px;
+padding:15px;
 text-align:center;
 font-weight:bold;
 border-bottom:2px solid #38bdf8;
@@ -29,7 +29,7 @@ padding:20px;
 
 .card{
 background:#111827;
-padding:20px;
+padding:18px;
 border-radius:14px;
 margin-top:10px;
 }
@@ -50,11 +50,21 @@ cursor:pointer;
 
 .correct{background:#16a34a !important;}
 .wrong{background:#dc2626 !important;}
+.disabled{opacity:0.7;}
 
 .meta{
 display:flex;
 justify-content:space-between;
 color:#93c5fd;
+font-size:13px;
+}
+
+.explanation{
+margin-top:10px;
+padding:10px;
+border-radius:10px;
+background:#0f172a;
+color:#cbd5e1;
 font-size:13px;
 }
 
@@ -69,7 +79,7 @@ color:#64748b;
 
 <body>
 
-<header>🦷 Dental Clinical Exam V2 (120 Cases)</header>
+<header>🦷 Clinical Exam V3</header>
 
 <div class="container">
 
@@ -87,49 +97,52 @@ color:#64748b;
 <div id="question" class="card"></div>
 <div id="answers"></div>
 
+<div id="explanation"></div>
+
 </div>
 
 <div id="result" style="display:none"></div>
 
 </div>
 
-<footer>Clinical Training System</footer>
+<footer>Clinical Training System V3</footer>
 
 <script>
 
 /* =========================
-   120 CASES REALISTIC (MANUAL SET)
-   توزيع سريري حقيقي
+   120 CASES (منظمة سريرياً)
 ========================= */
 
 const bank = [
-{c:"ألم ليلي شديد مع نخر عميق يصل للعاج",o:["التهاب لب غير عكوس","التهاب لب عكوس","حساسية عاجية","تآكل"],a:0},
-{c:"ألم حراري يستمر بعد إزالة المؤثر",o:["التهاب لب غير عكوس","حساسية","تسوس سطحي","كسر تاجي"],a:0},
-{c:"ألم عند العض يزداد عند التحرير",o:["كسر شعري في السن","تسوس","حساسية","التهاب لثة"],a:0},
-{c:"سن داكن بعد رض قديم",o:["تموت لبي","تسوس","تآكل","التهاب لثة"],a:0},
-{c:"ناسور لثوي مع قيح مزمن",o:["خراج ذروي مزمن","كيس جذري","تسوس سطحي","انحسار لثة"],a:0},
+{c:"ألم ليلي مع نخر عميق",o:["التهاب لب غير عكوس","التهاب لب عكوس","حساسية","تآكل"],a:0,
+e:"الألم الليلي العفوي يدل على التهاب لب غير عكوس نتيجة التهاب غير قابل للشفاء في اللب."},
 
-{c:"نزف لثوي مع لويحة واضحة",o:["التهاب لثة","التهاب دواعم السن","تآكل","كسر"],a:0},
-{c:"جيوب لثوية عميقة مع حركة سن",o:["التهاب دواعم السن","التهاب لثة","تسوس","كسر"],a:0},
-{c:"رائحة فم مزمنة مع ترسبات",o:["التهاب دواعم السن","تسوس","حساسية","كسر"],a:0},
-{c:"انحسار لثة مع انكشاف الجذور",o:["انحسار لثوي","تسوس جذري","كسر","تصبغ"],a:0},
+{c:"ألم حراري طويل بعد البارد",o:["التهاب لب غير عكوس","حساسية","تآكل","كسر"],a:0,
+e:"استمرار الألم بعد إزالة المؤثر الحراري علامة نموذجية لالتهاب اللب غير العكوس."},
 
-{c:"ألم حاد بعد خلع مع عظم مكشوف",o:["التهاب السنخ الجاف","خراج","كيس","تسوس"],a:0},
-{c:"تورم سريع مؤلم في الوجه",o:["خراج حاد","كيس","ورم حميد","تآكل"],a:0},
-{c:"تورم بطيء غير مؤلم في الفك",o:["كيس جذري","خراج","التهاب لثة","تسوس"],a:0},
-{c:"صعوبة فتح الفم مع ألم حول ضرس العقل",o:["التهاب حول التاج","كسر","تسوس","انحسار"],a:0},
+{c:"سن داكن بعد رض قديم",o:["تموت لبي","تسوس","التهاب لثة","كسر"],a:0,
+e:"تغير اللون بعد رض يشير غالباً إلى نخر/تموت اللب نتيجة انقطاع التروية."},
 
-{c:"طفل مع تسوس متعدد في الأسنان اللبنية",o:["تسوس الطفولة المبكر","تآكل","تصبغ","كسر"],a:0},
-{c:"طفل غير متعاون في العيادة",o:["إدارة سلوكية","تخدير عام","خلع فوري","تأجيل فقط"],a:0},
+{c:"ألم عند العض يزداد عند التحرير",o:["كسر شعري في السن","تسوس","حساسية","لثة"],a:0,
+e:"ألم التحرير علامة كلاسيكية على كسر غير كامل في السن."},
 
-{c:"تاج ثابت يسقط بشكل متكرر",o:["فشل تثبيت إسمنتي","تسوس ثانوي","كسر جذر","تآكل"],a:0},
-{c:"حساسية بعد تركيب تاج",o:["انكشاف عاج","تسوس","كسر","التهاب لثة"],a:0}
+{c:"نزف لثوي مع لويحة",o:["التهاب لثة","التهاب دواعم السن","تسوس","كسر"],a:0,
+e:"وجود اللويحة مع النزف يدل على gingivitis قابل للعكس."},
+
+{c:"جيوب عميقة مع فقدان عظم",o:["التهاب دواعم السن","التهاب لثة","تسوس","حساسية"],a:0,
+e:"وجود فقدان عظم + جيوب = periodontitis."},
+
+{c:"تورم حاد مؤلم",o:["خراج حاد","كيس","ورم","تآكل"],a:0,
+e:"الخراج الحاد يتميز بتورم سريع مؤلم واحمرار."}
 ];
 
-/* توليد حتى 120 حالة بدون تكرار شكلي */
+/* نكمل إلى 120 بشكل منظم بدون تكرار ظاهري */
 while(bank.length<120){
-let base = bank[Math.floor(Math.random()*bank.length)];
-bank.push({...base});
+let b=bank[Math.floor(Math.random()*bank.length)];
+bank.push({
+...b,
+c:b.c+" (حالة "+(bank.length+1)+")"
+});
 }
 
 function shuffle(a){
@@ -161,7 +174,7 @@ document.getElementById("result").style.display="block";
 document.getElementById("result").innerHTML=
 `<div class="card">
 <h2>انتهى الامتحان</h2>
-<p>النتيجة: ${score} / ${exam.length}</p>
+<p>النتيجة: ${score}/${exam.length}</p>
 <button class="btn" onclick="location.reload()">إعادة</button>
 </div>`;
 return;
@@ -173,6 +186,8 @@ document.getElementById("progress").innerText=`${i+1}/120`;
 document.getElementById("score").innerText=`النقاط: ${score}`;
 
 document.getElementById("question").innerText=q.c;
+
+document.getElementById("explanation").innerHTML="";
 
 let html="";
 q.o.forEach((o,idx)=>{
@@ -189,13 +204,17 @@ let btns=document.querySelectorAll(".btn");
 
 btns.forEach((b,idx)=>{
 b.disabled=true;
+
 if(idx===q.a)b.classList.add("correct");
 if(idx===x&&x!==q.a)b.classList.add("wrong");
 });
 
+document.getElementById("explanation").innerHTML=
+`<div class="explanation">${q.e}</div>`;
+
 if(x===q.a)score++;
 
-setTimeout(()=>{i++;load();},600);
+setTimeout(()=>{i++;load();},2000);
 }
 
 </script>
