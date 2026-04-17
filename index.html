@@ -152,54 +152,83 @@ Dental Clinical Exam Pro<br>
 <script>
 
 /* =========================
-   120 Clinical Cases
+   BASE CASES
 ========================= */
 
 const baseCases = [
-
-{case:"مريض يشكو من ألم ليلي نابض مع تسوس عميق.",q:"التشخيص؟",o:["التهاب لب غير عكوس","حساسية","تآكل","لثة"],a:0,e:"ألم ليلي = التهاب لب غير عكوس"},
-{case:"ألم بارد يزول بسرعة.",q:"التشخيص؟",o:["حساسية عاجية","التهاب لب","كسر","خراج"],a:0,e:"reversible pulpitis"},
-{case:"تورم مع ناسور.",q:"التشخيص؟",o:["خراج مزمن","حساسية","تآكل","كسر"],a:0,e:"chronic abscess"},
-{case:"ألم عند العض فقط.",q:"التشخيص؟",o:["كسر شعري","تسوس","حساسية","لثة"],a:0,e:"cracked tooth"},
-{case:"نزف لثة.",q:"التشخيص؟",o:["التهاب لثة","تسوس","كسر","تصبغ"],a:0,e:"gingivitis"},
-{case:"سن داكن بعد رض.",q:"التشخيص؟",o:["تموت لبي","تسوس","حساسية","تآكل"],a:0,e:"pulp necrosis"},
-
-/* ENDO */
-{case:"ألم تلقائي شديد ليلاً.",q:"التشخيص؟",o:["التهاب لب غير عكوس","حساسية","كسر","تآكل"],a:0,e:"irreversible pulpitis"},
-{case:"ألم مستمر بعد برد.",q:"التشخيص؟",o:["التهاب لب","حساسية","كسر","لثة"],a:0,e:"pulp inflammation"},
-{case:"ألم مع حرارة وبارد.",q:"التشخيص؟",o:["لب ملتهب","كيس","تسوس","تآكل"],a:0,e:"inflamed pulp"},
-
-/* PERIO */
-{case:"جيوب عميقة + حركة سن.",q:"التشخيص؟",o:["التهاب دواعم سن","تسوس","كسر","حساسية"],a:0,e:"periodontitis"},
-{case:"رائحة فم مزمنة.",q:"التشخيص؟",o:["التهاب دواعم سن","تسوس","تآكل","كسر"],a:0,e:"anaerobic infection"},
-
-/* SURG */
-{case:"ألم شديد بعد قلع.",q:"التشخيص؟",o:["dry socket","كسر","تسوس","حساسية"],a:0,e:"alveolar osteitis"},
-{case:"تورم مؤلم سريع.",q:"التشخيص؟",o:["خراج حاد","كيس","تآكل","حساسية"],a:0,e:"acute abscess"},
-
-/* PEDO */
-{case:"طفل مع تسوس متعدد.",q:"التشخيص؟",o:["ECC","كسر","تآكل","حساسية"],a:0,e:"early childhood caries"},
-
-/* PROSTH */
-{case:"ألم بعد حشوة مرتفعة.",q:"التشخيص؟",o:["high occlusion","كسر","تسوس","لثة"],a:0,e:"occlusal interference"}
-
+{
+case:"مريض يشكو من ألم ليلي نابض مع تسوس عميق.",
+q:"التشخيص؟",
+o:["التهاب لب غير عكوس","حساسية","تآكل","لثة"],
+a:0,
+e:"ألم ليلي = التهاب لب غير عكوس"
+},
+{
+case:"ألم بارد يزول بسرعة.",
+q:"التشخيص؟",
+o:["حساسية عاجية","التهاب لب","كسر","خراج"],
+a:0,
+e:"reversible pulpitis"
+},
+{
+case:"تورم مع ناسور.",
+q:"التشخيص؟",
+o:["خراج مزمن","حساسية","تآكل","كسر"],
+a:0,
+e:"chronic abscess"
+},
+{
+case:"ألم عند العض فقط.",
+q:"التشخيص؟",
+o:["كسر شعري","تسوس","حساسية","لثة"],
+a:0,
+e:"cracked tooth"
+},
+{
+case:"نزف لثة.",
+q:"التشخيص؟",
+o:["التهاب لثة","تسوس","كسر","تصبغ"],
+a:0,
+e:"gingivitis"
+},
+{
+case:"سن داكن بعد رض.",
+q:"التشخيص؟",
+o:["تموت لبي","تسوس","حساسية","تآكل"],
+a:0,
+e:"pulp necrosis"
+}
 ];
 
-/* expand to 120 */
+/* =========================
+   BUILD 120 CASES (FIXED SHUFFLE)
+========================= */
 
 let bank = [];
 
 for(let i=0;i<120;i++){
+
 let b = baseCases[i % baseCases.length];
+
+let options = [...b.o];
+let correct = options[b.a];
+
+// shuffle options
+options.sort(() => Math.random() - 0.5);
+
+// find new correct index
+let newIndex = options.indexOf(correct);
 
 bank.push({
 case: b.case + " (حالة " + (i+1) + ")",
 q: b.q,
-o: b.o,
-a: b.a,
+o: options,
+a: newIndex,
 e: b.e
 });
 }
+
+/* ========================= */
 
 let i=0,score=0;
 
@@ -235,23 +264,23 @@ let q = bank[i];
 let buttons=document.querySelectorAll(".btn");
 
 buttons.forEach((b,idx)=>{
-b.disabled = true;
+b.disabled=true;
 
-if(idx === q.a){
-b.style.background = "#22c55e";
-b.style.color = "white";
+if(idx===q.a){
+b.style.background="#22c55e";
+b.style.color="white";
 }
 
-if(idx === x && x !== q.a){
-b.style.background = "#ef4444";
-b.style.color = "white";
+if(idx===x && x!==q.a){
+b.style.background="#ef4444";
+b.style.color="white";
 }
 });
 
 document.getElementById("explain").innerText=q.e;
 document.getElementById("explain").style.display="block";
 
-if(x === q.a) score++;
+if(x===q.a) score++;
 
 setTimeout(()=>{i++;load();},1800);
 }
@@ -263,7 +292,7 @@ document.getElementById("result").style.display="block";
 document.getElementById("result").innerHTML=
 "<div class='card'>" +
 "<h2>انتهى الامتحان</h2>" +
-"<p>النتيجة: " + score + " / 120</p>" +
+"<p>النتيجة: "+score+" / 120</p>" +
 "<button class='restart' onclick='location.reload()'>إعادة الامتحان</button>" +
 "</div>";
 }
