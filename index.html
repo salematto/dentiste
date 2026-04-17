@@ -3,15 +3,39 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OSCE Dental</title>
+<title>OSCE Dental Exam</title>
 
 <style>
 body{margin:0;font-family:system-ui;background:#0b1220;color:#fff}
-header{background:#0f172a;padding:16px;text-align:center;border-bottom:3px solid #38bdf8;font-weight:bold}
+header{
+background:#0f172a;
+padding:16px;
+text-align:center;
+border-bottom:3px solid #38bdf8;
+font-weight:bold
+}
 .container{max-width:900px;margin:auto;padding:20px}
 
-.card{background:#111827;padding:18px;border-radius:14px;margin-top:10px;line-height:1.7}
-.btn{width:100%;padding:12px;margin:6px 0;border:none;border-radius:10px;background:#1f2937;color:#fff;cursor:pointer}
+.card{
+background:#111827;
+padding:18px;
+border-radius:14px;
+margin-top:10px;
+line-height:1.7;
+border-left:4px solid #38bdf8;
+}
+
+.btn{
+width:100%;
+padding:12px;
+margin:6px 0;
+border:none;
+border-radius:10px;
+background:#1f2937;
+color:#fff;
+cursor:pointer;
+}
+
 .correct{background:#16a34a !important}
 .wrong{background:#dc2626 !important}
 
@@ -20,16 +44,28 @@ header{background:#0f172a;padding:16px;text-align:center;border-bottom:3px solid
 .progress-bar{height:6px;background:#1f2937;border-radius:10px;margin-top:10px}
 .progress{height:100%;background:#38bdf8;width:0%}
 
-.explanation{margin-top:10px;background:#0f172a;padding:12px;border-radius:10px;border-left:4px solid #facc15}
+.explanation{
+margin-top:10px;
+background:#0f172a;
+padding:12px;
+border-radius:10px;
+border-left:4px solid #facc15
+}
 
-footer{text-align:center;padding:12px;color:#64748b;font-size:13px}
+footer{
+text-align:center;
+padding:12px;
+color:#64748b;
+font-size:13px;
+margin-top:20px
+}
 </style>
 </head>
 
 <body>
 
 <header>
-🦷 OSCE Dental Exam (Fixed Version)
+🦷 OSCE Dental Exam (Integrated Version)
 </header>
 
 <div class="container">
@@ -45,7 +81,9 @@ footer{text-align:center;padding:12px;color:#64748b;font-size:13px}
 <span id="score"></span>
 </div>
 
-<div class="progress-bar"><div id="progressBar" class="progress"></div></div>
+<div class="progress-bar">
+<div id="progressBar" class="progress"></div>
+</div>
 
 <div id="question" class="card"></div>
 <div id="answers"></div>
@@ -59,63 +97,134 @@ footer{text-align:center;padding:12px;color:#64748b;font-size:13px}
 
 </div>
 
-<footer>OSCE Training System</footer>
+<footer>OSCE Clinical Training System</footer>
 
 <script>
 
-/* 🟢 Bank مضمون بدون أي تعقيد */
+/* 🟢 BANK مدمج ومصحح سريريًا */
 const bank = [
 {
-q:"مريض 38 سنة، ألم ليلي + حرارة + تسوس عميق. التشخيص؟",
-o:["التهاب لب غير عكوس","حساسية","لثة","كسر"],
+q:"مريض 40 سنة، ألم ليلي نابض، يزداد بالحرارة ويستمر بعد إزالة المؤثر، تسوس عميق.",
+o:[
+"التهاب لب غير عكوس symptomatic irreversible pulpitis",
+"حساسية عاجية dentin hypersensitivity",
+"التهاب حول الذروة apical periodontitis",
+"ألم عضلي myofascial pain"
+],
 a:0,
-e:"Irreversible pulpitis"
+e:"Pain + lingering heat response → irreversible pulpitis"
 },
+
 {
-q:"ألم بارد يختفي فوراً بدون ألم عفوي؟",
-o:["حساسية عاجية","خراج","تموت لبي","كسر"],
+q:"مريض 28 سنة، ألم حاد عند البارد يختفي خلال ثوانٍ، لا ألم عفوي.",
+o:[
+"حساسية عاجية dentin hypersensitivity",
+"التهاب لب غير عكوس",
+"نخر لبّي",
+"كسر جذر"
+],
 a:0,
-e:"Dentin hypersensitivity"
+e:"Short cold pain → hypersensitivity"
 },
+
 {
-q:"سن غير حي + شفافية ذروية؟",
-o:["تموت لبي","التهاب لثة","حساسية","تآكل"],
+q:"سن غير مؤلم، متغير اللون، اختبار حيوية سلبي، آفة ذروية شعاعياً.",
+o:[
+"نخر لبّي pulp necrosis",
+"التهاب لب عكوس",
+"التهاب لثة",
+"فرط حساسية"
+],
 a:0,
-e:"Necrosis"
+e:"Non-vital + periapical lesion"
 },
+
 {
-q:"ألم عند العض + release pain؟",
-o:["Cracked tooth","تسوس","لثة","حساسية"],
+q:"ألم عند العض يزداد عند تحرير الضغط، بدون تسوس واضح.",
+o:[
+"Cracked tooth syndrome",
+"التهاب لب",
+"خراج لثوي",
+"جيوب أنفية"
+],
 a:0,
-e:"Cracked tooth syndrome"
+e:"Release pain = cracked tooth"
 },
+
 {
-q:"نزف لثوي بدون فقدان عظم؟",
-o:["التهاب لثة","دواعم","كيس","خراج"],
+q:"نزف لثوي عند التفريش دون فقدان عظم.",
+o:[
+"التهاب لثة gingivitis",
+"التهاب دواعم",
+"خراج ذروي",
+"كيس"
+],
 a:0,
-e:"Gingivitis"
+e:"Bleeding only = gingivitis"
 },
+
 {
-q:"جيوب + فقدان عظم؟",
-o:["Periodontitis","لثة","حساسية","تسوس"],
+q:"جيوب 6 ملم + فقدان عظم أفقي.",
+o:[
+"Periodontitis",
+"التهاب لثة",
+"حساسية",
+"تسوس"
+],
 a:0,
-e:"Periodontitis"
+e:"Attachment loss = periodontitis"
 },
+
 {
-q:"ألم بعد القلع + رائحة + فقدان خثرة؟",
-o:["Dry socket","خراج","كيس","تسوس"],
+q:"ألم شديد بعد 48 ساعة من القلع + رائحة كريهة + خلو الخثرة.",
+o:[
+"Dry socket",
+"خراج ذروي",
+"كيس",
+"Cellulitis"
+],
 a:0,
-e:"Alveolar osteitis"
+e:"Timing + empty socket"
 },
+
 {
-q:"طفل + تسوس متعدد + رضاعة ليلية؟",
-o:["ECC","تآكل","كسر","لثة"],
+q:"طفل 5 سنوات، تسوس متعدد + رضاعة ليلية.",
+o:[
+"Early childhood caries",
+"فلوروزس",
+"تآكل",
+"نقص تنسج"
+],
 a:0,
-e:"Early childhood caries"
+e:"ECC pattern"
+},
+
+{
+q:"تورم لثوي موضعي مع قيح من الجيب.",
+o:[
+"Periodontal abscess",
+"Periapical abscess",
+"Fibroma",
+"Mucocele"
+],
+a:0,
+e:"Pus from pocket"
+},
+
+{
+q:"ألم حراري طويل بعد البارد + تسوس عميق.",
+o:[
+"Symptomatic irreversible pulpitis",
+"Reversible pulpitis",
+"حساسية",
+"Sinus pain"
+],
+a:0,
+e:"Prolonged thermal pain"
 }
 ];
 
-/* 🔒 لا تغيير */
+/* 🔒 النظام */
 function shuffle(q){
 let arr=q.o.map((t,i)=>({t,correct:i===q.a}));
 for(let i=arr.length-1;i>0;i--){
@@ -128,6 +237,7 @@ return arr;
 let index=0,score=0,currentOptions=[];
 
 function startExam(){
+index=0;score=0;
 document.getElementById("start").style.display="none";
 document.getElementById("exam").style.display="block";
 load();
