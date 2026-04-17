@@ -3,18 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dental Clinical Exam Pro</title>
+<title>Dental Trainer Pro</title>
 
 <style>
 body{
 margin:0;
 font-family:Arial;
-background:#f3f6fb;
+background:#eef2ff;
 color:#0f172a;
 text-align:center;
 }
 
-/* الهيدر */
 header{
 background:#1e3a8a;
 color:white;
@@ -24,102 +23,78 @@ font-weight:bold;
 border-bottom:4px solid #facc15;
 }
 
-/* الحاوية */
 .container{
 max-width:800px;
 margin:auto;
 padding:20px;
 }
 
-/* بطاقة السؤال */
 .card{
-background:#ffffff;
+background:white;
 padding:24px;
 border-radius:16px;
-box-shadow:0 8px 20px rgba(30,58,138,0.12);
+box-shadow:0 10px 20px rgba(0,0,0,0.08);
 font-size:18px;
-min-height:110px;
-border:1px solid #e5e7eb;
+min-height:120px;
 }
 
-/* معلومات السؤال */
 .meta{
 display:flex;
 justify-content:space-between;
 font-size:13px;
-color:#475569;
 margin:10px 0;
+color:#475569;
 }
 
-/* الأزرار */
 .btn{
 display:block;
 width:100%;
 margin:10px 0;
 padding:14px;
-border:1px solid #cbd5e1;
 border-radius:12px;
+border:1px solid #cbd5e1;
+background:#f8fafc;
 cursor:pointer;
 font-size:15px;
-background:#f8fafc;
-color:#0f172a;
-transition:0.2s;
 }
 
-.btn:hover{
-background:#e2e8f0;
-border-color:#1e3a8a;
+.btn:hover{background:#e2e8f0;}
+
+.correct{background:#22c55e;color:white;}
+.wrong{background:#ef4444;color:white;}
+
+.explain{
+margin-top:15px;
+padding:15px;
+background:#fef9c3;
+border-radius:10px;
+text-align:right;
+font-size:14px;
+line-height:1.8;
 }
 
-/* صحيح / خطأ */
-.correct{
-background:#22c55e !important;
-color:white !important;
-border:none;
-}
-
-.wrong{
-background:#ef4444 !important;
-color:white !important;
-border:none;
-}
-
-/* زر البداية */
 .start{
 padding:14px;
-border:none;
-border-radius:12px;
 background:#1e3a8a;
 color:white;
+border:none;
+border-radius:12px;
+cursor:pointer;
 font-size:16px;
-font-weight:bold;
+}
+
+.next{
+margin-top:10px;
+background:#facc15;
+border:none;
+padding:10px;
+border-radius:10px;
 cursor:pointer;
 }
 
-/* النتيجة */
-.result{
-text-align:center;
-font-size:18px;
-padding:20px;
-line-height:2;
-}
-
-/* شارة النتيجة */
-.badge{
-display:inline-block;
-padding:6px 14px;
-border-radius:999px;
-background:#facc15;
-color:#0f172a;
-margin-top:10px;
-font-size:14px;
-font-weight:bold;
-}
-
-/* الفوتر */
 footer{
-text-align:center;
-padding:20px;
+margin-top:30px;
+padding:15px;
 font-size:12px;
 opacity:0.7;
 }
@@ -128,96 +103,124 @@ opacity:0.7;
 
 <body>
 
-<header>🦷 Dental Clinical Exam Pro</header>
+<header>🦷 Dental Clinical Trainer</header>
 
 <div class="container">
 
 <div id="start">
-<button class="start" onclick="startExam()">ابدأ الاختبار</button>
+<button class="start" onclick="startExam()">ابدأ</button>
 </div>
 
 <div id="exam" style="display:none;">
-
 <div class="meta">
-<div>السؤال: <span id="qnum"></span></div>
-<div>النتيجة: <span id="score"></span></div>
+<div>السؤال <span id="qnum"></span></div>
+<div>النتيجة <span id="score"></span></div>
 </div>
 
 <div id="question" class="card"></div>
-
 <div id="answers"></div>
+</div>
+
+<div id="result"></div>
 
 </div>
 
-<div id="result" class="result" style="display:none;"></div>
-
-</div>
-
-<footer>
-تصميم وتطوير: د. زكريا عطوني - سوريا
-</footer>
+<footer>د. زكريا عطوني</footer>
 
 <script>
 
-/* بنك حالات سريرية (موسع ومنظم) */
 const bank = [
 
-{q:"ألم ليلي شديد مع تسوس عميق",o:["التهاب لب غير عكوس","حساسية","تآكل","تصبغ"],a:0},
-{q:"نزف لثة عند التفريش",o:["التهاب لثة","تسوس","كسر","تصبغ"],a:0},
-{q:"ضرس عقل مطمور مؤلم",o:["انطمار ضرس","تسوس","حساسية","تآكل"],a:0},
-{q:"كسر سن أمامي بعد صدمة",o:["كسر تاجي","تسوس","تصبغ","تآكل"],a:0},
-{q:"ألم عند المضغ مع سن سليم ظاهريًا",o:["كسر شعري","تسوس","تآكل","حساسية"],a:0},
-{q:"تورم لثوي مع قيح",o:["خراج لثوي","تسوس","حساسية","تصبغ"],a:0},
-{q:"رائحة فم مزمنة",o:["التهاب دواعم سن","تسوس","كسر","تصبغ"],a:0},
-{q:"حركة سن واضحة",o:["مرض لثوي متقدم","تسوس","حساسية","تصبغ"],a:0},
-{q:"ألم بارد شديد",o:["حساسية عاجية","التهاب لب","تآكل","تصبغ"],a:0},
-{q:"ألم عفوي ليلي",o:["التهاب لب حاد","تسوس","حساسية","تصبغ"],a:0},
+{
+q:"ألم نابض ليلي يوقظ المريض + تسوس عميق",
+o:["التهاب لب غير عكوس","حساسية","تآكل","تصبغ"],
+a:0,
+exp:"الألم الليلي النابض الذي يوقظ المريض علامة قوية على irreversible pulpitis. الحساسية تكون قصيرة وغير عفوية."
+},
 
-{q:"تورم ذروي مزمن",o:["كيس جذري","تسوس","حساسية","تصبغ"],a:0},
-{q:"فشل علاج عصب سابق",o:["إعادة علاج جذور","تسوس","تآكل","حساسية"],a:0},
-{q:"سن داكن بعد صدمة قديمة",o:["نخر لب","حساسية","تآكل","تصبغ"],a:0},
-{q:"ألم عند الضغط على سن",o:["التهاب حول الذروة","تسوس","حساسية","تصبغ"],a:0},
-{q:"تآكل عنقي واضح",o:["تآكل مينا","تسوس","كسر","تصبغ"],a:0},
+{
+q:"ألم مع البارد يزول فورًا",
+o:["حساسية عاجية","التهاب لب","خراج","كسر"],
+a:0,
+exp:"استجابة سريعة تزول فورًا = dentin hypersensitivity. التهاب اللب يستمر بعد إزالة المحرض."
+},
 
-{q:"طفل مع تسوس متعدد",o:["تسوس طفولي منتشر","حساسية","تآكل","كسر"],a:0},
-{q:"طفل غير متعاون",o:["تعديل سلوكي","تسوس","تآكل","كسر"],a:0},
-{q:"ألم بعد حشوة مرتفعة",o:["ارتفاع إطباق","تسوس","حساسية","تصبغ"],a:0},
-{q:"نزف تلقائي من اللثة",o:["التهاب دواعم سن","تسوس","كسر","تصبغ"],a:0},
-{q:"انتفاخ خد مع ألم سن",o:["خراج ذروي","تسوس","حساسية","تصبغ"],a:0},
+{
+q:"ألم عند العض فقط بدون تسوس واضح",
+o:["Cracked tooth","حساسية","تصبغ","تآكل"],
+a:0,
+exp:"الألم عند الضغط فقط مع غياب أعراض أخرى يشير إلى crack. لا يوجد محفز حراري."
+},
 
-{q:"ألم عند البارد والحار",o:["التهاب لب","حساسية","تآكل","تصبغ"],a:0},
-{q:"كسر جذر سن",o:["كسر جذر","تسوس","تآكل","تصبغ"],a:0},
-{q:"رائحة فم مع جيوب عميقة",o:["التهاب دواعم سن","تسوس","كسر","تصبغ"],a:0},
-{q:"ألم مفاجئ في سن سليم",o:["كسر شعري","تسوس","حساسية","تصبغ"],a:0},
-{q:"تقرح لثوي مزمن",o:["التهاب لثة مزمن","تسوس","كسر","تصبغ"],a:0},
+{
+q:"تورم + قيح + ألم",
+o:["خراج","تآكل","تصبغ","حساسية"],
+a:0,
+exp:"وجود pus = infection. هذه حالة خراج وليست حالة لبية فقط."
+},
 
-{q:"ألم بعد أكل بارد",o:["حساسية عاجية","التهاب لب","تآكل","تصبغ"],a:0},
-{q:"تورم بدون ألم",o:["كيس جذري","تسوس","حساسية","تصبغ"],a:0},
-{q:"ألم عند العض فقط",o:["كسر شعري","تسوس","تآكل","تصبغ"],a:0},
-{q:"تسوس عميق بدون ألم",o:["لب متليف","التهاب لب","حساسية","تصبغ"],a:0},
-{q:"ألم مع ناسور لثوي",o:["خراج مزمن","تسوس","تآكل","تصبغ"],a:0}
+{
+q:"ألم بعد علاج عصب سابق",
+o:["فشل علاج جذور","حساسية","تآكل","تصبغ"],
+a:0,
+exp:"الألم بعد RCT غالبًا سببه missed canal أو infection متبقي."
+},
+
+{
+q:"سن داكن بعد صدمة",
+o:["نخر لب","حساسية","تآكل","تصبغ"],
+a:0,
+exp:"التغير اللوني بعد trauma يدل غالبًا على pulp necrosis."
+},
+
+{
+q:"نزف لثة + جيوب",
+o:["التهاب دواعم سن","تسوس","كسر","تصبغ"],
+a:0,
+exp:"وجود periodontal pockets يميز periodontitis وليس gingivitis فقط."
+},
+
+{
+q:"ألم مستمر بعد إزالة البارد",
+o:["التهاب لب","حساسية","تآكل","تصبغ"],
+a:0,
+exp:"استمرار الألم بعد إزالة المحرض = pulpitis وليس hypersensitivity."
+},
+
+{
+q:"ألم مع ناسور",
+o:["خراج مزمن","حساسية","تآكل","تصبغ"],
+a:0,
+exp:"sinus tract يدل على chronic abscess."
+},
+
+{
+q:"ألم مفاجئ في سن سليم",
+o:["Crack","حساسية","تآكل","تصبغ"],
+a:0,
+exp:"الألم المفاجئ في سن بدون تسوس غالبًا crack."
+}
 
 ];
 
 let qlist=[];
 let i=0;
 let score=0;
+let lock=false;
 
-/* بدء الاختبار */
 function startExam(){
 qlist=bank.sort(()=>Math.random()-0.5);
-i=0;
-score=0;
+i=0; score=0;
 
 document.getElementById("start").style.display="none";
 document.getElementById("exam").style.display="block";
-document.getElementById("result").style.display="none";
 
 load();
 }
 
-/* تحميل السؤال */
 function load(){
+
+lock=false;
 
 if(i>=qlist.length){
 end();
@@ -239,8 +242,10 @@ html+=`<button class="btn" onclick="check(${idx})">${opt}</button>`;
 document.getElementById("answers").innerHTML=html;
 }
 
-/* التحقق */
 function check(x){
+
+if(lock) return;
+lock=true;
 
 let q=qlist[i];
 let buttons=document.querySelectorAll(".btn");
@@ -253,27 +258,27 @@ b.disabled=true;
 
 if(x===q.a) score++;
 
-setTimeout(()=>{
-i++;
-load();
-},900);
+document.getElementById("answers").innerHTML += `
+<div class="explain">
+<b>التفسير السريري:</b><br>${q.exp}
+<br><br>
+<button class="next" onclick="nextQ()">التالي</button>
+</div>
+`;
 }
 
-/* النهاية */
+function nextQ(){
+i++;
+load();
+}
+
 function end(){
 
 document.getElementById("exam").style.display="none";
-document.getElementById("result").style.display="block";
-
-let level =
-score/qlist.length>0.8?"ممتاز 🟢":
-score/qlist.length>0.5?"جيد 🟠":
-"يحتاج تحسين 🔴";
 
 document.getElementById("result").innerHTML=
-"انتهى الاختبار 🧠<br><br>"+
-"النتيجة: "+score+" / "+qlist.length+
-"<br><span class='badge'>"+level+"</span>";
+"<h2>انتهى الاختبار</h2>"+
+"النتيجة: "+score+"/"+qlist.length;
 }
 
 </script>
