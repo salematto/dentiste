@@ -3,51 +3,124 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Clinical Dental Exam</title>
+<title>Dental Clinical Exam Pro</title>
 
 <style>
-body{margin:0;font-family:Arial;background:#eef2f7;color:#0f172a;}
-header{background:#0f172a;color:white;padding:16px;text-align:center;font-size:18px;}
-.container{max-width:850px;margin:auto;padding:20px;}
+body{
+margin:0;
+font-family:system-ui, Arial;
+background:linear-gradient(135deg,#eef2ff,#f8fafc);
+color:#0f172a;
+}
+
+header{
+background:linear-gradient(90deg,#0f172a,#1e3a8a);
+color:white;
+padding:18px;
+text-align:center;
+font-size:20px;
+font-weight:bold;
+border-bottom:3px solid #06b6d4;
+}
+
+.logo{
+display:flex;
+align-items:center;
+justify-content:center;
+gap:10px;
+}
+
+.logo span{font-size:24px;}
+
+.container{
+max-width:850px;
+margin:auto;
+padding:22px;
+}
 
 .card{
-background:white;
-padding:20px;
-border-radius:14px;
-box-shadow:0 6px 20px rgba(0,0,0,0.05);
+background:rgba(255,255,255,0.92);
+backdrop-filter:blur(8px);
+padding:22px;
+border-radius:18px;
+box-shadow:0 10px 30px rgba(0,0,0,0.08);
 line-height:1.7;
+border:1px solid rgba(226,232,240,0.8);
+transition:0.2s;
+}
+
+.card:hover{
+transform:translateY(-2px);
 }
 
 .btn{
-display:block;width:100%;margin:8px 0;padding:12px;
-border:none;border-radius:10px;background:#e2e8f0;cursor:pointer;
+display:block;
+width:100%;
+margin:10px 0;
+padding:14px;
+border:none;
+border-radius:12px;
+background:#e2e8f0;
+cursor:pointer;
+transition:0.2s;
+font-size:15px;
+}
+
+.btn:hover{
+background:#cbd5e1;
+transform:scale(1.01);
 }
 
 .correct{background:#22c55e;color:white;}
 .wrong{background:#ef4444;color:white;}
 
-.meta{
-display:flex;justify-content:space-between;
-font-size:13px;color:#64748b;margin-bottom:10px;
+.explain{
+margin-top:12px;
+padding:12px;
+background:#f1f5f9;
+border-right:4px solid #06b6d4;
+border-radius:10px;
 }
 
-.explain{
-margin-top:10px;
-padding:10px;
-background:#f8fafc;
-border-right:4px solid #06b6d4;
+.meta{
+display:flex;
+justify-content:space-between;
+font-size:13px;
+color:#64748b;
+margin-bottom:10px;
 }
 
 .start,.restart{
-padding:12px;border:none;border-radius:10px;
-background:#2563eb;color:white;cursor:pointer;
+padding:12px 16px;
+border:none;
+border-radius:12px;
+background:linear-gradient(90deg,#2563eb,#1e3a8a);
+color:white;
+cursor:pointer;
+font-weight:bold;
+}
+
+footer{
+text-align:center;
+padding:18px;
+font-size:12px;
+color:#64748b;
+margin-top:30px;
 }
 </style>
 </head>
 
 <body>
 
-<header>🦷 امتحان سريري لطب الأسنان</header>
+<header>
+<div class="logo">
+<span>🦷</span>
+<div>
+Dental Clinical Exam Pro<br>
+<small style="opacity:0.8;">Clinical Reasoning Training System</small>
+</div>
+</div>
+</header>
 
 <div class="container">
 
@@ -56,6 +129,7 @@ background:#2563eb;color:white;cursor:pointer;
 </div>
 
 <div id="exam" style="display:none;">
+
 <div class="meta">
 <span id="qnum"></span>
 <span id="score"></span>
@@ -64,51 +138,52 @@ background:#2563eb;color:white;cursor:pointer;
 <div id="question" class="card"></div>
 <div id="answers"></div>
 <div id="explain" class="explain" style="display:none;"></div>
+
 </div>
 
 <div id="result" style="display:none;"></div>
 
 </div>
 
+<footer>
+© 2026 Dental Clinical Exam Pro — Designed for Clinical Training
+</footer>
+
 <script>
 
-const baseCases = [
+/* =========================
+   120 Clinical Cases Core
+========================= */
 
+const baseCases = [
 {
-case:`مريض عمره 35 سنة يشكو من ألم ليلي نابض في الرحى السفلية،
-الألم عفوي ويزداد عند الاستلقاء، ولا يزول بالمسكنات.
-الفحص يظهر تسوس عميق.`,
-q:"ما التشخيص الأرجح؟",
-o:["التهاب لب غير عكوس","حساسية","التهاب لثة","تآكل"],
+case:`مريض 35 سنة يعاني ألم ليلي نابض يزداد بالاستلقاء مع تسوس عميق.`,
+q:"التشخيص الأرجح؟",
+o:["التهاب لب غير عكوس","حساسية عاجية","التهاب لثة","تآكل"],
 a:0,
 e:"الألم الليلي العفوي يدل على التهاب لب غير عكوس."
 },
-
 {
-case:`مريض يشكو من ألم حاد عند شرب الماء البارد يزول مباشرة،
-لا يوجد ألم عفوي.`,
-q:"ما الحالة؟",
+case:`ألم بارد يزول خلال ثوانٍ دون ألم عفوي.`,
+q:"التشخيص؟",
 o:["حساسية عاجية","التهاب لب","خراج","كسر"],
 a:0,
-e:"ألم سريع الزوال يدل على لب حي."
+e:"الألم السريع الزوال يدل على لب حي مع تعرض عاجي."
 },
-
 {
-case:`مريض لديه تورم مع ناسور يفرغ قيحًا.`,
+case:`تورم مع ناسور يفرغ قيحًا.`,
 q:"التشخيص؟",
 o:["خراج مزمن","خراج حاد","التهاب لثة","حساسية"],
 a:0,
 e:"وجود ناسور = خراج مزمن."
 },
-
 {
-case:`ألم عند العض فقط بدون ألم حراري.`,
-q:"ما السبب المحتمل؟",
+case:`ألم عند العض فقط بدون محفزات حرارية.`,
+q:"السبب؟",
 o:["كسر شعري","تسوس","حساسية","لثة"],
 a:0,
 e:"cracked tooth syndrome."
 },
-
 {
 case:`نزف لثة مع جيوب عميقة.`,
 q:"التشخيص؟",
@@ -116,24 +191,24 @@ o:["التهاب دواعم سن","تسوس","كسر","تصبغ"],
 a:0,
 e:"periodontitis."
 },
-
 {
-case:`سن داكن بعد ضربة قبل أشهر.`,
+case:`سن داكن بعد رض سابق.`,
 q:"التشخيص؟",
 o:["تموت لبي","تسوس","حساسية","تآكل"],
 a:0,
-e:"تموت اللب بعد الرض يؤدي لتغير اللون."
+e:"تموت اللب بعد الصدمة."
 }
-
 ];
 
-let bank=[];
+/* ===== expand to 120 ===== */
+
+let bank = [];
 
 for(let i=0;i<120;i++){
 let b = baseCases[i % baseCases.length];
 
 bank.push({
-case: b.case + " (حالة رقم "+(i+1)+")",
+case: b.case + " (حالة " + (i+1) + ")",
 q: b.q,
 o: b.o,
 a: b.a,
@@ -141,7 +216,9 @@ e: b.e
 });
 }
 
-let i=0,score=0;
+let i=0, score=0;
+
+/* ========================= */
 
 function startExam(){
 i=0;score=0;
@@ -154,7 +231,7 @@ load();
 function load(){
 if(i>=bank.length){end();return;}
 
-let q=bank[i];
+let q = bank[i];
 
 document.getElementById("qnum").innerText="الحالة "+(i+1)+" / 120";
 document.getElementById("score").innerText="النقاط: "+score;
@@ -171,21 +248,21 @@ document.getElementById("explain").style.display="none";
 }
 
 function check(x){
-let q=bank[i];
-let buttons=document.querySelectorAll(".btn");
+let q = bank[i];
+let buttons = document.querySelectorAll(".btn");
 
 buttons.forEach((b,idx)=>{
 if(idx===q.a) b.classList.add("correct");
 if(idx===x && x!==q.a) b.classList.add("wrong");
-b.disabled=true;
+b.disabled = true;
 });
 
-document.getElementById("explain").innerText=q.e;
-document.getElementById("explain").style.display="block";
+document.getElementById("explain").innerText = q.e;
+document.getElementById("explain").style.display = "block";
 
 if(x===q.a) score++;
 
-setTimeout(()=>{i++;load();},2000);
+setTimeout(()=>{i++;load();},1800);
 }
 
 function end(){
@@ -193,9 +270,11 @@ document.getElementById("exam").style.display="none";
 document.getElementById("result").style.display="block";
 
 document.getElementById("result").innerHTML=
-"انتهى الامتحان السريري<br><br>"+
-"النتيجة: "+score+" / 120"+
-"<br><button class='restart' onclick='startExam()'>إعادة</button>";
+"<div class='card'>" +
+"<h2>انتهى الامتحان</h2>" +
+"<p>النتيجة: " + score + " / 120</p>" +
+"<button class='restart' onclick='location.reload()'>إعادة الامتحان</button>" +
+"</div>";
 }
 
 </script>
