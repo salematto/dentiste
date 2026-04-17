@@ -247,11 +247,6 @@
             background-color: #128C7E;
             transform: scale(1.02);
         }
-        .whatsapp-float img {
-            width: 24px;
-            height: 24px;
-            filter: brightness(0) invert(1);
-        }
         @media (max-width: 650px) {
             .card-blue { padding: 1.2rem; }
             .question-text { font-size: 1.4rem; }
@@ -300,14 +295,14 @@
 
 <script>
     (function() {
-        // ------------------- قاعدة أسئلة فريدة (80 سؤالاً لا تكرار) -------------------
+        // ------------------- قاعدة أسئلة فريدة (80 سؤالاً) -------------------
         const questionsBank = [];
 
         function addQ(question, options, correctIndex, explanation) {
             questionsBank.push({ text: question, options: options, correct: correctIndex, explanation: explanation });
         }
 
-        // الأسئلة الفريدة والمتنوعة في طب الأسنان (تم فحصها لتجنب التكرار)
+        // الأسئلة الفريدة (تم توزيع الإجابة الصحيحة على مؤشرات مختلفة، لكننا سنقوم بخلط الخيارات أثناء العرض)
         addQ("أي الأسنان يُعرف بـ 'سن العقل'؟",["الضرس الثالث الدائم","الضرس الثاني الدائم","الناب العلوي","القاطعة الجانبية"],0,"ضرس العقل هو الضرس الثالث الدائم، يظهر بين 17-25 سنة.");
         addQ("كم عدد الأسنان الدائمة عند الإنسان البالغ؟",["28","30","32","34"],2,"32 سناً: 16 في كل فك.");
         addQ("أي عضلة ترفع الفك السفلي للمضغ؟",["الماضغة","الذقنية","الوجنية","الجبهية"],0,"العضلة الماضغة (Masseter) هي المسؤولة الرئيسية عن الرفع.");
@@ -390,8 +385,32 @@
         while(questionsBank.length < 80) addQ("سؤال احتياطي: عدد الأسنان الدائمة؟",["28","30","32","34"],2,"32 سناً.");
         if(questionsBank.length > 80) questionsBank.length = 80;
 
+        // ---------- دالة خلط الخيارات لكل سؤال مع الحفاظ على الإجابة الصحيحة ----------
+        function shuffleOptions(question) {
+            // نأخذ نسخة من الخيارات والمؤشر الصحيح
+            const options = [...question.options];
+            const correctAnswerText = options[question.correct];
+            // إنشاء مصفوفة من الكائنات {text, originalIndex}
+            let mapped = options.map((text, idx) => ({ text, originalIndex: idx }));
+            // خلط
+            for (let i = mapped.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [mapped[i], mapped[j]] = [mapped[j], mapped[i]];
+            }
+            // الخيارات الجديدة
+            const newOptions = mapped.map(item => item.text);
+            // إيجاد المؤشر الجديد للإجابة الصحيحة
+            let newCorrectIndex = newOptions.findIndex(opt => opt === correctAnswerText);
+            return {
+                text: question.text,
+                options: newOptions,
+                correct: newCorrectIndex,
+                explanation: question.explanation
+            };
+        }
+
         // ---------- منطق الاختبار ----------
-        let shuffledQuestions = [];
+        let shuffledQuestions = [];      // سيتم تخزين الأسئلة بعد خلط الخيارات لكل سؤال
         let currentIndex = 0;
         let answerLock = false;
         let autoTimer = null;
@@ -477,7 +496,10 @@
         }
 
         function initQuiz() {
-            shuffledQuestions = shuffleArray([...questionsBank]);
+            // خلط ترتيب الأسئلة أولاً
+            const baseShuffled = shuffleArray([...questionsBank]);
+            // لكل سؤال نقوم بخلط خياراته عشوائياً
+            shuffledQuestions = baseShuffled.map(q => shuffleOptions(q));
             currentIndex = 0;
             answerLock = false;
             if (autoTimer) clearTimeout(autoTimer);
