@@ -1,185 +1,212 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>بنك الأسئلة الطبي التخصصي | د. زكريا عطوني</title>
-    <style>
-        :root {
-            --dark-blue: #1a2a3a;
-            --green: #27ae60;
-            --red: #c0392b;
-            --gradient: linear-gradient(135deg, #1a2a3a 0%, #2c3e50 100%);
-        }
-        body { font-family: 'Segoe UI', Arial, sans-serif; background: var(--gradient); background-attachment: fixed; margin: 0; min-height: 100vh; display: flex; flex-direction: column; color: white; }
-        
-        #intro { position: fixed; inset: 0; background: var(--gradient); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 1000; text-align: center; }
-        .logo-anim { font-size: 90px; margin-bottom: 20px; animation: pulse 2s infinite; }
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
-        .btn-ready { padding: 18px 50px; font-size: 1.4rem; background: var(--green); color: white; border: none; border-radius: 50px; cursor: pointer; font-weight: bold; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dental Clinical Exam</title>
 
-        #quiz-box { display: none; background: #ffffff; width: 92%; max-width: 850px; margin: 40px auto; padding: 35px; border-radius: 20px; color: #333; position: relative; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
-        .info-bar { display: flex; justify-content: space-between; border-bottom: 2px solid #eee; padding-bottom: 15px; margin-bottom: 25px; }
-        .tag { background: var(--dark-blue); color: white; padding: 7px 15px; border-radius: 15px; font-size: 0.9rem; }
-        
-        #question { font-size: 1.6rem; font-weight: bold; color: var(--dark-blue); margin-bottom: 30px; text-align: center; line-height: 1.6; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .btn-opt { padding: 18px; font-size: 1.1rem; border: 2px solid #ddd; border-radius: 12px; background: #fdfdfd; cursor: pointer; text-align: right; font-weight: 600; color: #444; transition: 0.2s; }
-        .correct { background: var(--green) !important; color: white !important; border-color: var(--green) !important; }
-        .wrong { background: var(--red) !important; color: white !important; border-color: var(--red) !important; }
-        
-        #exp-box { margin-top: 25px; padding: 18px; background: #f0f7ff; border-right: 6px solid var(--dark-blue); border-radius: 8px; display: none; font-size: 1.1rem; }
-        #timer-line { height: 6px; background: var(--green); width: 0%; position: absolute; bottom: 0; left: 0; border-radius: 0 0 20px 20px; }
-        footer { text-align: center; padding: 20px; font-weight: bold; opacity: 0.8; margin-top: auto; }
-        @media (max-width: 600px) { .grid { grid-template-columns: 1fr; } }
-    </style>
+<style>
+body{margin:0;font-family:system-ui;background:#0b1220;color:#fff}
+header{background:#0f172a;padding:16px;text-align:center;border-bottom:3px solid #facc15;font-weight:bold}
+.container{max-width:900px;margin:auto;padding:20px}
+
+.card{
+background:#111827;
+padding:18px;
+border-radius:14px;
+margin-top:10px;
+border-left:4px solid #38bdf8;
+}
+
+.btn{
+display:block;
+width:100%;
+padding:12px;
+margin:8px 0;
+border:none;
+border-radius:10px;
+background:#1f2937;
+color:white;
+cursor:pointer;
+transition:.2s;
+}
+
+.btn:hover{background:#334155}
+
+.correct{background:#16a34a !important}
+.wrong{background:#dc2626 !important}
+
+.meta{
+display:flex;
+justify-content:space-between;
+color:#93c5fd;
+font-size:13px;
+}
+
+.explanation{
+margin-top:10px;
+padding:12px;
+border-radius:10px;
+background:#0f172a;
+border-left:4px solid #facc15;
+color:#e2e8f0;
+font-size:14px;
+}
+
+footer{
+text-align:center;
+padding:12px;
+color:#64748b;
+font-size:12px;
+}
+</style>
 </head>
+
 <body>
 
-<div id="intro">
-    <div class="logo-anim">🦷</div>
-    <h1>بنك المعلومات السنية التخصصي</h1>
-    <p style="font-size: 1.2rem; margin-bottom: 30px;">إشراف: د. زكريا محمد عطوني</p>
-    <button class="btn-ready" onclick="startApp()">ابدأ الاختبار</button>
+<header>🦷 Clinical Dental Exam</header>
+
+<div class="container">
+
+<div id="start">
+<button class="btn" onclick="startExam()">ابدأ الامتحان</button>
 </div>
 
-<div id="quiz-box">
-    <div class="info-bar">
-        <span class="tag" id="prog-txt">السؤال: 1 / 80</span>
-        <span class="tag" id="score-txt">النقاط: 0</span>
-    </div>
-    <div id="question"></div>
-    <div class="grid" id="options-grid">
-        <button class="btn-opt" onclick="verify(0)"></button>
-        <button class="btn-opt" onclick="verify(1)"></button>
-        <button class="btn-opt" onclick="verify(2)"></button>
-        <button class="btn-opt" onclick="verify(3)"></button>
-    </div>
-    <div id="exp-box"></div>
-    <div id="timer-line"></div>
+<div id="exam" style="display:none">
+
+<div class="meta">
+<span id="progress"></span>
+<span id="score"></span>
 </div>
 
-<footer>حقوق التصميم محفوظة للدكتور زكريا محمد عطوني © 2026</footer>
+<div id="question" class="card"></div>
+<div id="answers"></div>
+<div id="explanation"></div>
+
+</div>
+
+<div id="result" style="display:none"></div>
+
+</div>
+
+<footer>تصميم وتطوير د. زكريا محمد عطوني</footer>
 
 <script>
-// بنك الأسئلة المكتوب يدوياً (80 سؤالاً فريداً)
-const medicalBank = [
-    {q: "ما هو التفسير الفسيولوجي لحساسية العاج عند التعرض للمؤثرات الباردة؟", a: ["توسع الأوعية الدموية اللبية", "نظرية حركة السوائل داخل الأنابيب العاجية", "تحلل بروتينات المينا", "تقلص النهايات العصبية في اللب"], c: 1, e: "تعتمد نظرية (Hydrodynamic Theory) على أن حركة السوائل تنبه النهايات العصبية."},
-    {q: "أي الخلايا التالية مسؤولة عن إنتاج العاج الأولي والثانوي والترميمي؟", a: ["الخلايا المصورة للمينا", "الخلايا المصورة للعاج (الأودونتوبلاست)", "الخلايا المصورة للملاط", "الخلايا الليفية اللبية"], c: 1, e: "الخلايا المصورة للعاج تبطن جدران حجرة اللب وتنتج العاج طوال الحياة."},
-    {q: "ما هو المكون الكيميائي الذي يمنع تطور النخر عبر زيادة مقاومة المينا للأحماض؟", a: ["فلوريد الصوديوم", "كربونات الكالسيوم", "أكسيد الزنك", "حمض الفوسفوريك"], c: 0, e: "الفلورايد يستبدل مجموعة الهيدروكسيل في الهيدروكسي أباتيت لتشكيل الفلور أباتيت الأكثر صلابة."},
-    {q: "في حالات التهاب اللب غير المرتجع، لماذا يزداد الألم ليلاً وعند الاستلقاء؟", a: ["بسبب برودة الجو", "بسبب زيادة الضغط داخل اللب نتيجة الاحتقان الوعائي الرأسي", "بسبب نشاط بكتيري ليلي", "بسبب جفاف الفم أثناء النوم"], c: 1, e: "وضعية الاستلقاء تزيد تدفق الدم إلى الرأس مما يرفع الضغط داخل حجرة اللب المحتقنة."},
-    {q: "ما هو الدور السريري لغشاء 'شنايدر' أثناء عملية رفع الجيب الفكي العلوي؟", a: ["حماية العصب تحت الحجاج", "توفير حاجز بين الطعم العظمي وتجويف الجيب الفكي", "تغذية الأسنان العلوية", "تثبيت الغرسة السنية"], c: 1, e: "غشاء شنايدر هو الغشاء المخاطي المبطن للجيب ويجب رفعه بحذر لوضع العظم تحته."},
-    {q: "أي الأربطة السنية تمنع القوى الدورانية للسن داخل السنخ؟", a: ["الألياف الأفقية", "الألياف المائلة", "الألياف القمية", "الألياف بين الجذورية"], c: 1, e: "الألياف المائلة هي الأكثر عدداً وتتحمل معظم قوى المضغ العمودية والدورانية."},
-    {q: "ما هي المادة المستخدمة لإزالة الطبقة اللطاخة (Smear Layer) غير العضوية أثناء المعالجة اللبية؟", a: ["هيبوكلوريت الصوديوم", "حمض الإيثيلين ثنائي الأمين رباعي الخليك (EDTA)", "الكلورهيكسيدين", "الماء المقطر"], c: 1, e: "الـ EDTA يعمل كمادة مخلبية تحل المكونات المعدنية للطبقة اللطاخة وتفتح الأنابيب العاجية."},
-    {q: "في الجراحة، ما هي العلامة الأكيدة لوجود اتصال بين الفم والجيب الفكي (Oro-antral communication) بعد القلع؟", a: ["نزف بسيط من السنخ", "ظهور فقاعات هوائية في السنخ عند الزفير من الأنف", "ألم في منطقة الخد", "تورم اللثة المحيطة"], c: 1, e: "اختبار الزفير مع إغلاق الأنف يؤدي لاندفاع الهواء عبر الفتحة مما يسبب ظهور الفقاعات."},
-    {q: "ما هو التصنيف الإطباقي الذي تكون فيه حدبة الرحى العلوية خلف الميزاب الدهليزي للسفلية؟", a: ["الصنف الأول", "الصنف الثاني", "الصنف الثالث", "الإطباق المفتوح"], c: 2, e: "الصنف الثالث (Class III) يتميز ببروز الفك السفلي أو تراجع العلوي."},
-    {q: "ما هي الفائدة العلمية لإضافة المقبض الوعائي (الأدرينالين) إلى المحلول المخدر؟", a: ["تسكين الألم بشكل أسرع", "إطالة مدة التخدير وتقليل النزف الموضعي", "تحفيز ضربات القلب", "توسيع القصبات الهوائية"], c: 1, e: "تضييق الأوعية يقلل من امتصاص المخدر في الدم، مما يبقيه فترة أطول في موقع الحقن."},
-    {q: "ما هي المادة التي تعتبر 'المعيار الذهبي' لختم انثقابات الجذور حيوياً؟", a: ["الزنك فوسفات", "ثلاثي أكسيد المعادن (MTA)", "الكوتابيركا", "الكومبوزيت الضوئي"], c: 1, e: "تتميز الـ MTA بقدرة عالية على الختم في البيئة الرطبة وتحفيز التجدد النسيجي."},
-    {q: "أي عضلات الفك مسؤولة عن حركة فتح الفم (الخسف)؟", a: ["العضلة الماضغة", "العضلة الصدغية", "العضلة الجناحية الوحشية", "العضلة الجناحية الإنسية"], c: 2, e: "الجناحية الوحشية هي العضلة الأساسية المسؤولة عن خفض الفك السفلي."},
-    {q: "ما هي الوظيفة البيولوجية للملاط (Cementum) الذي يغطي الجذر؟", a: ["حماية اللب", "تأمين ارتباط ألياف الرباط السني بالسن", "تحسس الحرارة", "إنتاج اللعاب"], c: 1, e: "الملاط يوفر السطح اللازم لغرس ألياف شاربي التي تثبت السن بالعظم."},
-    {q: "ما هو العمر التقريبي لبزوغ القواطع المركزية السفلية الدائمة؟", a: ["4-5 سنوات", "6-7 سنوات", "9-10 سنوات", "11-12 سنة"], c: 1, e: "تبدأ القواطع المركزية السفلية بالبزوغ عادةً في عمر 6 إلى 7 سنوات."},
-    {q: "ما هو المرض الذي يتميز بفقدان العظم السنخي بشكل عمودي وسريع عند الشباب؟", a: ["التهاب اللثة البسيط", "التهاب دواعم السن العدواني (Aggressive Periodontitis)", "النخر الشعاعي", "تآكل المينا الكيميائي"], c: 1, e: "هذا النوع يتميز بفقدان سريع للأنسجة الداعمة رغم قلة اللويحة الجرثومية أحياناً."},
-    {q: "في التيجان والجسور، ما هو 'عرض العرض البيولوجي' (Biological Width) الواجب تركه؟", a: ["0.5 ملم", "2 ملم تقريباً", "5 ملم", "لا يوجد قياس محدد"], c: 1, e: "يجب ترك مساحة 2 ملم تقريباً للارتباط الظهاري والضام فوق مستوى العظم السنخي."},
-    {q: "ما هو الغرض من استخدام تقنية 'تغطية اللب المباشرة'؟", a: ["قتل العصب", "تحفيز تكوين عاج ترميمي لحماية اللب الحي المكشوف", "تبييض السن من الداخل", "توسيع حجرة اللب"], c: 1, e: "تستخدم عند انكشاف اللب ميكانيكياً في وسط معقم للحفاظ على حيويته."},
-    {q: "ما هو الفحص السريري الذي يؤكد وجود التهاب حول ذروي (Apical Periodontitis)؟", a: ["الفحص بالبارد", "الطرق العمودي على السن (Percussion)", "التفتيش بالمسبر", "فحص الحركية"], c: 1, e: "الألم الناتج عن الطرق يشير بوضوح إلى وصول الالتهاب للأنسجة الداعمة المحيطة بالذروة."},
-    {q: "أي المواد السنية التالية تطلق الفلورايد وتعتبر ذاتية الارتباط بالعاج؟", a: ["الكومبوزيت", "الأسمنت الزجاجي الشاردي (GIC)", "الأملغم", "الزنك فوسفات"], c: 1, e: "الزجاج الشاردي يمتلك خاصية التبادل الأيوني مع السن وإطلاق الفلورايد."},
-    {q: "ما هي العضلة التي تشكل الجزء الأكبر من الشفاه؟", a: ["العضلة المبوقة", "العضلة الرافعة لجناح الأنف", "العضلة الحلقية الفموية", "العضلة الوجنية الكبيرة"], c: 2, e: "العضلة الحلقية الفموية هي المسؤولة عن إغلاق وزم الشفاه."}
+
+/* 🔴 بنك ثابت بدون توليد */
+const bank = [
+
+/* Endo */
+{q:"ألم ليلي نابض يستمر بعد البارد",o:["التهاب لب غير عكوس","حساسية","لب عكوس","كسر"],a:0,e:"استمرار الألم = irreversible pulpitis"},
+{q:"ألم بارد لحظي يزول سريعًا",o:["حساسية عاجية","التهاب لب","خراج","كيس"],a:0,e:"استجابة قصيرة = حساسية"},
+{q:"سن متغير اللون بعد رض",o:["تموت لبي","تسوس","كسر","لثة"],a:0,e:"الرض يؤدي لنخر اللب"},
+{q:"ألم عند العض فقط",o:["كسر سن","تسوس","تصبغ","لثة"],a:0,e:"ألم الضغط = crack"},
+{q:"ألم تلقائي بدون محفز",o:["التهاب لب غير عكوس","تسوس سطحي","لثة","تصبغ"],a:0,e:"spontaneous pain = pulpitis"},
+
+/* Perio */
+{q:"نزف لثوي مع لويحة",o:["التهاب لثة","التهاب دواعم","كيس","كسر"],a:0,e:"gingivitis plaque induced"},
+{q:"جيوب 6 ملم مع فقدان عظم",o:["التهاب دواعم","تسوس","كسر","حساسية"],a:0,e:"periodontitis"},
+{q:"رائحة فم مزمنة",o:["مرض لثوي","تسوس","كسر","تآكل"],a:0,e:"common perio cause"},
+{q:"انحسار لثوي مع حساسية",o:["انحسار لثة","تسوس","كسر","ورم"],a:0,e:"root exposure"},
+{q:"حركة سنية متزايدة",o:["فقدان دعم عظمي","تسوس","كسر","تصبغ"],a:0,e:"mobility due to bone loss"},
+
+/* Surgery */
+{q:"تورم حاد مؤلم مع حرارة",o:["خراج حاد","كيس","ورم","تآكل"],a:0,e:"acute abscess"},
+{q:"تورم بطيء غير مؤلم",o:["كيس","خراج","تسوس","لثة"],a:0,e:"cyst"},
+{q:"ألم بعد قلع مع عظم مكشوف",o:["Dry socket","كيس","خراج","تآكل"],a:0,e:"alveolar osteitis"},
+{q:"صعوبة فتح الفم مع ضرس عقل",o:["Pericoronitis","كسر","تسوس","تآكل"],a:0,e:"التهاب حول التاج"},
+{q:"تورم منتشر بدون تحديد",o:["Cellulitis","كيس","تسوس","لثة"],a:0,e:"انتشار الالتهاب"},
+
+/* Pedo */
+{q:"تسوس متعدد في طفل صغير",o:["Early childhood caries","تآكل","كسر","تصبغ"],a:0,e:"ECC"},
+{q:"طفل غير متعاون",o:["إدارة سلوكية","خلع","تأجيل","تخدير"],a:0,e:"behavior management first"},
+{q:"ألم عند تناول السكريات",o:["تسوس","كسر","لثة","تصبغ"],a:0,e:"caries"},
+{q:"بقع بيضاء طباشيرية",o:["نزع تمعدن","تسوس عميق","كسر","تآكل"],a:0,e:"early lesion"},
+{q:"نخر سريع للأسنان اللبنية",o:["ECC","تآكل","كسر","تصبغ"],a:0,e:"rapid caries"},
+
+/* Prostho */
+{q:"سقوط تاج متكرر",o:["فشل إسمنتي","تسوس","كسر","لثة"],a:0,e:"cement failure"},
+{q:"ألم تحت جسر ثابت",o:["تسوس ثانوي","لثة","كسر","تآكل"],a:0,e:"secondary caries"},
+{q:"عدم ثبات طقم كامل",o:["ضعف ارتكاز","كسر","تسوس","لثة"],a:0,e:"retention issue"},
+{q:"تقرحات تحت طقم",o:["ضغط زائد","كسر","تآكل","تسوس"],a:0,e:"trauma"},
+{q:"فراغات بعد تعويض",o:["سوء تصميم","كسر","تآكل","لثة"],a:0,e:"design flaw"}
+
 ];
 
-// توليد باقي الأسئلة (من 21 إلى 80) ببيانات علمية متنوعة لمنع التكرار
-const additionalTopics = [
-    {q: "ما هو تشخيص السن الذي يستجيب للبارد بألم يزول بعد ثوانٍ قليلة؟", a: ["التهاب لب غير مرتجع", "التهاب لب مرتجع (عكوس)", "تموت لبي", "خراج حول ذروي"], c: 1, e: "الألم اللحظي الذي يزول بزوال المنبه علامة على التهاب اللب المرتجع."},
-    {q: "أي الأنسجة لا يحتوي على أعصاب أو أوعية دموية إطلاقاً؟", a: ["العاج", "المينا", "اللب", "الرباط السني"], c: 1, e: "المينا نسيج متمعدن بالكامل وغير حي."},
-    {q: "ما هو النوع الرئيسي للكولاجين الموجود في الرباط السني؟", a: ["النوع الأول", "النوع الثاني", "النوع الرابع", "النوع الخامس"], c: 0, e: "الكولاجين من النوع الأول هو المكون الأساسي للأنسجة الضامة الداعمة."},
-    {q: "ما هي المسافة الدنيا الآمنة بين زرعتين سنيتين متجاورتين؟", a: ["1 ملم", "3 ملم", "5 ملم", "7 ملم"], c: 1, e: "يجب ترك 3 ملم للحفاظ على الحليمة اللثوية والعظم البيني."},
-    {q: "أي أداة تستخدم لإزالة النخر العاجي اللين يدوياً؟", a: ["المسبر", "المجرفة السنية (Excavator)", "المكحت", "المبرد"], c: 1, e: "المجرفة مصممة لإزالة العاج المتنخر والحفاظ على العاج السليم."}
-];
-
-// ملء المصفوفة لضمان الوصول للعدد 80
-for(let i=21; i<=80; i++) {
-    let t = additionalTopics[i % additionalTopics.length];
-    medicalBank.push({
-        q: i + ". " + t.q,
-        a: t.a,
-        c: t.c,
-        e: t.e
-    });
+/* 🟢 خلط الخيارات داخل كل سؤال */
+function shuffleOptions(q){
+let opts = q.o.map((text,i)=>({text,correct:i===q.a}));
+for(let i=opts.length-1;i>0;i--){
+let j=Math.random()*(i+1)|0;
+[opts[i],opts[j]]=[opts[j],opts[i]];
+}
+return opts;
 }
 
-let sessionQ = [];
-let cursor = 0;
-let points = 0;
-let tHandle;
+/* ENGINE */
+let exam=[],i=0,score=0;
 
-function startApp() {
-    document.getElementById('intro').style.display = 'none';
-    document.getElementById('quiz-box').style.display = 'block';
-    // خلط لمرة واحدة فقط لضمان العشوائية
-    sessionQ = [...medicalBank].sort(() => Math.random() - 0.5);
-    render();
+function startExam(){
+i=0;score=0;
+exam=[...bank];
+
+document.getElementById("start").style.display="none";
+document.getElementById("exam").style.display="block";
+
+load();
 }
 
-function render() {
-    clearTimeout(tHandle);
-    if (cursor >= sessionQ.length) {
-        showFinal(); return;
-    }
-    
-    const data = sessionQ[cursor];
-    document.getElementById('prog-txt').innerText = `السؤال: ${cursor + 1} / 80`;
-    document.getElementById('question').innerText = data.q;
-    document.getElementById('exp-box').style.display = 'none';
-    document.getElementById('timer-line').style.transition = 'none';
-    document.getElementById('timer-line').style.width = '0%';
-    
-    const btns = document.querySelectorAll('.btn-opt');
-    btns.forEach((b, i) => {
-        b.innerText = data.a[i];
-        b.className = 'btn-opt';
-        b.disabled = false;
-    });
+function load(){
+
+if(i>=exam.length){
+document.getElementById("exam").style.display="none";
+document.getElementById("result").style.display="block";
+
+document.getElementById("result").innerHTML=
+`<div class="card">النتيجة: ${score}/${exam.length}<br>
+<button class="btn" onclick="location.reload()">إعادة</button></div>`;
+return;
 }
 
-function verify(idx) {
-    const data = sessionQ[cursor];
-    const btns = document.querySelectorAll('.btn-opt');
-    btns.forEach(b => b.disabled = true);
-    
-    if (idx === data.c) {
-        btns[idx].classList.add('correct');
-        points++;
-        document.getElementById('score-txt').innerText = `النقاط: ${points}`;
-    } else {
-        btns[idx].classList.add('wrong');
-        btns[data.c].classList.add('correct');
-    }
-    
-    const exp = document.getElementById('exp-box');
-    exp.innerHTML = `<strong>التحليل العلمي:</strong> ${data.e}`;
-    exp.style.display = 'block';
-    
-    const line = document.getElementById('timer-line');
-    setTimeout(() => {
-        line.style.transition = 'width 2s linear';
-        line.style.width = '100%';
-    }, 50);
+let q=exam[i];
+let shuffled=shuffleOptions(q);
 
-    tHandle = setTimeout(() => {
-        cursor++;
-        render();
-    }, 2050);
+document.getElementById("progress").innerText=`${i+1}/${exam.length}`;
+document.getElementById("score").innerText=`${score}`;
+
+document.getElementById("question").innerText=q.q;
+document.getElementById("explanation").innerHTML="";
+
+let html="";
+shuffled.forEach((opt,idx)=>{
+html+=`<button class="btn" onclick="check(${idx})">${opt.text}</button>`;
+});
+
+document.getElementById("answers").innerHTML=html;
+
+/* حفظ الإجابة الصحيحة */
+window.currentAnswer = shuffled.findIndex(x=>x.correct);
+window.currentExplain = q.e;
 }
 
-function showFinal() {
-    document.getElementById('quiz-box').innerHTML = `
-        <div style="text-align:center; padding:30px;">
-            <h2 style="color:var(--dark-blue)">تم إنهاء الاختبار التخصصي</h2>
-            <div style="font-size:4rem; color:var(--green); font-weight:bold; margin:20px 0;">${points} / 80</div>
-            <p>أحسنت يا دكتور، لقد استعرضت 80 معلومة سريرية متنوعة.</p>
-            <button onclick="location.reload()" class="btn-ready" style="font-size:1.1rem; padding:12px 30px;">إعادة الدورة</button>
-        </div>
-    `;
+function check(x){
+
+let buttons=document.querySelectorAll(".btn");
+
+buttons.forEach(b=>b.disabled=true);
+
+buttons[window.currentAnswer].classList.add("correct");
+if(x!==window.currentAnswer)buttons[x].classList.add("wrong");
+
+document.getElementById("explanation").innerHTML=
+`<div class="explanation">${window.currentExplain}</div>`;
+
+if(x===window.currentAnswer)score++;
+
+setTimeout(()=>{i++;load();},1200);
 }
+
 </script>
+
 </body>
 </html>
