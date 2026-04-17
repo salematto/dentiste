@@ -1,3 +1,100 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OSCE Dental Unified</title>
+
+<style>
+body{margin:0;font-family:system-ui;background:#0b1220;color:#fff}
+
+header{
+background:#0f172a;
+padding:16px;
+text-align:center;
+border-bottom:3px solid #38bdf8;
+font-weight:bold
+}
+
+.container{max-width:900px;margin:auto;padding:20px}
+
+.card{
+background:#111827;
+padding:18px;
+border-radius:14px;
+margin-top:10px;
+line-height:1.8;
+white-space:pre-line;
+}
+
+.btn{
+width:100%;
+padding:12px;
+margin:6px 0;
+border:none;
+border-radius:10px;
+background:#1f2937;
+color:#fff;
+cursor:pointer;
+text-align:right;
+}
+
+.correct{background:#16a34a !important}
+.wrong{background:#dc2626 !important}
+
+.meta{
+display:flex;
+justify-content:space-between;
+color:#93c5fd;
+font-size:13px
+}
+
+.progress-bar{
+height:6px;
+background:#1f2937;
+border-radius:10px;
+margin-top:10px;
+overflow:hidden
+}
+
+.progress{
+height:100%;
+background:#38bdf8;
+width:0%
+}
+
+.explanation{
+margin-top:10px;
+background:#0f172a;
+padding:12px;
+border-radius:10px;
+border-left:4px solid #facc15
+}
+
+footer{
+text-align:center;
+padding:12px;
+color:#64748b;
+font-size:13px
+}
+</style>
+</head>
+
+<body>
+
+<header>
+🦷 OSCE Dental Unified System
+<br><small style="color:#94a3b8">Clinical Reasoning Mode</small>
+</header>
+
+<div class="container">
+
+<div id="start">
+<button class="btn" onclick="startExam()">ابدأ الامتحان</button>
+</div>
+
+<div id="exam" style="display:none">
+
 <div class="meta">
 <span id="progressText"></span>
 <span id="score"></span>
@@ -6,7 +103,9 @@
 <div class="progress-bar"><div id="progressBar" class="progress"></div></div>
 
 <div id="question" class="card"></div>
+
 <div id="answers"></div>
+
 <div id="explanation"></div>
 
 <button class="btn" onclick="restartExam()">إعادة</button>
@@ -17,79 +116,121 @@
 
 </div>
 
-<footer>OSCE Training System</footer>
+<footer>Unified OSCE System - Stable Core</footer>
 
 <script>
 
-/* 🟢 بنك حالات فعلي (ليس فارغ) */
+/* 🟢 OSCE BANK (موحد وموسع) */
 const bank = [
-{
-q:"مريض 40 سنة يعاني من ألم ليلي نابض يزداد مع الحرارة ويستمر بعد زوال المؤثر.",
-o:[
-"التهاب لب غير عكوس (تموت لبي)",
-"حساسية عاجية",
-"التهاب لثة",
-"كسر سن"
-],
-a:0,
-e:"ألم مستمر بعد الحرارة = التهاب لب غير عكوس"
-},
-{
-q:"ألم حاد مع البارد يختفي فورًا بدون ألم عفوي.",
-o:[
-"حساسية عاجية",
-"تموت لبي",
-"خراج",
-"التهاب دواعم"
-],
-a:0,
-e:"ألم قصير مع البارد = حساسية عاجية"
-},
-{
-q:"سن غير حي مع آفة ذروية شعاعياً.",
-o:[
-"تموت لبي مع التهاب حول الذروة",
-"حساسية",
-"تسوس",
-"التهاب لثة"
-],
-a:0,
-e:"غياب الحيوية + آفة ذروية"
-},
-{
-q:"ألم عند العض يزداد عند تحرير الضغط.",
-o:[
-"كسر شعري في السن",
-"التهاب لثة",
-"حساسية",
-"تآكل"
-],
-a:0,
-e:"release pain = cracked tooth"
-},
-{
-q:"نزف لثوي دون فقدان عظم.",
-o:[
-"التهاب لثة",
-"التهاب دواعم",
-"خراج",
-"كيس"
-],
-a:0,
-e:"بدون فقدان عظم = gingivitis"
-}
+
+/* ENDODONTICS */
+{case:"ألم ليلي نابض يزداد مع الحرارة ويستمر بعد المؤثر",
+q:"التشخيص؟",
+o:["التهاب لب غير عكوس (تموت لبي)","حساسية عاجية","التهاب لثة","كسر سن"],a:0,e:"ألم مستمر + حرارة = تموت لبي"},
+
+{case:"ألم بارد يختفي فوراً",
+q:"التشخيص؟",
+o:["حساسية عاجية","تموت لبي","خراج ذروي","التهاب دواعم"],a:0,e:"ألم قصير = حساسية"},
+
+{case:"سن غير حي مع آفة ذروية",
+q:"التشخيص؟",
+o:["تموت لبي مع التهاب حول الذروة","حساسية","تسوس","لثة"],a:0,e:"non vital + lesion"},
+
+{case:"ألم عند العض يزداد عند التحرير",
+q:"التشخيص؟",
+o:["كسر شعري","لثة","حساسية","تآكل"],a:0,e:"cracked tooth"},
+
+{case:"ألم عفوي ليلي",
+q:"التشخيص؟",
+o:["التهاب لب غير عكوس","حساسية","تآكل","لثة"],a:0,e:"pulpitis"},
+
+{case:"تغير لون سن",
+q:"التشخيص؟",
+o:["تموت لبي","تسوس","كسر","تصبغ"],a:0,e:"necrosis"},
+
+{case:"ألم عند القرع",
+q:"التشخيص؟",
+o:["التهاب حول الذروة","حساسية","لثة","تسوس"],a:0,e:"apical inflammation"},
+
+{case:"تورم ذروي",
+q:"التشخيص؟",
+o:["خراج ذروي","كيس","ورم","تآكل"],a:0,e:"abscess"},
+
+{case:"ألم حراري طويل",
+q:"التشخيص؟",
+o:["التهاب لب غير عكوس","عكوس","حساسية","لثة"],a:0,e:"irreversible pulpitis"},
+
+{case:"ألم بعد علاج عصب",
+q:"التشخيص؟",
+o:["التهاب حول الذروة","حساسية","لثة","تسوس"],a:0,e:"post endo"},
+
+/* PERIODONTAL */
+{case:"نزف لثوي",
+q:"التشخيص؟",
+o:["التهاب لثة","دواعم","كيس","خراج"],a:0,e:"gingivitis"},
+
+{case:"فقدان عظم + جيوب",
+q:"التشخيص؟",
+o:["التهاب دواعم","لثة","تسوس","كسر"],a:0,e:"periodontitis"},
+
+{case:"قيح لثوي",
+q:"التشخيص؟",
+o:["خراج لثوي","كيس","تسوس","لثة"],a:0,e:"abscess"},
+
+{case:"رائحة فم",
+q:"التشخيص؟",
+o:["مرض لثوي","تسوس","كسر","تآكل"],a:0,e:"halitosis"},
+
+{case:"حركة سن",
+q:"التشخيص؟",
+o:["فقدان دعم عظمي","تسوس","كسر","تصبغ"],a:0,e:"mobility"},
+
+/* SURGERY */
+{case:"ألم 48 ساعة بعد القلع",
+q:"التشخيص؟",
+o:["التهاب السنخ الجاف","خراج","كيس","تسوس"],a:0,e:"dry socket"},
+
+{case:"تورم حاد",
+q:"التشخيص؟",
+o:["خراج","كيس","ورم","تآكل"],a:0,e:"abscess"},
+
+{case:"تورم منتشر",
+q:"التشخيص؟",
+o:["التهاب خلوي","كيس","تسوس","لثة"],a:0,e:"cellulitis"},
+
+{case:"ضرس عقل ملتهب",
+q:"التشخيص؟",
+o:["Pericoronitis","كسر","تسوس","حساسية"],a:0,e:"wisdom infection"},
+
+/* PEDO */
+{case:"تسوس طفل متعدد",
+q:"التشخيص؟",
+o:["ECC","تآكل","كسر","تصبغ"],a:0,e:"early childhood caries"},
+
+{case:"بقع بيضاء",
+q:"التشخيص؟",
+o:["Demineralization","تسوس","كسر","تصبغ"],a:0,e:"early lesion"},
+
+{case:"ألم سكريات",
+q:"التشخيص؟",
+o:["تسوس","حساسية","كسر","لثة"],a:0,e:"caries"},
+
+/* PROSTHO */
+{case:"سقوط تاج",
+q:"التشخيص؟",
+o:["فشل إسمنتي","كسر","تسوس","لثة"],a:0,e:"cement failure"},
+
+{case:"ألم تحت جسر",
+q:"التشخيص؟",
+o:["تسوس ثانوي","حساسية","كسر","تآكل"],a:0,e:"secondary caries"},
+
+{case:"طقم غير ثابت",
+q:"التشخيص؟",
+o:["مشكلة احتفاظ","كسر","تسوس","لثة"],a:0,e:"fit issue"}
+
 ];
 
 let index=0,score=0,currentOptions=[];
-
-function shuffle(q){
-let arr=q.o.map((t,i)=>({t,correct:i===q.a}));
-for(let i=arr.length-1;i>0;i--){
-let j=Math.random()*(i+1)|0;
-[arr[i],arr[j]]=[arr[j],arr[i]];
-}
-return arr;
-}
 
 function startExam(){
 index=0;score=0;
@@ -122,20 +263,30 @@ document.getElementById("score").innerText=score;
 document.getElementById("progressBar").style.width=
 ((index/bank.length)*100)+"%";
 
-document.getElementById("question").innerText=q.q;
+document.getElementById("question").innerText=
+q.case + "\n\n" + q.q;
+
 document.getElementById("explanation").innerHTML="";
 
 let html="";
 currentOptions.forEach((opt,i)=>{
-html+=`<button class="btn answer-btn" onclick="check(${i})">${opt.t}</button>`;
+html+=`<button class="btn" onclick="check(${i})">${opt.t}</button>`;
 });
 
 document.getElementById("answers").innerHTML=html;
 }
 
-function check(i){
+function shuffle(q){
+let arr=q.o.map((t,i)=>({t,correct:i===q.a}));
+for(let i=arr.length-1;i>0;i--){
+let j=Math.random()*(i+1)|0;
+[arr[i],arr[j]]=[arr[j],arr[i]];
+}
+return arr;
+}
 
-let buttons=document.querySelectorAll(".answer-btn");
+function check(i){
+let buttons=document.getElementById("answers").querySelectorAll(".btn");
 let correctIndex=currentOptions.findIndex(x=>x.correct);
 
 buttons.forEach(b=>b.disabled=true);
@@ -148,7 +299,7 @@ document.getElementById("explanation").innerHTML=
 
 if(i===correctIndex)score++;
 
-setTimeout(()=>{index++;load();},900);
+setTimeout(()=>{index++;load();},1200);
 }
 
 </script>
