@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OSCE Core Engine</title>
+<title>OSCE Dental</title>
 
 <style>
 body{margin:0;font-family:system-ui;background:#0b1220;color:#fff}
@@ -24,12 +24,12 @@ footer{text-align:center;padding:12px;color:#64748b;font-size:13px}
 
 <body>
 
-<header>🦷 OSCE Stable Core Engine</header>
+<header>🦷 نظام OSCE لطب الأسنان</header>
 
 <div class="container">
 
 <div id="start">
-<button class="btn" onclick="startExam()">ابدأ</button>
+<button class="btn" onclick="startExam()">ابدأ الامتحان</button>
 </div>
 
 <div id="exam" style="display:none">
@@ -53,12 +53,68 @@ footer{text-align:center;padding:12px;color:#64748b;font-size:13px}
 
 </div>
 
-<footer>Stable Engine - No logic changes allowed</footer>
+<footer>OSCE Training System</footer>
 
 <script>
 
-/* 🟢 هذا هو الجزء الوحيد الذي سيتغير لاحقاً */
-const bank = []; // ← نملأه فقط
+/* 🟢 بنك حالات فعلي (ليس فارغ) */
+const bank = [
+{
+q:"مريض 40 سنة يعاني من ألم ليلي نابض يزداد مع الحرارة ويستمر بعد زوال المؤثر.",
+o:[
+"التهاب لب غير عكوس (تموت لبي)",
+"حساسية عاجية",
+"التهاب لثة",
+"كسر سن"
+],
+a:0,
+e:"ألم مستمر بعد الحرارة = التهاب لب غير عكوس"
+},
+{
+q:"ألم حاد مع البارد يختفي فورًا بدون ألم عفوي.",
+o:[
+"حساسية عاجية",
+"تموت لبي",
+"خراج",
+"التهاب دواعم"
+],
+a:0,
+e:"ألم قصير مع البارد = حساسية عاجية"
+},
+{
+q:"سن غير حي مع آفة ذروية شعاعياً.",
+o:[
+"تموت لبي مع التهاب حول الذروة",
+"حساسية",
+"تسوس",
+"التهاب لثة"
+],
+a:0,
+e:"غياب الحيوية + آفة ذروية"
+},
+{
+q:"ألم عند العض يزداد عند تحرير الضغط.",
+o:[
+"كسر شعري في السن",
+"التهاب لثة",
+"حساسية",
+"تآكل"
+],
+a:0,
+e:"release pain = cracked tooth"
+},
+{
+q:"نزف لثوي دون فقدان عظم.",
+o:[
+"التهاب لثة",
+"التهاب دواعم",
+"خراج",
+"كيس"
+],
+a:0,
+e:"بدون فقدان عظم = gingivitis"
+}
+];
 
 let index=0,score=0,currentOptions=[];
 
@@ -96,7 +152,7 @@ return;
 let q=bank[index];
 currentOptions=shuffle(q);
 
-document.getElementById("progressText").innerText=`الحالة ${index+1}/${bank.length}`;
+document.getElementById("progressText").innerText=`${index+1}/${bank.length}`;
 document.getElementById("score").innerText=score;
 
 document.getElementById("progressBar").style.width=
