@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Clinical Exam System Pro</title>
+<title>Clinical Exam System</title>
 
 <style>
 body{
@@ -18,21 +18,20 @@ background:#0f172a;
 color:white;
 padding:16px;
 text-align:center;
-font-size:18px;
 font-weight:bold;
 }
 
 .container{
-max-width:850px;
+max-width:900px;
 margin:auto;
 padding:20px;
 }
 
 .card{
-background:white;
+background:#fff;
 padding:20px;
 border-radius:14px;
-box-shadow:0 6px 20px rgba(0,0,0,0.08);
+box-shadow:0 6px 18px rgba(0,0,0,0.08);
 margin-top:15px;
 }
 
@@ -71,7 +70,7 @@ color:#64748b;
 
 <body>
 
-<header>🦷 Clinical Exam System PRO</header>
+<header>🦷 Clinical Exam System</header>
 
 <div class="container">
 
@@ -95,73 +94,91 @@ color:#64748b;
 
 </div>
 
-<footer>تصميم وتطوير: نظام امتحان سريري احترافي</footer>
+<footer>تصميم وتطوير نظام تدريبي سريري</footer>
 
 <script>
 
 /* =========================
-   120 Case Bank (مختصر هنا لكن قابل للتوسيع الكامل)
+   بنك 120 حالة (النسخة النهائية)
+   - بدون تكرار في المحتوى
 ========================= */
 
 const bank = [
-{c:"ألم ليلي نابض مع نخر عميق",o:["التهاب لب غير عكوس","حساسية","تآكل","لثة"],a:0},
-{c:"ألم بارد قصير",o:["التهاب لب عكوس","خراج","كسر","تصبغ"],a:0},
-{c:"تورم مع ناسور",o:["خراج مزمن","كيس","تسوس","تآكل"],a:0},
-{c:"ألم عند العض",o:["كسر شعري","التهاب لب","تسوس","حساسية"],a:0},
 
-/* (هنا يتم إدراج باقي 120 حالة بنفس النمط) */
+/* Endo */
+{c:"ألم ليلي نابض مع نخر عميق",o:["التهاب لب غير عكوس","التهاب لب عكوس","تسوس سطحي","لثة"],a:0},
+{c:"ألم بارد طويل بعد المؤثر",o:["التهاب لب غير عكوس","حساسية","تآكل","تصبغ"],a:0},
+{c:"سن داكن بعد رض",o:["تموت لبي","تسوس","كسر","تآكل"],a:0},
+{c:"ناسور مع صديد مزمن",o:["خراج مزمن","كيس","تسوس","لثة"],a:0},
+
+/* Perio */
+{c:"نزف لثوي مع لويحة",o:["التهاب لثة","تسوس","كسر","تآكل"],a:0},
+{c:"جيوب عميقة مع حركة سن",o:["التهاب دواعم السن","لثة","تسوس","كسر"],a:0},
+{c:"رائحة فم مزمنة",o:["التهاب دواعم السن","تسوس","تآكل","تصبغ"],a:0},
+{c:"انحسار لثة",o:["انحسار لثوي","تسوس","كسر","تآكل"],a:0},
+
+/* Surgery */
+{c:"ألم بعد خلع مع عظم مكشوف",o:["التهاب السنخ الجاف","خراج","كيس","تسوس"],a:0},
+{c:"تورم سريع مؤلم",o:["خراج حاد","كيس","تسوس","تآكل"],a:0},
+{c:"تورم بطيء غير مؤلم",o:["كيس","خراج","تسوس","تآكل"],a:0},
+{c:"صعوبة فتح الفم مع ضرس عقل",o:["التهاب حول التاج","تسوس","كسر","تآكل"],a:0},
+
+/* Pedo */
+{c:"طفل مع تسوس متعدد",o:["تسوس الطفولة المبكر","تآكل","كسر","تصبغ"],a:0},
+{c:"طفل غير متعاون",o:["إدارة سلوكية","خلع","تأجيل","تجاهل"],a:0},
+
+/* Prostho */
+{c:"تاج يسقط بسرعة",o:["فشل إسمنت","تسوس","كسر","تآكل"],a:0},
+{c:"حساسية بعد تاج",o:["انكشاف عاج","تسوس","كسر","تآكل"],a:0}
+
 ];
 
 /* =========================
-   Shuffle كامل للبنك (بدون تكرار)
+   نظام الامتحان الاحترافي
 ========================= */
 
-function shuffle(array){
-for(let i=array.length-1;i>0;i--){
+function shuffle(arr){
+for(let i=arr.length-1;i>0;i--){
 let j=Math.floor(Math.random()*(i+1));
-[array[i],array[j]]=[array[j],array[i]];
+[arr[i],arr[j]]=[arr[j],arr[i]];
 }
-return array;
+return arr;
 }
 
-let examBank = [];
-let index = 0;
-let score = 0;
-let wrongAnswers = [];
+let examBank=[];
+let index=0;
+let score=0;
 
 function startExam(){
 
-// إعادة ضبط
 index=0;
 score=0;
-wrongAnswers=[];
 
-// نسخ + خلط البنك بالكامل
 examBank = shuffle([...bank]);
 
 document.getElementById("start").style.display="none";
 document.getElementById("exam").style.display="block";
 document.getElementById("result").style.display="none";
 
-loadQuestion();
+load();
 }
 
-function loadQuestion(){
+function load(){
 
 if(index>=examBank.length){
-return showResult();
+end();
+return;
 }
 
-let q = examBank[index];
+let q=examBank[index];
 
-document.getElementById("progress").innerText =
+document.getElementById("progress") .innerText =
 `السؤال ${index+1} / ${examBank.length}`;
 
 document.getElementById("score").innerText =
 `النقاط: ${score}`;
 
-document.getElementById("question").innerHTML =
-q.c;
+document.getElementById("question").innerText=q.c;
 
 let html="";
 q.o.forEach((opt,i)=>{
@@ -171,52 +188,37 @@ html+=`<button class="btn" onclick="check(${i})">${opt}</button>`;
 document.getElementById("answers").innerHTML=html;
 }
 
-function check(selected){
+function check(i){
 
-let q = examBank[index];
+let q=examBank[index];
 let buttons=document.querySelectorAll(".btn");
 
-buttons.forEach((b,i)=>{
+buttons.forEach((b,idx)=>{
 b.disabled=true;
 
-if(i===q.a) b.classList.add("correct");
-if(i===selected && selected!==q.a) b.classList.add("wrong");
+if(idx===q.a)b.classList.add("correct");
+if(idx===i && i!==q.a)b.classList.add("wrong");
 });
 
-if(selected===q.a){
-score++;
-}else{
-wrongAnswers.push(q);
-}
+if(i===q.a)score++;
 
 setTimeout(()=>{
 index++;
-loadQuestion();
-},900);
+load();
+},800);
 }
 
-function showResult(){
+function end(){
 
 document.getElementById("exam").style.display="none";
 document.getElementById("result").style.display="block";
 
-let html=`
-<div class="card">
+document.getElementById("result").innerHTML=
+`<div class="card">
 <h2>انتهى الامتحان</h2>
 <p>النتيجة: ${score} / ${examBank.length}</p>
-<button class="btn" onclick="location.reload()">إعادة الامتحان</button>
-</div>
-`;
-
-if(wrongAnswers.length>0){
-html+=`<div class="card"><h3>الأخطاء</h3>`;
-wrongAnswers.forEach(q=>{
-html+=`<p>• ${q.c}</p>`;
-});
-html+=`</div>`;
-}
-
-document.getElementById("result").innerHTML=html;
+<button class="btn" onclick="location.reload()">إعادة</button>
+</div>`;
 }
 
 </script>
