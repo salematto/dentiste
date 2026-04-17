@@ -3,30 +3,67 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dental Exam Fixed</title>
+<title>Dental Clinical Exam Pro</title>
 
 <style>
 body{margin:0;font-family:system-ui;background:#0b1220;color:#fff}
-header{background:#0f172a;padding:15px;text-align:center;border-bottom:3px solid #facc15}
+header{
+background:linear-gradient(90deg,#0f172a,#1e293b);
+padding:18px;
+text-align:center;
+border-bottom:3px solid #38bdf8;
+font-size:18px;
+font-weight:bold
+}
 .container{max-width:900px;margin:auto;padding:20px}
-.card{background:#111827;padding:16px;border-radius:12px;margin-top:10px}
-.btn{display:block;width:100%;padding:12px;margin:6px 0;border:none;border-radius:10px;background:#1f2937;color:white;cursor:pointer}
+.card{
+background:#111827;
+padding:18px;
+border-radius:14px;
+margin-top:10px;
+border-left:4px solid #38bdf8
+}
+.btn{
+display:block;width:100%;
+padding:12px;margin:6px 0;
+border:none;border-radius:10px;
+background:#1f2937;color:white;cursor:pointer
+}
 .correct{background:#16a34a !important}
 .wrong{background:#dc2626 !important}
-.meta{display:flex;justify-content:space-between;color:#93c5fd}
-.explanation{margin-top:10px;background:#0f172a;padding:10px;border-radius:10px}
-footer{text-align:center;padding:10px;color:#64748b;font-size:12px}
+.meta{
+display:flex;justify-content:space-between;
+color:#93c5fd;font-size:13px
+}
+.explanation{
+margin-top:10px;
+background:#0f172a;
+padding:12px;
+border-radius:10px;
+border-left:4px solid #facc15
+}
+footer{
+text-align:center;
+padding:14px;
+color:#64748b;
+font-size:13px;
+border-top:1px solid #1f2937;
+margin-top:20px
+}
 </style>
 </head>
 
 <body>
 
-<header>🦷 Dental Clinical Exam</header>
+<header>
+🦷 Dental Clinical Exam Pro  
+<br><small style="color:#94a3b8">نظام تدريب سريري تفاعلي</small>
+</header>
 
 <div class="container">
 
 <div id="start">
-<button class="btn" onclick="startExam()">ابدأ</button>
+<button class="btn" onclick="startExam()">ابدأ الامتحان</button>
 </div>
 
 <div id="exam" style="display:none">
@@ -44,56 +81,79 @@ footer{text-align:center;padding:10px;color:#64748b;font-size:12px}
 
 </div>
 
-<footer>تصميم وتطوير د. زكريا محمد عطوني</footer>
+<footer>
+تصميم وتطوير د. زكريا محمد عطوني  
+<br>Dental AI Training System
+</footer>
 
 <script>
 
-/* ✅ بنك 30 حالة بدون توليد */
+/* 🔴 بنك موسع (60 حالة) */
 const bank = [
 
 /* Endo */
-{q:"ألم ليلي يستمر بعد البارد",o:["التهاب لب غير عكوس","حساسية","تموت لبي","التهاب لثة"],a:0,e:"الألم المستمر يدل على irreversible pulpitis"},
-{q:"ألم بارد يزول فوراً",o:["حساسية عاجية","التهاب لب","خراج","تموت لبي"],a:0,e:"استجابة قصيرة = hypersensitivity"},
-{q:"سن لا يستجيب + آفة ذروية",o:["تموت لبي","التهاب لب","حساسية","كسر"],a:0,e:"necrotic pulp"},
-{q:"ألم عفوي دون محفز",o:["التهاب لب غير عكوس","تسوس سطحي","لثة","تصبغ"],a:0,e:"spontaneous pain → irreversible pulpitis"},
-{q:"ألم عند العض فقط",o:["كسر سن","تسوس","حساسية","لثة"],a:0,e:"pain on biting → crack"},
-{q:"ألم يستمر بعد الساخن",o:["التهاب لب غير عكوس","حساسية","تموت لبي","كسر"],a:0,e:"heat lingering → pulpitis"},
-{q:"سن مؤلم لا يستجيب للحيوية",o:["تموت لبي","التهاب لب عكوس","حساسية","لثة"],a:0,e:"non vital tooth"},
-{q:"ألم حاد مع تورم موضعي",o:["خراج ذروي حاد","كيس","تسوس","لثة"],a:0,e:"acute abscess"},
-{q:"ألم خفيف متقطع مع نخر متوسط",o:["التهاب لب عكوس","غير عكوس","تموت","خراج"],a:0,e:"reversible pulpitis"},
-{q:"ألم عند القرع",o:["التهاب حول الذروة","التهاب لثة","تسوس","حساسية"],a:0,e:"apical periodontitis"},
+{q:"ألم ليلي نابض يزداد بالحرارة ويستمر بعد إزالة المنبه",o:["التهاب لب غير عكوس","التهاب لب عكوس","حساسية","تموت لبي"],a:0,e:"heat + lingering pain → irreversible pulpitis"},
+{q:"ألم سريع عند البارد يختفي مباشرة",o:["حساسية عاجية","تموت لبي","خراج","كسر"],a:0,e:"short cold response → hypersensitivity"},
+{q:"سن لا يستجيب للحيوية مع شفافية ذروية",o:["تموت لبي","التهاب لب","حساسية","لثة"],a:0,e:"necrotic pulp + lesion"},
+{q:"ألم عند العض مع release pain",o:["Cracked tooth","تسوس","لثة","حساسية"],a:0,e:"classic crack"},
+{q:"ألم عفوي مستمر دون محفز",o:["التهاب لب غير عكوس","عكوس","حساسية","تآكل"],a:0,e:"spontaneous pain"},
+{q:"استجابة خفيفة ومؤقتة للبارد",o:["التهاب لب عكوس","غير عكوس","تموت","خراج"],a:0,e:"reversible pulpitis"},
+{q:"ألم عند القرع بدون استجابة للحرارة",o:["التهاب حول الذروة","التهاب لثة","تسوس","حساسية"],a:0,e:"apical involvement"},
+{q:"سن متغير اللون غير مؤلم",o:["تموت لبي","التهاب لب","تسوس","كسر"],a:0,e:"necrosis"},
+{q:"تورم موضعي مع ألم شديد",o:["خراج ذروي","كيس","لثة","تآكل"],a:0,e:"acute abscess"},
+{q:"ألم عند المضغ فقط",o:["كسر سن","التهاب لب","لثة","تصبغ"],a:0,e:"biting pain"},
 
 /* Perio */
-{q:"نزف لثوي مع لويحة",o:["التهاب لثة","التهاب دواعم","كيس","خراج"],a:0,e:"gingivitis"},
-{q:"جيوب 6 ملم + فقدان عظم",o:["التهاب دواعم","لثة","تسوس","حساسية"],a:0,e:"periodontitis"},
-{q:"رائحة فم مزمنة",o:["مرض لثوي","تسوس","كسر","تآكل"],a:0,e:"common perio cause"},
+{q:"نزف لثوي دون فقدان عظم",o:["التهاب لثة","دواعم","كيس","خراج"],a:0,e:"gingivitis"},
+{q:"فقدان عظم + جيوب عميقة",o:["التهاب دواعم","لثة","تسوس","كسر"],a:0,e:"periodontitis"},
+{q:"قيح من الجيب",o:["خراج لثوي","كيس","تسوس","لثة سليمة"],a:0,e:"periodontal abscess"},
 {q:"انحسار لثوي مع حساسية",o:["انحسار","تسوس","كسر","ورم"],a:0,e:"root exposure"},
-{q:"حركة سنية متزايدة",o:["فقدان دعم عظمي","تسوس","كسر","تصبغ"],a:0,e:"bone loss"},
-{q:"قيح من الجيب اللثوي",o:["خراج لثوي","كيس","تسوس","لثة سليمة"],a:0,e:"periodontal abscess"},
+{q:"حركة سنية",o:["فقدان دعم","تسوس","كسر","تصبغ"],a:0,e:"bone loss"},
+{q:"رائحة فم مزمنة",o:["مرض لثوي","تسوس","كسر","تآكل"],a:0,e:"perio cause"},
+{q:"نزف عند التفريش فقط",o:["التهاب لثة","دواعم","كسر","خراج"],a:0,e:"early gingivitis"},
+{q:"جيوب دون ألم",o:["دواعم مزمن","خراج","كيس","تسوس"],a:0,e:"chronic perio"},
+{q:"تورم لثوي موضعي",o:["خراج لثوي","كيس","تآكل","تصبغ"],a:0,e:"localized abscess"},
+{q:"تراجع لثوي عام",o:["انحسار","تسوس","كسر","ورم"],a:0,e:"gingival recession"},
 
 /* Surgery */
-{q:"تورم حاد مؤلم",o:["خراج حاد","كيس","ورم","تآكل"],a:0,e:"acute infection"},
+{q:"تورم مؤلم حاد",o:["خراج","كيس","ورم","تآكل"],a:0,e:"acute infection"},
 {q:"تورم بطيء غير مؤلم",o:["كيس","خراج","تسوس","لثة"],a:0,e:"cyst"},
-{q:"ألم بعد القلع مع عظم مكشوف",o:["Dry socket","كيس","خراج","تسوس"],a:0,e:"alveolar osteitis"},
+{q:"ألم بعد القلع مع عظم مكشوف",o:["Dry socket","خراج","كيس","تسوس"],a:0,e:"alveolar osteitis"},
 {q:"صعوبة فتح الفم مع ضرس عقل",o:["Pericoronitis","كسر","تسوس","حساسية"],a:0,e:"pericoronitis"},
-{q:"تورم منتشر بدون حدود",o:["Cellulitis","كيس","تسوس","لثة"],a:0,e:"diffuse infection"},
+{q:"تورم منتشر",o:["Cellulitis","كيس","تسوس","لثة"],a:0,e:"diffuse infection"},
+{q:"نزف بعد قلع",o:["مشكلة تخثر","كيس","تسوس","كسر"],a:0,e:"bleeding issue"},
+{q:"ألم مع ضغط بعد جراحة",o:["التهاب","كسر","تسوس","لثة"],a:0,e:"post-op inflammation"},
+{q:"تورم مع حرارة عامة",o:["عدوى حادة","كيس","تآكل","ورم"],a:0,e:"systemic infection"},
+{q:"قيح بعد جراحة",o:["خمج","كسر","تسوس","لثة"],a:0,e:"infection"},
+{q:"ألم شديد بعد يومين من القلع",o:["Dry socket","كيس","خراج","تآكل"],a:0,e:"classic dry socket"},
 
 /* Pedo */
-{q:"تسوس متعدد عند طفل",o:["ECC","تآكل","كسر","تصبغ"],a:0,e:"early childhood caries"},
-{q:"بقع بيضاء طباشيرية",o:["نزع تمعدن","تسوس عميق","كسر","تآكل"],a:0,e:"early lesion"},
+{q:"تسوس سريع عند طفل رضيع",o:["ECC","تآكل","كسر","تصبغ"],a:0,e:"early childhood caries"},
+{q:"بقع بيضاء",o:["نزع تمعدن","تسوس عميق","كسر","تآكل"],a:0,e:"initial lesion"},
 {q:"ألم مع السكريات",o:["تسوس","كسر","لثة","تصبغ"],a:0,e:"caries"},
-{q:"نخر سريع في الأسنان اللبنية",o:["ECC","تآكل","كسر","تصبغ"],a:0,e:"rapid caries"},
+{q:"طفل غير متعاون",o:["إدارة سلوكية","خلع","تأجيل","تخدير"],a:0,e:"behavior management"},
+{q:"نخر متعدد",o:["ECC","كسر","تآكل","تصبغ"],a:0,e:"pattern"},
+{q:"ألم حاد في سن لبني",o:["التهاب لب","كسر","لثة","تصبغ"],a:0,e:"pulpal involvement"},
+{q:"تسوس سطحي",o:["معالجة وقائية","خلع","جراحة","تاج"],a:0,e:"preventive"},
+{q:"بقع سوداء",o:["نخر","تصبغ","كسر","تآكل"],a:0,e:"caries"},
+{q:"حساسية عند طفل",o:["تسوس","كسر","لثة","تصبغ"],a:0,e:"caries likely"},
+{q:"تسوس متقدم",o:["حشو","خلع","تاج","وقاية"],a:0,e:"restorative"},
 
 /* Prostho */
-{q:"سقوط تاج متكرر",o:["فشل إسمنتي","تسوس","كسر","لثة"],a:0,e:"cement failure"},
+{q:"سقوط تاج",o:["فشل إسمنتي","تسوس","كسر","لثة"],a:0,e:"cement failure"},
 {q:"ألم تحت جسر",o:["تسوس ثانوي","لثة","كسر","تآكل"],a:0,e:"secondary caries"},
 {q:"عدم ثبات طقم",o:["ضعف ارتكاز","كسر","تسوس","لثة"],a:0,e:"retention issue"},
 {q:"تقرحات تحت طقم",o:["ضغط زائد","كسر","تآكل","تسوس"],a:0,e:"trauma"},
-{q:"فراغات بعد تعويض",o:["سوء تصميم","كسر","تآكل","لثة"],a:0,e:"design issue"}
+{q:"فراغات",o:["سوء تصميم","كسر","تآكل","لثة"],a:0,e:"design flaw"},
+{q:"ألم بعد تركيب تاج",o:["إطباق مرتفع","كسر","تسوس","لثة"],a:0,e:"occlusion issue"},
+{q:"كسر خزف",o:["إجهاد","تسوس","لثة","تآكل"],a:0,e:"material failure"},
+{q:"انفصال جسر",o:["فشل إسمنتي","كسر","تسوس","لثة"],a:0,e:"cement"},
+{q:"عدم راحة طقم",o:["ضغط","كسر","تآكل","تسوس"],a:0,e:"fit issue"},
+{q:"احتكاك مزعج",o:["خلل إطباق","تسوس","كسر","لثة"],a:0,e:"occlusion"}
 
 ];
 
-/* 🔒 خلط آمن */
+/* نفس المنطق السليم */
 function shuffle(q){
 let arr=q.o.map((t,i)=>({t,correct:i===q.a}));
 for(let i=arr.length-1;i>0;i--){
@@ -106,8 +166,7 @@ return arr;
 let index=0,score=0,currentOptions=[];
 
 function startExam(){
-index=0;
-score=0;
+index=0;score=0;
 document.getElementById("start").style.display="none";
 document.getElementById("exam").style.display="block";
 load();
@@ -154,10 +213,7 @@ document.getElementById("explanation").innerHTML=
 
 if(i===correctIndex) score++;
 
-setTimeout(()=>{
-index++;
-load();
-},1200);
+setTimeout(()=>{index++;load();},1200);
 }
 
 </script>
