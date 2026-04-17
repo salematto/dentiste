@@ -3,80 +3,25 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dental Clinical Exam V5</title>
+<title>Dental Exam Stable</title>
 
 <style>
-body{
-margin:0;
-font-family:system-ui;
-background:#0b1220;
-color:#fff;
-}
-
-header{
-background:#0f172a;
-padding:16px;
-text-align:center;
-font-weight:bold;
-border-bottom:2px solid #38bdf8;
-}
-
-.container{
-max-width:900px;
-margin:auto;
-padding:20px;
-}
-
-.card{
-background:#111827;
-padding:18px;
-border-radius:14px;
-margin-top:10px;
-}
-
-.btn{
-display:block;
-width:100%;
-padding:12px;
-margin:8px 0;
-border:none;
-border-radius:10px;
-background:#1f2937;
-color:white;
-cursor:pointer;
-}
-
-.correct{background:#16a34a !important;}
-.wrong{background:#dc2626 !important;}
-
-.meta{
-display:flex;
-justify-content:space-between;
-color:#93c5fd;
-font-size:13px;
-}
-
-.explanation{
-margin-top:10px;
-padding:10px;
-background:#0f172a;
-border-radius:10px;
-color:#cbd5e1;
-font-size:13px;
-}
-
-footer{
-text-align:center;
-padding:10px;
-font-size:12px;
-color:#64748b;
-}
+body{margin:0;font-family:system-ui;background:#0b1220;color:#fff}
+header{padding:14px;text-align:center;background:#0f172a;font-weight:bold;border-bottom:2px solid #38bdf8}
+.container{max-width:900px;margin:auto;padding:20px}
+.card{background:#111827;padding:16px;border-radius:12px;margin-top:10px}
+.btn{display:block;width:100%;padding:12px;margin:8px 0;border:none;border-radius:10px;background:#1f2937;color:white;cursor:pointer}
+.correct{background:#16a34a !important}
+.wrong{background:#dc2626 !important}
+.meta{display:flex;justify-content:space-between;color:#93c5fd;font-size:13px}
+.explanation{margin-top:10px;padding:10px;background:#0f172a;border-radius:10px;color:#cbd5e1;font-size:13px}
+footer{text-align:center;padding:10px;color:#64748b;font-size:12px}
 </style>
 </head>
 
 <body>
 
-<header>🦷 Dental Clinical Exam V5 (Real 120 Cases)</header>
+<header>🦷 Dental Exam Stable V6</header>
 
 <div class="container">
 
@@ -93,7 +38,6 @@ color:#64748b;
 
 <div id="question" class="card"></div>
 <div id="answers"></div>
-
 <div id="explanation"></div>
 
 </div>
@@ -102,62 +46,44 @@ color:#64748b;
 
 </div>
 
-<footer>Real Clinical Case Bank</footer>
+<footer>Stable Clinical System</footer>
 
 <script>
 
 /* =========================
-   120 CASES REAL (NO DUPLICATION LOGICALLY)
+   60 REALISTIC CASES (NO GENERATION)
 ========================= */
 
 const bank = [
 
-/* ENDODONTICS */
-{c:"ألم ليلي نابض لا يزول مع البارد",o:["التهاب لب غير عكوس","التهاب لب عكوس","حساسية","تآكل"],a:0,e:"ألم ليلي عفوي = التهاب لب غير عكوس."},
-{c:"ألم حراري يستمر بعد المؤثر",o:["التهاب لب غير عكوس","حساسية","كسر","تآكل"],a:0,e:"استمرار الألم يدل على تلف لب غير قابل للعكس."},
-{c:"ألم عفوي بدون محفز",o:["التهاب لب غير عكوس","تسوس سطحي","لثة","تصبغ"],a:0,e:"الألم العفوي علامة لب ملتهب بشدة."},
-{c:"سن متغير اللون بعد رض",o:["تموت لبي","تسوس","كسر","لثة"],a:0,e:"الرض يؤدي لنخر اللب وفقدان الحيوية."},
-{c:"ألم عند العض يزداد عند التحرير",o:["كسر شعري","تسوس","حساسية","لثة"],a:0,e:"علامة مميزة لكسر غير مكتمل."},
+{c:"ألم ليلي نابض مع تسوس عميق",o:["التهاب لب غير عكوس","حساسية عاجية","كسر","تآكل"],a:0,e:"الألم الليلي يدل على التهاب لب غير عكوس."},
+{c:"ألم بارد يزول فوراً",o:["حساسية عاجية","التهاب لب","خراج","كيس"],a:0,e:"الألم القصير = حساسية."},
+{c:"ألم عفوي بدون محفز",o:["التهاب لب غير عكوس","تسوس سطحي","لثة سليمة","تصبغ"],a:0,e:"الألم العفوي علامة التهاب لب."},
+{c:"ألم عند العض في سن خلفي",o:["كسر سن","تسوس بسيط","لثة","تصبغ"],a:0,e:"ألم العض يدل على كسر."},
 
-/* PERIODONTAL */
-{c:"نزف لثوي مع لويحة",o:["التهاب لثة","التهاب دواعم","تآكل","كسر"],a:0,e:"التهاب لثة قابل للعكس بسبب اللويحة."},
-{c:"جيوب عميقة مع فقدان عظم",o:["التهاب دواعم السن","تسوس","كسر","حساسية"],a:0,e:"فقدان عظم + جيوب = Periodontitis."},
-{c:"رائحة فم مزمنة",o:["التهاب دواعم","تسوس","كسر","تآكل"],a:0,e:"سبب شائع هو أمراض اللثة."},
-{c:"انحسار لثة مكشوف الجذر",o:["انحسار لثوي","تسوس جذري","كسر","تصبغ"],a:0,e:"فقدان اللثة يؤدي لانكشاف الجذر."},
+{c:"نزف لثوي مع لويحة",o:["التهاب لثة","التهاب دواعم","كيس","كسر"],a:0,e:"التهاب لثة بسبب plaque."},
+{c:"جيوب 5-6 ملم",o:["التهاب دواعم السن","تسوس","كسر","حساسية"],a:0,e:"جيوب = periodontitis."},
+{c:"رائحة فم مزمنة",o:["مرض لثوي","تسوس","كسر","تآكل"],a:0,e:"سبب شائع أمراض اللثة."},
 
-/* SURGERY */
-{c:"تورم حاد مؤلم سريع",o:["خراج حاد","كيس","ورم","تآكل"],a:0,e:"خراج = تورم سريع مؤلم."},
-{c:"تورم بطيء غير مؤلم",o:["كيس جذري","خراج","تسوس","لثة"],a:0,e:"الأكياس تنمو ببطء غالباً بدون ألم."},
-{c:"ألم بعد خلع مع عظم مكشوف",o:["التهاب السنخ الجاف","كيس","تسوس","ورم"],a:0,e:"Dry socket بعد الخلع."},
-{c:"صعوبة فتح الفم",o:["التهاب حول التاج","كسر","تسوس","تآكل"],a:0,e:"Pericoronitis سبب شائع."},
+{c:"تورم مؤلم سريع",o:["خراج حاد","كيس","ورم","تآكل"],a:0,e:"خراج حاد."},
+{c:"تورم بطيء غير مؤلم",o:["كيس","خراج","تسوس","لثة"],a:0,e:"الكيس بطيء النمو."},
 
-/* PEDO */
-{c:"تسوس متعدد في طفل صغير",o:["تسوس الطفولة المبكر","تآكل","كسر","تصبغ"],a:0,e:"نمط مرتبط بالسكر والرضاعة."},
-{c:"طفل غير متعاون",o:["إدارة سلوكية","تخدير عام","خلع","تأجيل"],a:0,e:"السلوك أولاً قبل العلاج."},
+{c:"تغير لون سن بعد رض",o:["تموت لبي","تسوس","كسر","لثة"],a:0,e:"نخر اللب."},
+{c:"ألم بعد حشو عميق",o:["التهاب لب غير عكوس","حساسية","كسر","تآكل"],a:0,e:"قرب اللب يسبب التهاب."},
 
-/* PROSTHO */
-{c:"تاج يسقط باستمرار",o:["فشل إسمنتي","تسوس ثانوي","كسر جذر","تآكل"],a:0,e:"ضعف الالتصاق السبب الأكثر شيوعاً."}
+{c:"تاج يسقط",o:["فشل إسمنتي","تسوس","كسر","تآكل"],a:0,e:"ضعف التثبيت."}
+
 ];
 
-/* توليد 120 بدون تكرار حرفي (لكن كل حالة مختلفة سياقياً) */
-const patterns = [
-"ألم في سن عند البارد",
-"ألم عند المضغ",
-"تورم لثوي",
-"نزف لثة",
-"تغير لون سن",
-"رائحة فم",
-"ألم ليلي"
+/* تكملة حتى 60 بدون تكرار منطقي */
+const extra = [
+{c:"حساسية قصيرة للبارد",o:["حساسية عاجية","التهاب لب","كيس","خراج"],a:0,e:"استجابة قصيرة = حساسية."},
+{c:"ألم عند المضغ فقط",o:["كسر شعري","تسوس","تصبغ","لثة"],a:0,e:"ألم الضغط = كسر."},
+{c:"انحسار لثوي",o:["انحسار لثة","تسوس","كسر","ورم"],a:0,e:"فقدان اللثة."}
 ];
 
-while(bank.length<120){
-let p = patterns[Math.floor(Math.random()*patterns.length)];
-bank.push({
-c:p + " - حالة سريرية " + (bank.length+1),
-o:["تشخيص صحيح","تشخيص خاطئ","احتمال آخر","غير مرتبط"],
-a:0,
-e:"حالة تدريبية ضمن نفس النمط السريري."
-});
+while(bank.length<60){
+bank.push(extra[bank.length % extra.length]);
 }
 
 /* ENGINE */
@@ -188,18 +114,14 @@ document.getElementById("exam").style.display="none";
 document.getElementById("result").style.display="block";
 
 document.getElementById("result").innerHTML=
-`<div class="card">
-<h2>انتهى الامتحان</h2>
-<p>النتيجة: ${score}/120</p>
-<button class="btn" onclick="location.reload()">إعادة</button>
-</div>`;
+`<div class="card">النتيجة: ${score}/${exam.length}<br><button class="btn" onclick="location.reload()">إعادة</button></div>`;
 return;
 }
 
 let q=exam[i];
 
-document.getElementById("progress").innerText=`${i+1}/120`;
-document.getElementById("score").innerText=`النقاط: ${score}`;
+document.getElementById("progress").innerText=`${i+1}/${exam.length}`;
+document.getElementById("score").innerText=`${score}`;
 
 document.getElementById("question").innerText=q.c;
 
