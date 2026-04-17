@@ -38,19 +38,23 @@ margin:auto;
 padding:22px;
 }
 
+/* ✅ CARD (محسن فعليًا) */
 .card{
-background:rgba(255,255,255,0.92);
-backdrop-filter:blur(8px);
-padding:22px;
-border-radius:18px;
-box-shadow:0 10px 30px rgba(0,0,0,0.08);
+background: linear-gradient(145deg,#ffffff,#f8fafc);
+padding:24px;
+border-radius:20px;
+box-shadow:
+0 10px 25px rgba(15,23,42,0.10),
+0 2px 6px rgba(15,23,42,0.05);
 line-height:1.7;
-border:1px solid rgba(226,232,240,0.8);
-transition:0.2s;
+border:1px solid #e2e8f0;
+transition:0.25s ease;
 }
 
 .card:hover{
-transform:translateY(-2px);
+transform:translateY(-3px);
+box-shadow:
+0 15px 35px rgba(15,23,42,0.15);
 }
 
 .btn{
@@ -146,14 +150,10 @@ Dental Clinical Exam Pro<br>
 </div>
 
 <footer>
-© 2026 Dental Clinical Exam Pro — Designed for Clinical Training
+تصميم وتطوير: د. زكريا محمد عطوني
 </footer>
 
 <script>
-
-/* =========================
-   120 Clinical Cases Core
-========================= */
 
 const baseCases = [
 {
@@ -168,7 +168,7 @@ case:`ألم بارد يزول خلال ثوانٍ دون ألم عفوي.`,
 q:"التشخيص؟",
 o:["حساسية عاجية","التهاب لب","خراج","كسر"],
 a:0,
-e:"الألم السريع الزوال يدل على لب حي مع تعرض عاجي."
+e:"ألم سريع الزوال يدل على لب حي مع تعرض عاجي."
 },
 {
 case:`تورم مع ناسور يفرغ قيحًا.`,
@@ -200,10 +200,7 @@ e:"تموت اللب بعد الصدمة."
 }
 ];
 
-/* ===== expand to 120 ===== */
-
-let bank = [];
-
+let bank=[];
 for(let i=0;i<120;i++){
 let b = baseCases[i % baseCases.length];
 
@@ -216,9 +213,7 @@ e: b.e
 });
 }
 
-let i=0, score=0;
-
-/* ========================= */
+let i=0,score=0;
 
 function startExam(){
 i=0;score=0;
@@ -249,16 +244,16 @@ document.getElementById("explain").style.display="none";
 
 function check(x){
 let q = bank[i];
-let buttons = document.querySelectorAll(".btn");
+let buttons=document.querySelectorAll(".btn");
 
 buttons.forEach((b,idx)=>{
 if(idx===q.a) b.classList.add("correct");
 if(idx===x && x!==q.a) b.classList.add("wrong");
-b.disabled = true;
+b.disabled=true;
 });
 
-document.getElementById("explain").innerText = q.e;
-document.getElementById("explain").style.display = "block";
+document.getElementById("explain").innerText=q.e;
+document.getElementById("explain").style.display="block";
 
 if(x===q.a) score++;
 
