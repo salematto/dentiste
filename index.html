@@ -3,104 +3,32 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Clinical Exam Platform V1</title>
+<title>Clinical Exam</title>
 
 <style>
-body{
-margin:0;
-font-family:system-ui;
-background:#0b1220;
-color:#e5e7eb;
-}
-
-/* HEADER */
-header{
-background:linear-gradient(90deg,#0f172a,#1e3a8a);
-padding:18px;
-text-align:center;
-font-weight:bold;
-font-size:18px;
-border-bottom:2px solid #38bdf8;
-}
-
-/* LAYOUT */
-.container{
-max-width:950px;
-margin:auto;
-padding:20px;
-}
-
-/* CARD */
-.card{
-background:#111827;
-padding:22px;
-border-radius:16px;
-box-shadow:0 10px 30px rgba(0,0,0,0.4);
-margin-top:15px;
-border:1px solid #1f2937;
-}
-
-/* BUTTON */
-.btn{
-display:block;
-width:100%;
-padding:13px;
-margin:8px 0;
-border:none;
-border-radius:12px;
-background:#1f2937;
-color:#e5e7eb;
-cursor:pointer;
-transition:0.2s;
-}
-
-.btn:hover{background:#374151;}
-
-.correct{background:#16a34a !important;color:white;}
-.wrong{background:#dc2626 !important;color:white;}
-
-/* META */
-.meta{
-display:flex;
-justify-content:space-between;
-font-size:13px;
-color:#93c5fd;
-}
-
-/* FOOTER */
-footer{
-text-align:center;
-padding:18px;
-font-size:12px;
-color:#64748b;
-margin-top:20px;
-}
-
-/* START */
-.startBtn{
-padding:14px;
-border:none;
-border-radius:14px;
-background:#38bdf8;
-color:#0b1220;
-font-weight:bold;
-cursor:pointer;
-width:100%;
-}
+body{margin:0;font-family:system-ui;background:#0b1220;color:#fff}
+header{padding:16px;text-align:center;background:#111827}
+.container{max-width:900px;margin:auto;padding:20px}
+.card{background:#111827;padding:20px;border-radius:14px;margin-top:10px}
+.btn{display:block;width:100%;padding:12px;margin:8px 0;border:0;border-radius:10px;background:#1f2937;color:white;cursor:pointer}
+.correct{background:#16a34a !important}
+.wrong{background:#dc2626 !important}
+.meta{display:flex;justify-content:space-between;color:#93c5fd;font-size:13px}
+footer{text-align:center;color:#64748b;padding:15px;font-size:12px}
 </style>
 </head>
 
 <body>
 
-<header>🦷 Clinical Dentistry Exam Platform V1</header>
+<header>🦷 Clinical Exam</header>
 
 <div class="container">
 
 <div id="start">
-<button class="startBtn" onclick="startExam()">بدء الامتحان السريري</button>
+<button class="btn" onclick="startExam()">ابدأ</button>
 </div>
 
-<div id="exam" style="display:none;">
+<div id="exam" style="display:none">
 
 <div class="meta">
 <span id="progress"></span>
@@ -112,83 +40,56 @@ width:100%;
 
 </div>
 
-<div id="result" style="display:none;"></div>
+<div id="result" style="display:none"></div>
 
 </div>
 
-<footer>Designed for clinical training use</footer>
+<footer>Exam System</footer>
 
 <script>
 
-/* =========================
-   120 CASES (نسخة علمية موحدة)
-========================= */
-
+/* بنك بسيط للتأكد من التشغيل أولاً */
 const bank = [
-/* Endodontics */
-{c:"ألم ليلي نابض مع تسوس عميق",o:["التهاب لب غير عكوس","التهاب لب عكوس","تسوس سطحي","حساسية عاجية"],a:0},
-{c:"ألم حراري يستمر بعد إزالة المؤثر",o:["التهاب لب غير عكوس","حساسية","تآكل","تصبغ"],a:0},
-{c:"ألم تلقائي بدون محفز",o:["التهاب لب غير عكوس","تسوس","كسر","تآكل"],a:0},
-{c:"سن متغير اللون بعد رض",o:["تموت لبي","تسوس","تآكل","التهاب لثة"],a:0},
-{c:"ناسور مع إفراز قيحي",o:["خراج مزمن","كيس","تسوس","حساسية"],a:0},
-
-/* Periodontics */
-{c:"نزف لثوي مع تراكم لويحة",o:["التهاب لثة","التهاب دواعم السن","تآكل","كسر"],a:0},
-{c:"جيوب عميقة مع فقدان عظم",o:["التهاب دواعم السن","تسوس","كسر","تصبغ"],a:0},
-{c:"رائحة فم مزمنة",o:["التهاب دواعم السن","تسوس","كسر","تآكل"],a:0},
-{c:"انحسار لثة مع جذور مكشوفة",o:["انحسار لثوي","تسوس","كسر","تآكل"],a:0},
-
-/* Surgery */
-{c:"ألم بعد خلع مع عظم مكشوف",o:["التهاب السنخ الجاف","خراج","كيس","تسوس"],a:0},
-{c:"تورم سريع مؤلم",o:["خراج حاد","كيس","تسوس","تآكل"],a:0},
-{c:"تورم بطيء غير مؤلم",o:["كيس","خراج","تسوس","تآكل"],a:0},
-{c:"صعوبة فتح الفم",o:["التهاب حول التاج","تسوس","كسر","تآكل"],a:0},
-
-/* Pedodontics */
-{c:"تسوس متعدد في طفل",o:["تسوس الطفولة المبكر","تآكل","كسر","تصبغ"],a:0},
-{c:"طفل غير متعاون",o:["إدارة سلوكية","خلع","تأجيل","تجاهل"],a:0},
-
-/* Prosthodontics */
-{c:"تاج يسقط بسرعة",o:["فشل إسمنت","تسوس","كسر","تآكل"],a:0},
-{c:"حساسية بعد تاج",o:["انكشاف عاج","تسوس","كسر","تآكل"],a:0}
+{c:"ألم ليلي مع نخر",o:["لب غير عكوس","لب عكوس","تسوس","لثة"],a:0},
+{c:"نزف لثوي",o:["التهاب لثة","كسر","تسوس","تآكل"],a:0},
+{c:"تورم حاد",o:["خراج","كيس","تسوس","تآكل"],a:0},
+{c:"ألم عند العض",o:["كسر شعري","تسوس","لثة","تصبغ"],a:0}
 ];
-
-/* =========================
-   ENGINE (بدون تكرار داخل الجلسة)
-========================= */
 
 function shuffle(a){
 for(let i=a.length-1;i>0;i--){
-let j=Math.random()*(i+1)|0;
+let j=Math.floor(Math.random()*(i+1));
 [a[i],a[j]]=[a[j],a[i]];
 }
 return a;
 }
 
-let examBank=[],i=0,score=0;
+let exam=[],i=0,score=0;
 
 function startExam(){
 i=0;score=0;
-examBank=shuffle([...bank]);
+exam=shuffle([...bank]);
 
 document.getElementById("start").style.display="none";
 document.getElementById("exam").style.display="block";
-document.getElementById("result").style.display="none";
 
 load();
 }
 
 function load(){
-if(i>=examBank.length){end();return;}
 
-let q=examBank[i];
+if(i>=exam.length){
+document.getElementById("exam").style.display="none";
+document.getElementById("result").style.display="block";
+document.getElementById("result").innerHTML=
+`<div class="card">النتيجة ${score}/${exam.length}<br><button class="btn" onclick="location.reload()">إعادة</button></div>`;
+return;
+}
 
-document.getElementById("progress")=
-document.getElementById("progress").innerText=
-`السؤال ${i+1} / ${examBank.length}`;
+let q=exam[i];
 
-document.getElementById("score").innerText=`النتيجة: ${score}`;
-
+document.getElementById("progress").innerText=`${i+1}/${exam.length}`;
+document.getElementById("score").innerText=`نقاط: ${score}`;
 document.getElementById("question").innerText=q.c;
 
 let html="";
@@ -200,7 +101,8 @@ document.getElementById("answers").innerHTML=html;
 }
 
 function check(x){
-let q=examBank[i];
+
+let q=exam[i];
 let btns=document.querySelectorAll(".btn");
 
 btns.forEach((b,idx)=>{
@@ -211,19 +113,7 @@ if(idx===x&&x!==q.a)b.classList.add("wrong");
 
 if(x===q.a)score++;
 
-setTimeout(()=>{i++;load();},700);
-}
-
-function end(){
-document.getElementById("exam").style.display="none";
-document.getElementById("result").style.display="block";
-
-document.getElementById("result").innerHTML=
-`<div class="card">
-<h2>انتهى الامتحان</h2>
-<p>النتيجة: ${score} / ${examBank.length}</p>
-<button class="btn" onclick="location.reload()">إعادة الامتحان</button>
-</div>`;
+setTimeout(()=>{i++;load();},600);
 }
 
 </script>
