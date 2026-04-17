@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OSCE Dental Exam</title>
+<title>OSCE Dental Stable</title>
 
 <style>
 body{margin:0;font-family:system-ui;background:#0b1220;color:#fff}
@@ -22,7 +22,6 @@ padding:18px;
 border-radius:14px;
 margin-top:10px;
 line-height:1.7;
-border-left:4px solid #38bdf8;
 }
 
 .btn{
@@ -36,13 +35,31 @@ color:#fff;
 cursor:pointer;
 }
 
+.answer-btn{width:100%}
+
 .correct{background:#16a34a !important}
 .wrong{background:#dc2626 !important}
 
-.meta{display:flex;justify-content:space-between;color:#93c5fd;font-size:13px}
+.meta{
+display:flex;
+justify-content:space-between;
+color:#93c5fd;
+font-size:13px
+}
 
-.progress-bar{height:6px;background:#1f2937;border-radius:10px;margin-top:10px}
-.progress{height:100%;background:#38bdf8;width:0%}
+.progress-bar{
+height:6px;
+background:#1f2937;
+border-radius:10px;
+margin-top:10px;
+overflow:hidden
+}
+
+.progress{
+height:100%;
+background:#38bdf8;
+width:0%
+}
 
 .explanation{
 margin-top:10px;
@@ -56,17 +73,14 @@ footer{
 text-align:center;
 padding:12px;
 color:#64748b;
-font-size:13px;
-margin-top:20px
+font-size:13px
 }
 </style>
 </head>
 
 <body>
 
-<header>
-🦷 OSCE Dental Exam (Integrated Version)
-</header>
+<header>🦷 OSCE Dental Stable System</header>
 
 <div class="container">
 
@@ -86,7 +100,9 @@ margin-top:20px
 </div>
 
 <div id="question" class="card"></div>
+
 <div id="answers"></div>
+
 <div id="explanation"></div>
 
 <button class="btn" onclick="restartExam()">إعادة</button>
@@ -97,110 +113,102 @@ margin-top:20px
 
 </div>
 
-<footer>OSCE Clinical Training System</footer>
+<footer>Dental OSCE Training System</footer>
 
 <script>
 
-/* 🟢 BANK مدمج ومصحح سريريًا */
+/* 🟢 BANK مصحح سريرياً + مصطلحات دقيقة */
 const bank = [
 {
-q:"مريض 40 سنة، ألم ليلي نابض، يزداد بالحرارة ويستمر بعد إزالة المؤثر، تسوس عميق.",
+q:"مريض 40 سنة، ألم ليلي نابض يزداد مع الحرارة ويستمر بعد زوال المؤثر.",
 o:[
-"التهاب لب غير عكوس symptomatic irreversible pulpitis",
-"حساسية عاجية dentin hypersensitivity",
-"التهاب حول الذروة apical periodontitis",
-"ألم عضلي myofascial pain"
+"Symptomatic irreversible pulpitis",
+"Dentin hypersensitivity",
+"Apical periodontitis",
+"Myofascial pain"
 ],
 a:0,
-e:"Pain + lingering heat response → irreversible pulpitis"
+e:"Pain + lingering heat response → Symptomatic irreversible pulpitis"
 },
-
 {
-q:"مريض 28 سنة، ألم حاد عند البارد يختفي خلال ثوانٍ، لا ألم عفوي.",
+q:"ألم حاد مع البارد يختفي فوراً بدون ألم عفوي.",
 o:[
-"حساسية عاجية dentin hypersensitivity",
-"التهاب لب غير عكوس",
-"نخر لبّي",
-"كسر جذر"
+"Dentin hypersensitivity",
+"Pulp necrosis",
+"Periapical abscess",
+"Root fracture"
 ],
 a:0,
-e:"Short cold pain → hypersensitivity"
+e:"Short sharp cold pain → hypersensitivity"
 },
-
 {
-q:"سن غير مؤلم، متغير اللون، اختبار حيوية سلبي، آفة ذروية شعاعياً.",
+q:"سن غير حي (Pulp necrosis) مع آفة ذروية شعاعياً.",
 o:[
-"نخر لبّي pulp necrosis",
-"التهاب لب عكوس",
-"التهاب لثة",
-"فرط حساسية"
+"Pulp necrosis with apical periodontitis",
+"Reversible pulpitis",
+"Gingivitis",
+"Erosion"
 ],
 a:0,
-e:"Non-vital + periapical lesion"
+e:"Non-vital tooth + radiolucency"
 },
-
 {
-q:"ألم عند العض يزداد عند تحرير الضغط، بدون تسوس واضح.",
+q:"ألم عند العض يزداد عند تحرير الضغط.",
 o:[
 "Cracked tooth syndrome",
-"التهاب لب",
-"خراج لثوي",
-"جيوب أنفية"
+"Gingivitis",
+"Early caries",
+"Sinusitis"
 ],
 a:0,
-e:"Release pain = cracked tooth"
+e:"Release pain → cracked tooth"
 },
-
 {
-q:"نزف لثوي عند التفريش دون فقدان عظم.",
+q:"نزف لثوي دون فقدان عظم.",
 o:[
-"التهاب لثة gingivitis",
-"التهاب دواعم",
-"خراج ذروي",
-"كيس"
+"Plaque-induced gingivitis",
+"Periodontitis",
+"Periapical infection",
+"Cyst"
 ],
 a:0,
-e:"Bleeding only = gingivitis"
+e:"Bleeding without attachment loss"
 },
-
 {
-q:"جيوب 6 ملم + فقدان عظم أفقي.",
+q:"جيوب 6mm مع فقدان عظم.",
 o:[
 "Periodontitis",
-"التهاب لثة",
-"حساسية",
-"تسوس"
+"Gingivitis",
+"Hypersensitivity",
+"Caries"
 ],
 a:0,
 e:"Attachment loss = periodontitis"
 },
-
 {
-q:"ألم شديد بعد 48 ساعة من القلع + رائحة كريهة + خلو الخثرة.",
+q:"ألم بعد 48 ساعة من القلع + رائحة كريهة + خلو الخثرة.",
 o:[
-"Dry socket",
-"خراج ذروي",
-"كيس",
+"Alveolar osteitis (dry socket)",
+"Periapical abscess",
+"Cyst",
 "Cellulitis"
 ],
 a:0,
-e:"Timing + empty socket"
+e:"Classic dry socket presentation"
 },
-
 {
-q:"طفل 5 سنوات، تسوس متعدد + رضاعة ليلية.",
+q:"طفل 5 سنوات، تسوس منتشر + رضاعة ليلية.",
 o:[
 "Early childhood caries",
-"فلوروزس",
-"تآكل",
-"نقص تنسج"
+"Fluorosis",
+"Erosion",
+"Amelogenesis imperfecta"
 ],
 a:0,
 e:"ECC pattern"
 },
-
 {
-q:"تورم لثوي موضعي مع قيح من الجيب.",
+q:"تورم لثوي مع قيح من الجيب.",
 o:[
 "Periodontal abscess",
 "Periapical abscess",
@@ -208,23 +216,22 @@ o:[
 "Mucocele"
 ],
 a:0,
-e:"Pus from pocket"
+e:"Pus from periodontal pocket"
 },
-
 {
 q:"ألم حراري طويل بعد البارد + تسوس عميق.",
 o:[
 "Symptomatic irreversible pulpitis",
 "Reversible pulpitis",
-"حساسية",
+"Dentin hypersensitivity",
 "Sinus pain"
 ],
 a:0,
-e:"Prolonged thermal pain"
+e:"Lingering thermal pain"
 }
 ];
 
-/* 🔒 النظام */
+/* 🔒 shuffle ثابت */
 function shuffle(q){
 let arr=q.o.map((t,i)=>({t,correct:i===q.a}));
 for(let i=arr.length-1;i>0;i--){
@@ -272,7 +279,7 @@ document.getElementById("explanation").innerHTML="";
 
 let html="";
 currentOptions.forEach((opt,i)=>{
-html+=`<button class="btn" onclick="check(${i})">${opt.t}</button>`;
+html+=`<button class="btn answer-btn" onclick="check(${i})">${opt.t}</button>`;
 });
 
 document.getElementById("answers").innerHTML=html;
@@ -280,20 +287,21 @@ document.getElementById("answers").innerHTML=html;
 
 function check(i){
 
-let buttons=document.querySelectorAll(".btn");
+let buttons=document.querySelectorAll(".answer-btn");
+
 let correctIndex=currentOptions.findIndex(x=>x.correct);
+
+buttons.forEach(b=>b.disabled=true);
 
 buttons[correctIndex].classList.add("correct");
 if(i!==correctIndex)buttons[i].classList.add("wrong");
-
-buttons.forEach(b=>b.disabled=true);
 
 document.getElementById("explanation").innerHTML=
 `<div class="explanation">${bank[index].e}</div>`;
 
 if(i===correctIndex)score++;
 
-setTimeout(()=>{index++;load();},1000);
+setTimeout(()=>{index++;load();},900);
 }
 
 </script>
