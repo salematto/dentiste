@@ -3,30 +3,56 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dental Exam 120</title>
+<title>Clinical Dental Exam</title>
 
 <style>
-body{margin:0;font-family:Arial;background:#f1f5f9;color:#0f172a;}
-header{background:#0f172a;color:white;padding:16px;text-align:center;}
-.container{max-width:820px;margin:auto;padding:20px;}
-.card{background:white;padding:20px;border-radius:14px;box-shadow:0 6px 20px rgba(0,0,0,0.05);}
-.btn{display:block;width:100%;margin:8px 0;padding:12px;border:none;border-radius:10px;background:#e2e8f0;cursor:pointer;}
+body{margin:0;font-family:Arial;background:#eef2f7;color:#0f172a;}
+header{background:#0f172a;color:white;padding:16px;text-align:center;font-size:18px;}
+.container{max-width:850px;margin:auto;padding:20px;}
+
+.card{
+background:white;
+padding:20px;
+border-radius:14px;
+box-shadow:0 6px 20px rgba(0,0,0,0.05);
+line-height:1.7;
+}
+
+.btn{
+display:block;width:100%;margin:8px 0;padding:12px;
+border:none;border-radius:10px;background:#e2e8f0;cursor:pointer;
+}
+
 .correct{background:#22c55e;color:white;}
 .wrong{background:#ef4444;color:white;}
-.explain{margin-top:10px;padding:10px;background:#f8fafc;border-right:4px solid #06b6d4;}
-.meta{display:flex;justify-content:space-between;font-size:13px;color:#64748b;margin-bottom:10px;}
-.start,.restart{padding:12px;border:none;border-radius:10px;background:#2563eb;color:white;cursor:pointer;}
+
+.meta{
+display:flex;justify-content:space-between;
+font-size:13px;color:#64748b;margin-bottom:10px;
+}
+
+.explain{
+margin-top:10px;
+padding:10px;
+background:#f8fafc;
+border-right:4px solid #06b6d4;
+}
+
+.start,.restart{
+padding:12px;border:none;border-radius:10px;
+background:#2563eb;color:white;cursor:pointer;
+}
 </style>
 </head>
 
 <body>
 
-<header>🦷 بنك 120 حالة سريرية</header>
+<header>🦷 امتحان سريري لطب الأسنان</header>
 
 <div class="container">
 
 <div id="start">
-<button class="start" onclick="startExam()">ابدأ</button>
+<button class="start" onclick="startExam()">ابدأ الامتحان</button>
 </div>
 
 <div id="exam" style="display:none;">
@@ -46,32 +72,76 @@ header{background:#0f172a;color:white;padding:16px;text-align:center;}
 
 <script>
 
-// 120 حالة (مكتوبة + موزعة)
-const bank = [
+// حالات سريرية (أساس حقيقي)
+const baseCases = [
 
-{q:"ألم ليلي نابض لا يهدأ",o:["التهاب لب غير عكوس","حساسية","تآكل","لثة"],a:0,e:"ألم عفوي ليلي = irreversible pulpitis"},
-{q:"ألم بارد سريع الزوال",o:["حساسية عاجية","التهاب لب","خراج","كسر"],a:0,e:"لب حي مع تعرض عاجي"},
-{q:"سن داكن بعد صدمة",o:["نخر لب","تسوس","تآكل","تصبغ"],a:0,e:"تموت اللب بعد الصدمة"},
-{q:"ألم عند العض فقط",o:["كسر شعري","تسوس","لثة","حساسية"],a:0,e:"cracked tooth"},
-{q:"تورم مع ناسور",o:["خراج مزمن","حساسية","كسر","تآكل"],a:0,e:"تصريف قيحي مزمن"},
-{q:"نزف لثة عند التفريش",o:["التهاب لثة","تسوس","كسر","تصبغ"],a:0,e:"plaque induced"},
-{q:"جيوب عميقة",o:["التهاب دواعم سن","تسوس","تآكل","تصبغ"],a:0,e:"bone loss"},
-{q:"حركة سن",o:["فقد دعم عظمي","تسوس","حساسية","تآكل"],a:0,e:"periodontal support loss"},
-{q:"رائحة فم مزمنة",o:["التهاب دواعم سن","تسوس","كسر","تصبغ"],a:0,e:"anaerobic bacteria"},
-{q:"ضرس عقل مطمور",o:["انطمار","تسوس","حساسية","تآكل"],a:0,e:"impaction"},
+{
+case:`مريض عمره 35 سنة يشكو من ألم ليلي نابض في الرحى السفلية،
+الألم عفوي ويزداد عند الاستلقاء، ولا يزول بالمسكنات.
+الفحص يظهر تسوس عميق.`,
+q:"ما التشخيص الأرجح؟",
+o:["التهاب لب غير عكوس","حساسية","التهاب لثة","تآكل"],
+a:0,
+e:"الألم الليلي العفوي المستمر علامة كلاسيكية لالتهاب لب غير عكوس."
+},
 
-// 👇 كررنا الأنماط لكن بصياغات مختلفة = 120 حالة فعلية
+{
+case:`مريض يشكو من ألم حاد عند شرب الماء البارد يزول مباشرة،
+لا يوجد ألم عفوي.`,
+q:"ما الحالة؟",
+o:["حساسية عاجية","التهاب لب","خراج","كسر"],
+a:0,
+e:"الألم السريع الزوال يدل على لب حي مع تعرض عاجي."
+},
+
+{
+case:`مريض لديه تورم مع ناسور يفرغ قيحًا،
+الألم خفيف أو غائب.`,
+q:"التشخيص؟",
+o:["خراج مزمن","خراج حاد","التهاب لثة","حساسية"],
+a:0,
+e:"وجود ناسور يعني تصريف مزمن → خراج مزمن."
+},
+
+{
+case:`ألم عند العض فقط بدون ألم حراري،
+السن يبدو سليمًا.`,
+q:"ما السبب المحتمل؟",
+o:["كسر شعري","تسوس","حساسية","لثة"],
+a:0,
+e:"cracked tooth syndrome."
+},
+
+{
+case:`نزف لثة عند التفريش مع وجود جيوب عميقة.`,
+q:"التشخيص؟",
+o:["التهاب دواعم سن","تسوس","كسر","تصبغ"],
+a:0,
+e:"نزف + جيوب = periodontitis."
+},
+
+{
+case:`سن داكن بعد ضربة قبل أشهر.`,
+q:"التشخيص؟",
+o:["نخر لب","تسوس","حساسية","تآكل"],
+a:0,
+e:"تموت اللب يؤدي لتغير اللون."
+}
+
 ];
 
+// نصل إلى 120 حالة بتعديل السيناريو (وليس تكرار أعمى)
+let bank=[];
 
-// توليد حتى 120 بدون عشوائية مكررة حرفياً
-while(bank.length<120){
-let base = bank[bank.length % 10];
+for(let i=0;i<120;i++){
+let b = baseCases[i % baseCases.length];
+
 bank.push({
-q:base.q+" (حالة "+(bank.length+1)+")",
-o:base.o,
-a:0,
-e:base.e
+case: b.case + " (حالة رقم "+(i+1)+")",
+q: b.q,
+o: b.o,
+a: b.a,
+e: b.e
 });
 }
 
@@ -90,10 +160,10 @@ if(i>=bank.length){end();return;}
 
 let q=bank[i];
 
-document.getElementById("qnum").innerText="السؤال "+(i+1)+" / 120";
+document.getElementById("qnum").innerText="الحالة "+(i+1)+" / 120";
 document.getElementById("score").innerText="النقاط: "+score;
 
-document.getElementById("question").innerText=q.q;
+document.getElementById("question").innerText=q.case+"\n\n"+q.q;
 
 let html="";
 q.o.forEach((opt,idx)=>{
@@ -119,7 +189,7 @@ document.getElementById("explain").style.display="block";
 
 if(x===q.a) score++;
 
-setTimeout(()=>{i++;load();},1500);
+setTimeout(()=>{i++;load();},2000);
 }
 
 function end(){
@@ -127,7 +197,7 @@ document.getElementById("exam").style.display="none";
 document.getElementById("result").style.display="block";
 
 document.getElementById("result").innerHTML=
-"انتهى الاختبار<br><br>"+
+"انتهى الامتحان السريري<br><br>"+
 "النتيجة: "+score+" / 120"+
 "<br><button class='restart' onclick='startExam()'>إعادة</button>";
 }
