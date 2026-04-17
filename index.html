@@ -1,14 +1,167 @@
-document.getElementById("progressText").innerText=`${index+1}/${bank.length}`;
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OSCE Dental</title>
+
+<style>
+body{margin:0;font-family:system-ui;background:#0b1220;color:#fff}
+header{background:#0f172a;padding:16px;text-align:center;border-bottom:3px solid #38bdf8;font-weight:bold}
+.container{max-width:900px;margin:auto;padding:20px}
+
+.card{background:#111827;padding:18px;border-radius:14px;margin-top:10px;line-height:1.7}
+.btn{width:100%;padding:12px;margin:6px 0;border:none;border-radius:10px;background:#1f2937;color:#fff;cursor:pointer}
+.correct{background:#16a34a !important}
+.wrong{background:#dc2626 !important}
+
+.meta{display:flex;justify-content:space-between;color:#93c5fd;font-size:13px}
+
+.progress-bar{height:6px;background:#1f2937;border-radius:10px;margin-top:10px}
+.progress{height:100%;background:#38bdf8;width:0%}
+
+.explanation{margin-top:10px;background:#0f172a;padding:12px;border-radius:10px;border-left:4px solid #facc15}
+
+footer{text-align:center;padding:12px;color:#64748b;font-size:13px}
+</style>
+</head>
+
+<body>
+
+<header>
+🦷 OSCE Dental Exam (Fixed Version)
+</header>
+
+<div class="container">
+
+<div id="start">
+<button class="btn" onclick="startExam()">ابدأ الامتحان</button>
+</div>
+
+<div id="exam" style="display:none">
+
+<div class="meta">
+<span id="progressText"></span>
+<span id="score"></span>
+</div>
+
+<div class="progress-bar"><div id="progressBar" class="progress"></div></div>
+
+<div id="question" class="card"></div>
+<div id="answers"></div>
+<div id="explanation"></div>
+
+<button class="btn" onclick="restartExam()">إعادة</button>
+
+</div>
+
+<div id="result"></div>
+
+</div>
+
+<footer>OSCE Training System</footer>
+
+<script>
+
+/* 🟢 Bank مضمون بدون أي تعقيد */
+const bank = [
+{
+q:"مريض 38 سنة، ألم ليلي + حرارة + تسوس عميق. التشخيص؟",
+o:["التهاب لب غير عكوس","حساسية","لثة","كسر"],
+a:0,
+e:"Irreversible pulpitis"
+},
+{
+q:"ألم بارد يختفي فوراً بدون ألم عفوي؟",
+o:["حساسية عاجية","خراج","تموت لبي","كسر"],
+a:0,
+e:"Dentin hypersensitivity"
+},
+{
+q:"سن غير حي + شفافية ذروية؟",
+o:["تموت لبي","التهاب لثة","حساسية","تآكل"],
+a:0,
+e:"Necrosis"
+},
+{
+q:"ألم عند العض + release pain؟",
+o:["Cracked tooth","تسوس","لثة","حساسية"],
+a:0,
+e:"Cracked tooth syndrome"
+},
+{
+q:"نزف لثوي بدون فقدان عظم؟",
+o:["التهاب لثة","دواعم","كيس","خراج"],
+a:0,
+e:"Gingivitis"
+},
+{
+q:"جيوب + فقدان عظم؟",
+o:["Periodontitis","لثة","حساسية","تسوس"],
+a:0,
+e:"Periodontitis"
+},
+{
+q:"ألم بعد القلع + رائحة + فقدان خثرة؟",
+o:["Dry socket","خراج","كيس","تسوس"],
+a:0,
+e:"Alveolar osteitis"
+},
+{
+q:"طفل + تسوس متعدد + رضاعة ليلية؟",
+o:["ECC","تآكل","كسر","لثة"],
+a:0,
+e:"Early childhood caries"
+}
+];
+
+/* 🔒 لا تغيير */
+function shuffle(q){
+let arr=q.o.map((t,i)=>({t,correct:i===q.a}));
+for(let i=arr.length-1;i>0;i--){
+let j=Math.random()*(i+1)|0;
+[arr[i],arr[j]]=[arr[j],arr[i]];
+}
+return arr;
+}
+
+let index=0,score=0,currentOptions=[];
+
+function startExam(){
+document.getElementById("start").style.display="none";
+document.getElementById("exam").style.display="block";
+load();
+}
+
+function restartExam(){
+index=0;score=0;
+load();
+}
+
+function load(){
+
+if(index>=bank.length){
+document.getElementById("exam").style.display="none";
+document.getElementById("result").innerHTML=
+`<div class="card">Score ${score}/${bank.length}
+<br><button class="btn" onclick="location.reload()">Restart</button></div>`;
+return;
+}
+
+let q=bank[index];
+currentOptions=shuffle(q);
+
+document.getElementById("progressText").innerText=`Case ${index+1}/${bank.length}`;
 document.getElementById("score").innerText=score;
 
-let percent=(index/bank.length)*100;
-document.getElementById("progressBar").style.width=percent+"%";
+document.getElementById("progressBar").style.width=
+((index/bank.length)*100)+"%";
 
 document.getElementById("question").innerText=q.q;
 document.getElementById("explanation").innerHTML="";
 
 let html="";
-currentOptions.forEach((opt,i)=>
+currentOptions.forEach((opt,i)=>{
 html+=`<button class="btn" onclick="check(${i})">${opt.t}</button>`;
 });
 
@@ -17,7 +170,7 @@ document.getElementById("answers").innerHTML=html;
 
 function check(i){
 
-let buttons=document.getElementById("answers").querySelectorAll(".btn");
+let buttons=document.querySelectorAll(".btn");
 let correctIndex=currentOptions.findIndex(x=>x.correct);
 
 buttons[correctIndex].classList.add("correct");
@@ -28,9 +181,9 @@ buttons.forEach(b=>b.disabled=true);
 document.getElementById("explanation").innerHTML=
 `<div class="explanation">${bank[index].e}</div>`;
 
-if(i===correctIndex) score++;
+if(i===correctIndex)score++;
 
-setTimeout(()=>{index++;load();},1200);
+setTimeout(()=>{index++;load();},1000);
 }
 
 </script>
