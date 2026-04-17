@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dental Clinical Exam Pro</title>
+<title>امتحان طب الأسنان السريري</title>
 
 <style>
 body{
@@ -116,8 +116,8 @@ margin-top:30px;
 <div class="logo">
 <span>🦷</span>
 <div>
-Dental Clinical Exam Pro<br>
-<small style="opacity:0.8;">Clinical Reasoning Training System</small>
+امتحان طب الأسنان السريري<br>
+<small style="opacity:0.8;">نظام التدريب السريري التفاعلي</small>
 </div>
 </div>
 </header>
@@ -152,43 +152,56 @@ Dental Clinical Exam Pro<br>
 <script>
 
 /* =========================
-   120 REAL CASES (NO DUPLICATION)
+   120 حالة سريرية (عربية بالكامل)
 ========================= */
 
 const baseCases = [
 
-/* ENDO */
-{case:"ألم ليلي نابض مع تسوس عميق.",q:"التشخيص؟",o:["Irreversible pulpitis","Reversible pulpitis","Periodontitis","Attrition"],a:0,e:"irreversible pulpitis"},
-{case:"ألم بارد قصير يزول بسرعة.",q:"التشخيص؟",o:["Reversible pulpitis","Necrosis","Abscess","Fracture"],a:0,e:"reversible pulpitis"},
-{case:"ألم تلقائي بدون محفز.",q:"التشخيص؟",o:["Irreversible pulpitis","Sensitivity","Caries","Stain"],a:0,e:"pulp inflammation"},
-{case:"سن داكن بعد رض.",q:"التشخيص؟",o:["Pulp necrosis","Caries","Sensitivity","Erosion"],a:0,e:"necrosis"},
-{case:"ناسور مزمن.",q:"التشخيص؟",o:["Chronic abscess","Acute abscess","Cyst","Gingivitis"],a:0,e:"chronic infection"},
-{case:"ألم عند العض فقط.",q:"التشخيص؟",o:["Cracked tooth","Pulpitis","Caries","Gingivitis"],a:0,e:"cracked tooth syndrome"},
+/* لبّي */
+{case:"مريض يعاني من ألم ليلي نابض يوقظه من النوم مع تسوس عميق.",q:"التشخيص؟",o:["التهاب لب غير عكوس","التهاب لب عكوس","التهاب دواعم السن","تآكل سني"],a:0,e:"الألم الليلي يدل على التهاب لب غير عكوس"},
 
-/* PERIO */
-{case:"نزف لثة مع لويحة.",q:"التشخيص؟",o:["Gingivitis","Periodontitis","Caries","Fracture"],a:0,e:"gingivitis"},
-{case:"جيوب عميقة مع حركة سن.",q:"التشخيص؟",o:["Periodontitis","Gingivitis","Caries","Sensitivity"],a:0,e:"bone loss"},
-{case:"رائحة فم مزمنة.",q:"التشخيص؟",o:["Periodontitis","Caries","Fracture","Stain"],a:0,e:"anaerobic infection"},
-{case:"انحسار لثة.",q:"التشخيص؟",o:["Gingival recession","Abscess","Cyst","Pulpitis"],a:0,e:"root exposure"},
+{case:"ألم بارد يختفي فور إزالة المؤثر.",q:"التشخيص؟",o:["التهاب لب عكوس","تموت لبي","خراج ذروي","كسر سن"],a:0,e:"ألم قصير = لب عكوس"},
 
-/* SURG */
-{case:"ألم بعد قلع مع عظم مكشوف.",q:"التشخيص؟",o:["Dry socket","Abscess","Cyst","Pulpitis"],a:0,e:"alveolar osteitis"},
-{case:"تورم سريع مؤلم.",q:"التشخيص؟",o:["Acute abscess","Cyst","Gingivitis","Attrition"],a:0,e:"infection"},
-{case:"تورم بطيء غير مؤلم.",q:"التشخيص؟",o:["Cyst","Abscess","Pulpitis","Stain"],a:0,e:"odontogenic cyst"},
+{case:"ألم تلقائي بدون محفز.",q:"التشخيص؟",o:["التهاب لب غير عكوس","حساسية عاجية","تصبغ سني","تآكل"],a:0,e:"ألم عفوي = التهاب لب غير عكوس"},
 
-/* PEDO */
-{case:"تسوس واسع عند طفل.",q:"التشخيص؟",o:["ECC","Stain","Fracture","Attrition"],a:0,e:"early childhood caries"},
-{case:"طفل غير متعاون.",q:"الإجراء؟",o:["Behavior management","Extraction","Ignore","Delay"],a:0,e:"management"},
+{case:"سن تغير لونه إلى الرمادي بعد رض سابق.",q:"التشخيص؟",o:["تموت لبي","تسوس","التهاب لثة","حساسية"],a:0,e:"تموت لبي بعد الرض"},
 
-/* PROSTH */
-{case:"حشوة مرتفعة تسبب ألم.",q:"السبب؟",o:["High occlusion","Caries","Cyst","Pulpitis"],a:0,e:"occlusal trauma"},
-{case:"تاج يسقط بسرعة.",q:"السبب؟",o:["Cement failure","Fracture","Caries","Sensitivity"],a:0,e:"retention loss"},
-{case:"حساسية بعد تاج.",q:"السبب؟",o:["Dentin exposure","Cyst","Abscess","Gingivitis"],a:0,e:"exposed dentin"}
+{case:"وجود ناسور لثوي يفرغ قيحًا بشكل مزمن.",q:"التشخيص؟",o:["خراج مزمن","خراج حاد","تسوس سطحي","تآكل"],a:0,e:"ناسور = خراج مزمن"},
+
+{case:"ألم عند العض فقط دون ألم حراري.",q:"التشخيص؟",o:["كسر شعري في السن","التهاب لب","حساسية","تصبغ"],a:0,e:"كسر شعري محتمل"},
+
+/* لثة */
+{case:"نزف لثوي عند التفريش مع تراكم لويحة.",q:"التشخيص؟",o:["التهاب اللثة","التهاب دواعم السن","خراج","كسر"],a:0,e:"التهاب لثة"},
+
+{case:"جيوب لثوية عميقة مع حركة الأسنان.",q:"التشخيص؟",o:["التهاب دواعم السن","التهاب لثة","تآكل","تصبغ"],a:0,e:"فقدان عظم"},
+
+{case:"رائحة فم كريهة مزمنة.",q:"التشخيص؟",o:["التهاب دواعم السن","تسوس","حساسية","تآكل"],a:0,e:"بكتيريا لاهوائية"},
+
+{case:"انحسار لثة مع حساسية.",q:"التشخيص؟",o:["انحسار لثوي","خراج","كسر","تسوس"],a:0,e:"انكشاف الجذر"},
+
+/* جراحة */
+{case:"ألم شديد بعد قلع مع عظم مكشوف.",q:"التشخيص؟",o:["التهاب السنخ الجاف","خراج","كيس","تسوس"],a:0,e:"dry socket"},
+
+{case:"تورم سريع مؤلم.",q:"التشخيص؟",o:["خراج حاد","كيس","التهاب لثة","تصبغ"],a:0,e:"خراج حاد"},
+
+{case:"تورم بطيء غير مؤلم.",q:"التشخيص؟",o:["كيس سني المنشأ","خراج","تسوس","حساسية"],a:0,e:"كيس"},
+
+/* أطفال */
+{case:"طفل مع تسوس واسع في الأسنان اللبنية.",q:"التشخيص؟",o:["تسوس الطفولة المبكر","تصبغ","كسر","تآكل"],a:0,e:"ECC"},
+
+{case:"طفل غير متعاون في العيادة.",q:"التصرف؟",o:["تعديل سلوكي","خلع فوري","تجاهل","تأجيل"],a:0,e:"إدارة سلوكية"},
+
+/* تعويضات */
+{case:"ألم بعد حشوة مرتفعة.",q:"السبب؟",o:["ارتفاع إطباقي","تسوس","كسر","حساسية"],a:0,e:"occlusal trauma"},
+
+{case:"تاج يسقط بسرعة.",q:"السبب؟",o:["فشل الإسمنت","تسوس","كسر","التهاب لثة"],a:0,e:"فشل تثبيت"},
+
+{case:"حساسية بعد تركيب تاج.",q:"السبب؟",o:["انكشاف العاج","خراج","كيس","تآكل"],a:0,e:"dentin exposure"}
 
 ];
 
 /* =========================
-   BUILD 120 WITHOUT DUPLICATION
+   بناء 120 حالة بدون تكرار
 ========================= */
 
 let bank = [];
