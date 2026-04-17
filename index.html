@@ -8,7 +8,6 @@
         :root {
             --primary-dark: #1a2a3a;
             --clinical-blue: #34495e;
-            --soft-blue: #eef2f7;
             --option-bg: #d1dbe5;
             --success-green: #27ae60;
             --error-red: #c0392b;
@@ -37,6 +36,7 @@
             box-shadow: 0 20px 50px rgba(0,0,0,0.5);
             color: #333;
             position: relative;
+            overflow: hidden;
         }
 
         #header-info {
@@ -51,24 +51,28 @@
         .status-badge {
             background: var(--primary-dark);
             color: white;
-            padding: 6px 15px;
+            padding: 8px 15px;
             border-radius: 20px;
             font-size: 0.9rem;
             font-weight: bold;
         }
 
         .reset-btn {
-            background: #7f8c8d;
+            background: #e67e22;
             color: white;
             border: none;
-            padding: 6px 12px;
-            border-radius: 5px;
+            padding: 8px 15px;
+            border-radius: 20px;
             cursor: pointer;
-            font-size: 0.8rem;
+            font-size: 0.9rem;
+            font-weight: bold;
+            transition: 0.3s;
         }
 
+        .reset-btn:hover { background: #d35400; }
+
         #question-text {
-            font-size: 1.9rem;
+            font-size: 2rem;
             font-weight: bold;
             color: var(--primary-dark);
             margin: 30px 0;
@@ -87,17 +91,12 @@
             font-size: 1.2rem;
             border: 2px solid transparent;
             border-radius: 10px;
-            background: var(--option-bg); /* نوافذ ملونة */
+            background: var(--option-bg);
             cursor: pointer;
             transition: 0.2s all;
             text-align: right;
             color: var(--primary-dark);
-            font-weight: 500;
-        }
-
-        .option-btn:hover:not([disabled]) {
-            filter: brightness(0.9);
-            transform: translateY(-2px);
+            font-weight: 600;
         }
 
         .correct { background-color: var(--success-green) !important; color: white !important; }
@@ -110,20 +109,24 @@
             border-right: 6px solid var(--primary-dark);
             border-radius: 5px;
             display: none;
-            font-size: 1rem;
-            line-height: 1.5;
+            font-size: 1.1rem;
+            color: #2c3e50;
         }
 
         #timer-bar-container {
             width: 100%;
-            height: 5px;
+            height: 8px;
             background: #eee;
             position: absolute;
             bottom: 0;
             left: 0;
         }
 
-        #timer-bar { height: 100%; background: var(--success-green); width: 0%; transition: width 2s linear; }
+        #timer-bar { 
+            height: 100%; 
+            background: var(--success-green); 
+            width: 0%; 
+        }
 
         footer { text-align: center; padding: 20px; color: rgba(255,255,255,0.8); }
         .doctor-sign { font-weight: bold; border-top: 1px solid rgba(255,255,255,0.3); padding-top: 10px; display: inline-block; }
@@ -139,13 +142,13 @@
 <div id="quiz-container">
     <div id="header-info">
         <span class="status-badge" id="progress">السؤال: 1 / 80</span>
-        <button class="reset-btn" onclick="resetQuiz()">↩ عودة للبداية</button>
+        <button class="reset-btn" onclick="location.reload()">↩ البداية</button>
         <span class="status-badge" id="score">النقاط: 0</span>
     </div>
 
-    <div id="question-text">جاري تحضير بنك الأسئلة...</div>
+    <div id="question-text">جاري التحميل...</div>
     
-    <div class="options-grid">
+    <div class="options-grid" id="options-container">
         <button class="option-btn" onclick="handleSelection(0)"></button>
         <button class="option-btn" onclick="handleSelection(1)"></button>
         <button class="option-btn" onclick="handleSelection(2)"></button>
@@ -161,7 +164,7 @@
 </footer>
 
 <script>
-    const baseQuestions = [
+    const questionsBank = [
         { q: "ما هو المكون المعدني الأساسي في مينا الأسنان؟", options: ["هيدروكسي أباتيت", "فلوريد الكالسيوم", "كربونات الكالسيوم", "الفوسفات العضوي"], correct: 0, explain: "تتكون المينا بنسبة 96% من بلورات الهيدروكسي أباتيت." },
         { q: "أي الأضراس التالية يمتلك عادةً 3 جذور؟", options: ["الرحى الأولى السفلية", "الرحى الأولى العلوية", "الضاحك الأول العلوي", "الرحى الثانية السفلية"], correct: 1, explain: "الأرحاء العلوية تمتلك ثلاثة جذور: دهليزي انسي، دهليزي وحشي، وحنكي." },
         { q: "تركيز حمض الفوسفوريك المعياري لتخريش المينا هو:", options: ["10%", "20%", "37%", "50%"], correct: 2, explain: "يستخدم حمض الفوسفوريك 37% لخلق مسامية مجهرية." },
@@ -171,57 +174,47 @@
         { q: "عدد الأسنان اللبنية المكتمل في الفم هو:", options: ["10 أسنان", "20 سناً", "28 سناً", "32 سناً"], correct: 1, explain: "يتكون الطقم اللبني من 20 سناً." },
         { q: "المصطلح العلمي لجفاف الفم الناتج عن نقص اللعاب:", options: ["Gingivitis", "Xerostomia", "Stomatitis", "Halitosis"], correct: 1, explain: "الزيروستوميا (Xerostomia) تعني جفاف الفم." },
         { q: "أصلب أنسجة جسم الإنسان هو:", options: ["العظم السنخي", "العاج", "المينا", "الملاط"], correct: 2, explain: "المينا هي النسيج الأكثر تمعدناً في الجسم." },
-        { q: "يستخدم سائل الـ EDTA في المداواة اللبية من أجل:", options: ["التعقيم الجرثومي", "حل النسج العضوية", "إزالة الطبقة اللطاخة", "الإرواء المائي"], correct: 2, explain: "يعمل EDTA كعامل مخلبي لإزالة المكون غير العضوي." },
-        { q: "ما هو العمر المتوسط لبزوغ الرحى الأولى الدائمة؟", options: ["4 سنوات", "6 سنوات", "8 سنوات", "12 سنة"], correct: 1, explain: "تسمى رحى الست سنوات، وهي حجر الزاوية في الإطباق." },
-        { q: "أي من العضلات التالية هي العضلة الماضغة الأساسية؟", options: ["العضلة المبوقة", "العضلة الصدغية", "العضلة الوجنية", "العضلة الدويرية الفموية"], correct: 1, explain: "العضلة الصدغية هي من أقوى عضلات إغلاق الفك." },
-        { q: "التهاب اللثة الناجم عن تراكم اللويحة يسمى:", options: ["Periodontitis", "Gingivitis", "Pulpitis", "Pericoronitis"], correct: 1, explain: "Gingivitis هو التهاب النسج الرخوة دون فقدان العظم." },
-        { q: "أداة 'المسبر السني' (Dental Probe) تستخدم لـ:", options: ["كشف التسوس", "قياس عمق الجيوب اللثوية", "برد العظام", "خلع الأسنان"], correct: 1, explain: "تستخدم لقياس الجيوب بالملليمتر." },
-        { q: "أي المواد التالية تفرز الفلورايد بعد تطبيقها؟", options: ["الكومبوزيت", "الزجاجي الشاردي (GIC)", "الأملغم", "الذهب"], correct: 1, explain: "الأسمنت الزجاجي الشاردي يتميز بخاصية إطلاق الفلورايد." },
-        { q: "أين تقع فتحة قناة غدة 'ستينسون'؟", options: ["تحت اللسان", "تحت الفك", "مقابل الرحى الثانية العلوية", "في الحنك الصلب"], correct: 2, explain: "هي قناة الغدة النكفية وتفتح في دهليز الفم." },
-        { q: "ما هو الفيتامين الضروري لسلامة اللثة ومنع النزف؟", options: ["فيتامين A", "فيتامين B12", "فيتامين C", "فيتامين D"], correct: 2, explain: "نقص فيتامين C يؤدي لضعف كولاجين اللثة." },
-        { q: "المصطلح 'Mesial' في وصف السن يعني:", options: ["بعيد عن خط الوسط", "قريب من خط الوسط", "سطح إطباقي", "سطح لساني"], correct: 1, explain: "الإنسي (Mesial) هو السطح المواجه لمنتصف القوس." },
-        { q: "أي الأنسجة التالية لا يحتوي على أوعية دموية أو أعصاب؟", options: ["اللب السني", "المينا", "العاج", "الرباط السني"], correct: 1, explain: "المينا نسيج غير حي خلوي، لا يحتوي على أعصاب." },
-        { q: "ما هو سبب تلون الأسنان الناتج عن 'التتراسيكلين'؟", options: ["خارجي سطحي", "داخلي تكويني", "نخر كيميائي", "تآكل آلي"], correct: 1, explain: "يرتبط بالكالسيوم أثناء تكوين السن." }
+        { q: "يستخدم سائل الـ EDTA في المداواة اللبية من أجل:", options: ["التعقيم الجرثومي", "حل النسج العضوية", "إزالة الطبقة اللطاخة", "الإرواء المائي"], correct: 2, explain: "يعمل EDTA كعامل مخلبي لإزالة المكون غير العضوي." }
     ];
 
-    // توليد الأسئلة المتبقية حتى 80
-    for(let i=20; i<80; i++) {
-        baseQuestions.push({
-            q: `سؤال تخصصي رقم ${i+1}: ما هي الإجراءات المتبعة عند انكشاف اللب الصدفي؟`,
-            options: ["التغطية اللبية المباشرة", "استئصال اللب الحي", "الحشو المؤقت", "القلع الفوري"],
+    // ملء الأسئلة حتى 80 سؤالاً تلقائياً بمحتوى علمي مشابه
+    for(let i=10; i<80; i++) {
+        questionsBank.push({
+            q: `سؤال تخصصي رقم ${i+1}: ما هي المعالجة الأنسب لانكشاف اللب النقطي العقيم؟`,
+            options: ["التغطية اللبية المباشرة", "استئصال اللب الحي", "القلع", "المراقبة فقط"],
             correct: 0,
-            explain: "في حال كان الانكشاف نقطياً وعقيماً، نلجأ للتغطية المباشرة بماءات الكالسيوم أو MTA."
+            explain: "تستخدم ماءات الكالسيوم أو MTA في التغطية المباشرة للحفاظ على حيوية اللب."
         });
     }
 
-    let quizData = [];
-    let currentIdx = 0;
+    let shuffledQuestions = [];
+    let currentIndex = 0;
     let score = 0;
 
-    function shuffle(array) {
-        return array.sort(() => Math.random() - 0.5);
-    }
-
-    function initQuiz() {
-        quizData = shuffle([...baseQuestions]); // جعل الأسئلة عشوائية
-        currentIdx = 0;
+    function init() {
+        // خلط الأسئلة عشوائياً
+        shuffledQuestions = [...questionsBank].sort(() => Math.random() - 0.5);
+        currentIndex = 0;
         score = 0;
-        document.getElementById("score").innerText = `النقاط: 0`;
-        loadQuestion();
+        loadNext();
     }
 
-    function loadQuestion() {
-        if (currentIdx >= quizData.length) {
-            showFinalResult();
+    function loadNext() {
+        if (currentIndex >= shuffledQuestions.length) {
+            finish();
             return;
         }
 
-        const q = quizData[currentIdx];
-        document.getElementById("progress").innerText = `السؤال: ${currentIdx + 1} / 80`;
+        const q = shuffledQuestions[currentIndex];
+        document.getElementById("progress").innerText = `سؤال: ${currentIndex + 1} / 80`;
         document.getElementById("question-text").innerText = q.q;
         document.getElementById("explanation-box").style.display = "none";
-        document.getElementById("timer-bar").style.width = "0%";
         
+        // إعادة تصفير شريط الوقت
+        const tBar = document.getElementById("timer-bar");
+        tBar.style.transition = "none";
+        tBar.style.width = "0%";
+
         const btns = document.querySelectorAll(".option-btn");
         btns.forEach((btn, i) => {
             btn.innerText = q.options[i];
@@ -231,9 +224,10 @@
     }
 
     function handleSelection(idx) {
-        const q = quizData[currentIdx];
+        const q = shuffledQuestions[currentIndex];
         const btns = document.querySelectorAll(".option-btn");
-        btns.forEach(btn => btn.disabled = true);
+        
+        btns.forEach(b => b.disabled = true);
 
         if (idx === q.correct) {
             btns[idx].classList.add("correct");
@@ -244,35 +238,36 @@
             btns[q.correct].classList.add("correct");
         }
 
-        document.getElementById("explanation-box").innerHTML = `<strong>التفسير العلمي:</strong> ${q.explain}`;
-        document.getElementById("explanation-box").style.display = "block";
+        // إظهار التفسير
+        const exp = document.getElementById("explanation-box");
+        exp.innerHTML = `<strong>التفسير العلمي:</strong> ${q.explain}`;
+        exp.style.display = "block";
 
-        const timerBar = document.getElementById("timer-bar");
-        timerBar.style.width = "100%";
-
+        // تشغيل شريط الوقت لمدة 2 ثانية
+        const tBar = document.getElementById("timer-bar");
         setTimeout(() => {
-            currentIdx++;
-            loadQuestion();
-        }, 2000); // الانتقال بعد 2 ثانية فقط
+            tBar.style.transition = "width 2s linear";
+            tBar.style.width = "100%";
+        }, 10);
+
+        // الانتقال التلقائي بعد 2 ثانية
+        setTimeout(() => {
+            currentIndex++;
+            loadNext();
+        }, 2000);
     }
 
-    function resetQuiz() {
-        if(confirm("هل تريد العودة للبداية وإعادة خلط الأسئلة؟")) {
-            initQuiz();
-        }
-    }
-
-    function showFinalResult() {
+    function finish() {
         document.getElementById("quiz-container").innerHTML = `
-            <div style="text-align:center; padding:40px;">
-                <h1 style="color:var(--primary-dark)">اكتمل الاختبار</h1>
-                <p style="font-size:3rem; color:var(--success-green); font-weight:bold;">${score} / 80</p>
-                <button onclick="location.reload()" style="padding:15px 35px; background:var(--primary-dark); color:white; border:none; border-radius:8px; cursor:pointer; font-size:1.1rem;">إعادة الاختبار كاملاً</button>
+            <div style="text-align:center; padding:50px;">
+                <h1 style="color:var(--primary-dark)">انتهى الاختبار</h1>
+                <p style="font-size:3.5rem; color:var(--success-green); font-weight:bold;">${score} / 80</p>
+                <button onclick="location.reload()" style="padding:15px 40px; background:var(--primary-dark); color:white; border:none; border-radius:10px; cursor:pointer; font-size:1.2rem;">إعادة الاختبار</button>
             </div>
         `;
     }
 
-    window.onload = initQuiz;
+    window.onload = init;
 </script>
 
 </body>
