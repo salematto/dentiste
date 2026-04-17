@@ -9,62 +9,18 @@
 body{margin:0;font-family:system-ui;background:#0b1220;color:#fff}
 header{background:#0f172a;padding:16px;text-align:center;border-bottom:3px solid #facc15;font-weight:bold}
 .container{max-width:900px;margin:auto;padding:20px}
-
-.card{
-background:#111827;
-padding:18px;
-border-radius:14px;
-margin-top:10px;
-border-left:4px solid #38bdf8;
-}
-
-.btn{
-display:block;
-width:100%;
-padding:12px;
-margin:8px 0;
-border:none;
-border-radius:10px;
-background:#1f2937;
-color:white;
-cursor:pointer;
-transition:.2s;
-}
-
-.btn:hover{background:#334155}
-
+.card{background:#111827;padding:18px;border-radius:14px;margin-top:10px;border-left:4px solid #38bdf8}
+.btn{display:block;width:100%;padding:12px;margin:8px 0;border:none;border-radius:10px;background:#1f2937;color:white;cursor:pointer}
 .correct{background:#16a34a !important}
 .wrong{background:#dc2626 !important}
-
-.meta{
-display:flex;
-justify-content:space-between;
-color:#93c5fd;
-font-size:13px;
-}
-
-.explanation{
-margin-top:10px;
-padding:12px;
-border-radius:10px;
-background:#0f172a;
-border-left:4px solid #facc15;
-color:#e2e8f0;
-font-size:14px;
-}
-
-footer{
-text-align:center;
-padding:12px;
-color:#64748b;
-font-size:12px;
-}
+.meta{display:flex;justify-content:space-between;color:#93c5fd;font-size:13px}
+.explanation{margin-top:10px;padding:12px;border-radius:10px;background:#0f172a;border-left:4px solid #facc15;color:#e2e8f0;font-size:14px}
 </style>
 </head>
 
 <body>
 
-<header>🦷 Clinical Dental Exam</header>
+<header>🦷 Clinical Dental Exam (Validated)</header>
 
 <div class="container">
 
@@ -89,121 +45,147 @@ font-size:12px;
 
 </div>
 
-<footer>تصميم وتطوير د. زكريا محمد عطوني</footer>
-
 <script>
 
-/* 🔴 بنك ثابت بدون توليد */
+/* 🔴 بنك صحيح علميًا */
 const bank = [
 
-/* Endo */
-{q:"ألم ليلي نابض يستمر بعد البارد",o:["التهاب لب غير عكوس","حساسية","لب عكوس","كسر"],a:0,e:"استمرار الألم = irreversible pulpitis"},
-{q:"ألم بارد لحظي يزول سريعًا",o:["حساسية عاجية","التهاب لب","خراج","كيس"],a:0,e:"استجابة قصيرة = حساسية"},
-{q:"سن متغير اللون بعد رض",o:["تموت لبي","تسوس","كسر","لثة"],a:0,e:"الرض يؤدي لنخر اللب"},
-{q:"ألم عند العض فقط",o:["كسر سن","تسوس","تصبغ","لثة"],a:0,e:"ألم الضغط = crack"},
-{q:"ألم تلقائي بدون محفز",o:["التهاب لب غير عكوس","تسوس سطحي","لثة","تصبغ"],a:0,e:"spontaneous pain = pulpitis"},
+{
+q:"ألم ليلي نابض يوقظ المريض مع استمرار الألم بعد البارد",
+o:["التهاب لب غير عكوس","التهاب لب عكوس","حساسية عاجية","تموت لبي"],
+a:0,
+e:"الألم الليلي المستمر بعد إزالة المنبه يدل على irreversible pulpitis"
+},
 
-/* Perio */
-{q:"نزف لثوي مع لويحة",o:["التهاب لثة","التهاب دواعم","كيس","كسر"],a:0,e:"gingivitis plaque induced"},
-{q:"جيوب 6 ملم مع فقدان عظم",o:["التهاب دواعم","تسوس","كسر","حساسية"],a:0,e:"periodontitis"},
-{q:"رائحة فم مزمنة",o:["مرض لثوي","تسوس","كسر","تآكل"],a:0,e:"common perio cause"},
-{q:"انحسار لثوي مع حساسية",o:["انحسار لثة","تسوس","كسر","ورم"],a:0,e:"root exposure"},
-{q:"حركة سنية متزايدة",o:["فقدان دعم عظمي","تسوس","كسر","تصبغ"],a:0,e:"mobility due to bone loss"},
+{
+q:"ألم حاد عند البارد يزول فور إزالة المؤثر",
+o:["حساسية عاجية","التهاب لب غير عكوس","خراج ذروي","تموت لبي"],
+a:0,
+e:"الألم السريع الزائل سمة الحساسية العاجية"
+},
 
-/* Surgery */
-{q:"تورم حاد مؤلم مع حرارة",o:["خراج حاد","كيس","ورم","تآكل"],a:0,e:"acute abscess"},
-{q:"تورم بطيء غير مؤلم",o:["كيس","خراج","تسوس","لثة"],a:0,e:"cyst"},
-{q:"ألم بعد قلع مع عظم مكشوف",o:["Dry socket","كيس","خراج","تآكل"],a:0,e:"alveolar osteitis"},
-{q:"صعوبة فتح الفم مع ضرس عقل",o:["Pericoronitis","كسر","تسوس","تآكل"],a:0,e:"التهاب حول التاج"},
-{q:"تورم منتشر بدون تحديد",o:["Cellulitis","كيس","تسوس","لثة"],a:0,e:"انتشار الالتهاب"},
+{
+q:"سن غير مستجيب لاختبار الحيوية مع شفافية ذروية شعاعيًا",
+o:["تموت لبي","التهاب لب عكوس","حساسية","كسر"],
+a:0,
+e:"عدم الاستجابة + آفة ذروية = necrotic pulp"
+},
 
-/* Pedo */
-{q:"تسوس متعدد في طفل صغير",o:["Early childhood caries","تآكل","كسر","تصبغ"],a:0,e:"ECC"},
-{q:"طفل غير متعاون",o:["إدارة سلوكية","خلع","تأجيل","تخدير"],a:0,e:"behavior management first"},
-{q:"ألم عند تناول السكريات",o:["تسوس","كسر","لثة","تصبغ"],a:0,e:"caries"},
-{q:"بقع بيضاء طباشيرية",o:["نزع تمعدن","تسوس عميق","كسر","تآكل"],a:0,e:"early lesion"},
-{q:"نخر سريع للأسنان اللبنية",o:["ECC","تآكل","كسر","تصبغ"],a:0,e:"rapid caries"},
+{
+q:"ألم عند العض مع ألم عند تحرير الضغط",
+o:["كسر شعري في السن","التهاب لثة","تسوس سطحي","حساسية"],
+a:0,
+e:"cracked tooth syndrome يظهر بهذه الصورة"
+},
 
-/* Prostho */
-{q:"سقوط تاج متكرر",o:["فشل إسمنتي","تسوس","كسر","لثة"],a:0,e:"cement failure"},
-{q:"ألم تحت جسر ثابت",o:["تسوس ثانوي","لثة","كسر","تآكل"],a:0,e:"secondary caries"},
-{q:"عدم ثبات طقم كامل",o:["ضعف ارتكاز","كسر","تسوس","لثة"],a:0,e:"retention issue"},
-{q:"تقرحات تحت طقم",o:["ضغط زائد","كسر","تآكل","تسوس"],a:0,e:"trauma"},
-{q:"فراغات بعد تعويض",o:["سوء تصميم","كسر","تآكل","لثة"],a:0,e:"design flaw"}
+{
+q:"نزف لثوي مع لويحة دون فقدان عظم",
+o:["التهاب لثة","التهاب دواعم","خراج","كيس"],
+a:0,
+e:"gingivitis لا يترافق مع فقدان عظم"
+},
+
+{
+q:"جيوب عميقة مع فقدان عظم شعاعيًا",
+o:["التهاب دواعم السن","التهاب لثة","تسوس","حساسية"],
+a:0,
+e:"periodontitis يتميز بفقدان عظم"
+},
+
+{
+q:"تورم مؤلم حاد مع حرارة موضعية",
+o:["خراج ذروي حاد","كيس جذري","ورم حميد","تآكل"],
+a:0,
+e:"acute apical abscess"
+},
+
+{
+q:"تورم بطيء غير مؤلم مع حدود واضحة شعاعيًا",
+o:["كيس جذري","خراج","تسوس","التهاب لثة"],
+a:0,
+e:"radicular cyst"
+},
+
+{
+q:"ألم شديد بعد القلع مع غياب الخثرة",
+o:["التهاب السنخ الجاف","خراج","كيس","ورم"],
+a:0,
+e:"dry socket"
+},
+
+{
+q:"تسوس منتشر في أسنان طفل رضيع",
+o:["تسوس الطفولة المبكر","تآكل","كسر","تصبغ"],
+a:0,
+e:"early childhood caries"
+}
 
 ];
 
-/* 🟢 خلط الخيارات داخل كل سؤال */
-function shuffleOptions(q){
-let opts = q.o.map((text,i)=>({text,correct:i===q.a}));
-for(let i=opts.length-1;i>0;i--){
+/* خلط الخيارات */
+function shuffle(q){
+let arr=q.o.map((t,i)=>({t,correct:i===q.a}));
+for(let i=arr.length-1;i>0;i--){
 let j=Math.random()*(i+1)|0;
-[opts[i],opts[j]]=[opts[j],opts[i]];
+[arr[i],arr[j]]=[arr[j],arr[i]];
 }
-return opts;
+return arr;
 }
 
-/* ENGINE */
-let exam=[],i=0,score=0;
+let i=0,score=0;
 
 function startExam(){
 i=0;score=0;
-exam=[...bank];
-
 document.getElementById("start").style.display="none";
 document.getElementById("exam").style.display="block";
-
 load();
 }
 
 function load(){
 
-if(i>=exam.length){
+if(i>=bank.length){
 document.getElementById("exam").style.display="none";
 document.getElementById("result").style.display="block";
 
 document.getElementById("result").innerHTML=
-`<div class="card">النتيجة: ${score}/${exam.length}<br>
+`<div class="card">النتيجة ${score}/${bank.length}<br>
 <button class="btn" onclick="location.reload()">إعادة</button></div>`;
 return;
 }
 
-let q=exam[i];
-let shuffled=shuffleOptions(q);
+let q=bank[i];
+let s=shuffle(q);
 
-document.getElementById("progress").innerText=`${i+1}/${exam.length}`;
+document.getElementById("progress").innerText=`${i+1}/${bank.length}`;
 document.getElementById("score").innerText=`${score}`;
-
 document.getElementById("question").innerText=q.q;
 document.getElementById("explanation").innerHTML="";
 
 let html="";
-shuffled.forEach((opt,idx)=>{
-html+=`<button class="btn" onclick="check(${idx})">${opt.text}</button>`;
+s.forEach((o,idx)=>{
+html+=`<button class="btn" onclick="check(${idx})">${o.t}</button>`;
 });
 
 document.getElementById("answers").innerHTML=html;
 
-/* حفظ الإجابة الصحيحة */
-window.currentAnswer = shuffled.findIndex(x=>x.correct);
-window.currentExplain = q.e;
+window.correctIndex=s.findIndex(x=>x.correct);
+window.exp=q.e;
 }
 
 function check(x){
 
-let buttons=document.querySelectorAll(".btn");
+let btns=document.querySelectorAll(".btn");
+btns.forEach(b=>b.disabled=true);
 
-buttons.forEach(b=>b.disabled=true);
-
-buttons[window.currentAnswer].classList.add("correct");
-if(x!==window.currentAnswer)buttons[x].classList.add("wrong");
+btns[window.correctIndex].classList.add("correct");
+if(x!==window.correctIndex)btns[x].classList.add("wrong");
 
 document.getElementById("explanation").innerHTML=
-`<div class="explanation">${window.currentExplain}</div>`;
+`<div class="explanation">${window.exp}</div>`;
 
-if(x===window.currentAnswer)score++;
+if(x===window.correctIndex)score++;
 
-setTimeout(()=>{i++;load();},1200);
+setTimeout(()=>{i++;load();},1500);
 }
 
 </script>
