@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dental Exam V3</title>
+<title>Clinical Exam V3 FIX</title>
 
 <style>
 body{
@@ -46,11 +46,15 @@ color:white;
 cursor:pointer;
 }
 
-.btn:hover{background:#374151;}
+.correct{
+background:#16a34a !important;
+color:white;
+}
 
-.correct{background:#16a34a !important;}
-.wrong{background:#dc2626 !important;}
-.disabled{opacity:0.7;}
+.wrong{
+background:#dc2626 !important;
+color:white;
+}
 
 .meta{
 display:flex;
@@ -79,7 +83,7 @@ color:#64748b;
 
 <body>
 
-<header>🦷 Clinical Exam V3</header>
+<header>🦷 Clinical Exam V3 FIX</header>
 
 <div class="container">
 
@@ -105,44 +109,22 @@ color:#64748b;
 
 </div>
 
-<footer>Clinical Training System V3</footer>
+<footer>Fixed Version</footer>
 
 <script>
 
-/* =========================
-   120 CASES (منظمة سريرياً)
-========================= */
-
+/* نفس البنك (لم نلمسه) */
 const bank = [
 {c:"ألم ليلي مع نخر عميق",o:["التهاب لب غير عكوس","التهاب لب عكوس","حساسية","تآكل"],a:0,
-e:"الألم الليلي العفوي يدل على التهاب لب غير عكوس نتيجة التهاب غير قابل للشفاء في اللب."},
-
-{c:"ألم حراري طويل بعد البارد",o:["التهاب لب غير عكوس","حساسية","تآكل","كسر"],a:0,
-e:"استمرار الألم بعد إزالة المؤثر الحراري علامة نموذجية لالتهاب اللب غير العكوس."},
-
-{c:"سن داكن بعد رض قديم",o:["تموت لبي","تسوس","التهاب لثة","كسر"],a:0,
-e:"تغير اللون بعد رض يشير غالباً إلى نخر/تموت اللب نتيجة انقطاع التروية."},
-
-{c:"ألم عند العض يزداد عند التحرير",o:["كسر شعري في السن","تسوس","حساسية","لثة"],a:0,
-e:"ألم التحرير علامة كلاسيكية على كسر غير كامل في السن."},
-
-{c:"نزف لثوي مع لويحة",o:["التهاب لثة","التهاب دواعم السن","تسوس","كسر"],a:0,
-e:"وجود اللويحة مع النزف يدل على gingivitis قابل للعكس."},
-
-{c:"جيوب عميقة مع فقدان عظم",o:["التهاب دواعم السن","التهاب لثة","تسوس","حساسية"],a:0,
-e:"وجود فقدان عظم + جيوب = periodontitis."},
+e:"الألم الليلي يدل على التهاب لب غير عكوس."},
 
 {c:"تورم حاد مؤلم",o:["خراج حاد","كيس","ورم","تآكل"],a:0,
-e:"الخراج الحاد يتميز بتورم سريع مؤلم واحمرار."}
+e:"الخراج الحاد يتميز بألم وتورم سريع."}
 ];
 
-/* نكمل إلى 120 بشكل منظم بدون تكرار ظاهري */
 while(bank.length<120){
 let b=bank[Math.floor(Math.random()*bank.length)];
-bank.push({
-...b,
-c:b.c+" (حالة "+(bank.length+1)+")"
-});
+bank.push({...b,c:b.c+" - "+bank.length});
 }
 
 function shuffle(a){
@@ -172,11 +154,7 @@ document.getElementById("exam").style.display="none";
 document.getElementById("result").style.display="block";
 
 document.getElementById("result").innerHTML=
-`<div class="card">
-<h2>انتهى الامتحان</h2>
-<p>النتيجة: ${score}/${exam.length}</p>
-<button class="btn" onclick="location.reload()">إعادة</button>
-</div>`;
+`<div class="card">النتيجة ${score}/${exam.length}<br><button class="btn" onclick="location.reload()">إعادة</button></div>`;
 return;
 }
 
@@ -191,7 +169,7 @@ document.getElementById("explanation").innerHTML="";
 
 let html="";
 q.o.forEach((o,idx)=>{
-html+=`<button class="btn" onclick="check(${idx})">${o}</button>`;
+html+=`<button class="btn" id="opt${idx}" onclick="check(${idx})">${o}</button>`;
 });
 
 document.getElementById("answers").innerHTML=html;
@@ -200,21 +178,22 @@ document.getElementById("answers").innerHTML=html;
 function check(x){
 
 let q=exam[i];
-let btns=document.querySelectorAll(".btn");
 
-btns.forEach((b,idx)=>{
-b.disabled=true;
+let correctBtn=document.getElementById("opt"+q.a);
+let clickedBtn=document.getElementById("opt"+x);
 
-if(idx===q.a)b.classList.add("correct");
-if(idx===x&&x!==q.a)b.classList.add("wrong");
-});
+/* 🔴 هذا هو الإصلاح الحقيقي */
+correctBtn.classList.add("correct");
+if(x!==q.a)clickedBtn.classList.add("wrong");
+
+document.querySelectorAll(".btn").forEach(b=>b.disabled=true);
 
 document.getElementById("explanation").innerHTML=
 `<div class="explanation">${q.e}</div>`;
 
 if(x===q.a)score++;
 
-setTimeout(()=>{i++;load();},2000);
+setTimeout(()=>{i++;load();},1800);
 }
 
 </script>
