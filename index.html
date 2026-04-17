@@ -3,107 +3,38 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dental Trainer Pro</title>
+<title>Dental Exam Pro</title>
 
 <style>
-body{
-margin:0;
-font-family:Arial;
-background:#eef2ff;
-color:#0f172a;
-text-align:center;
-}
+body{margin:0;font-family:Arial;background:#f1f5f9;color:#0f172a;}
+header{background:#0f172a;color:white;padding:18px;text-align:center;font-size:20px;}
+.container{max-width:820px;margin:auto;padding:20px;}
 
-header{
-background:#1e3a8a;
-color:white;
-padding:18px;
-font-size:20px;
-font-weight:bold;
-border-bottom:4px solid #facc15;
-}
+.card{background:white;padding:24px;border-radius:16px;box-shadow:0 8px 25px rgba(0,0,0,0.05);}
 
-.container{
-max-width:800px;
-margin:auto;
-padding:20px;
-}
-
-.card{
-background:white;
-padding:24px;
-border-radius:16px;
-box-shadow:0 10px 20px rgba(0,0,0,0.08);
-font-size:18px;
-min-height:120px;
-}
-
-.meta{
-display:flex;
-justify-content:space-between;
-font-size:13px;
-margin:10px 0;
-color:#475569;
-}
-
-.btn{
-display:block;
-width:100%;
-margin:10px 0;
-padding:14px;
-border-radius:12px;
-border:1px solid #cbd5e1;
-background:#f8fafc;
-cursor:pointer;
-font-size:15px;
-}
-
-.btn:hover{background:#e2e8f0;}
-
-.correct{background:#22c55e;color:white;}
-.wrong{background:#ef4444;color:white;}
+.btn{display:block;width:100%;margin:10px 0;padding:14px;border:none;border-radius:12px;background:#e2e8f0;cursor:pointer;}
+.correct{background:#22c55e !important;color:white;}
+.wrong{background:#ef4444 !important;color:white;}
 
 .explain{
 margin-top:15px;
-padding:15px;
-background:#fef9c3;
-border-radius:10px;
+padding:12px;
+background:#f8fafc;
+border-right:4px solid #06b6d4;
 text-align:right;
-font-size:14px;
-line-height:1.8;
 }
 
-.start{
-padding:14px;
-background:#1e3a8a;
-color:white;
-border:none;
-border-radius:12px;
-cursor:pointer;
-font-size:16px;
-}
+.hidden{display:none;}
 
-.next{
-margin-top:10px;
-background:#facc15;
-border:none;
-padding:10px;
-border-radius:10px;
-cursor:pointer;
-}
+.start{padding:14px;border:none;border-radius:12px;background:#2563eb;color:white;cursor:pointer;}
+.restart{padding:12px;margin-top:15px;border:none;background:#0f172a;color:white;border-radius:10px;}
 
-footer{
-margin-top:30px;
-padding:15px;
-font-size:12px;
-opacity:0.7;
-}
 </style>
 </head>
 
 <body>
 
-<header>🦷 Dental Clinical Trainer</header>
+<header>🦷 بنك أسئلة طب الأسنان</header>
 
 <div class="container">
 
@@ -111,127 +42,110 @@ opacity:0.7;
 <button class="start" onclick="startExam()">ابدأ</button>
 </div>
 
-<div id="exam" style="display:none;">
-<div class="meta">
-<div>السؤال <span id="qnum"></span></div>
-<div>النتيجة <span id="score"></span></div>
-</div>
-
+<div id="exam" class="hidden">
 <div id="question" class="card"></div>
 <div id="answers"></div>
+<div id="explain" class="explain hidden"></div>
 </div>
 
-<div id="result"></div>
+<div id="result" class="hidden"></div>
 
 </div>
-
-<footer>د. زكريا عطوني</footer>
 
 <script>
 
 const bank = [
 
 {
-q:"ألم نابض ليلي يوقظ المريض + تسوس عميق",
-o:["التهاب لب غير عكوس","حساسية","تآكل","تصبغ"],
+q:"ألم ليلي نابض لا يزول بالمسكنات",
+o:["التهاب لب غير عكوس","التهاب لثة","حساسية","تآكل"],
 a:0,
-exp:"الألم الليلي النابض الذي يوقظ المريض علامة قوية على irreversible pulpitis. الحساسية تكون قصيرة وغير عفوية."
+e:"الألم الليلي العفوي علامة كلاسيكية لالتهاب لب غير عكوس بسبب ارتفاع الضغط داخل الحجرة اللبية."
 },
 
 {
-q:"ألم مع البارد يزول فورًا",
-o:["حساسية عاجية","التهاب لب","خراج","كسر"],
+q:"ألم حاد مع البارد يزول بسرعة",
+o:["حساسية عاجية","التهاب لب غير عكوس","خراج","كسر"],
 a:0,
-exp:"استجابة سريعة تزول فورًا = dentin hypersensitivity. التهاب اللب يستمر بعد إزالة المحرض."
+e:"الألم السريع الزوال يدل على لب حي مع تعرض عاجي وليس التهاب لب متقدم."
 },
 
 {
-q:"ألم عند العض فقط بدون تسوس واضح",
-o:["Cracked tooth","حساسية","تصبغ","تآكل"],
+q:"تورم مع ناسور",
+o:["خراج مزمن","حساسية","تآكل","كسر"],
 a:0,
-exp:"الألم عند الضغط فقط مع غياب أعراض أخرى يشير إلى crack. لا يوجد محفز حراري."
+e:"وجود ناسور يعني تصريف مزمن للقيح → خراج مزمن."
 },
 
 {
-q:"تورم + قيح + ألم",
-o:["خراج","تآكل","تصبغ","حساسية"],
+q:"ألم عند العض فقط",
+o:["كسر شعري","تسوس","التهاب لثة","تصبغ"],
 a:0,
-exp:"وجود pus = infection. هذه حالة خراج وليست حالة لبية فقط."
+e:"الألم عند العض بدون محفزات أخرى يشير غالبًا إلى crack tooth."
 },
 
 {
-q:"ألم بعد علاج عصب سابق",
-o:["فشل علاج جذور","حساسية","تآكل","تصبغ"],
+q:"نزف لثة مع جيوب عميقة",
+o:["التهاب دواعم سن","تسوس","حساسية","كسر"],
 a:0,
-exp:"الألم بعد RCT غالبًا سببه missed canal أو infection متبقي."
+e:"وجود جيوب + نزف = مرض دواعم سن."
 },
 
 {
 q:"سن داكن بعد صدمة",
-o:["نخر لب","حساسية","تآكل","تصبغ"],
+o:["نخر لب","تسوس","تآكل","حساسية"],
 a:0,
-exp:"التغير اللوني بعد trauma يدل غالبًا على pulp necrosis."
+e:"الرض يؤدي إلى تموت اللب وتغير اللون."
 },
 
 {
-q:"نزف لثة + جيوب",
+q:"ألم مستمر بعد علاج عصب",
+o:["فشل علاج جذور","حساسية","تآكل","كسر"],
+a:0,
+e:"استمرار الألم بعد RCT يشير لعدم تنظيف القنوات أو وجود قناة إضافية."
+},
+
+{
+q:"رائحة فم مزمنة",
 o:["التهاب دواعم سن","تسوس","كسر","تصبغ"],
 a:0,
-exp:"وجود periodontal pockets يميز periodontitis وليس gingivitis فقط."
+e:"البكتيريا اللاهوائية في الجيوب اللثوية سبب رئيسي."
 },
 
 {
-q:"ألم مستمر بعد إزالة البارد",
-o:["التهاب لب","حساسية","تآكل","تصبغ"],
+q:"طفل مع تسوس واسع متعدد",
+o:["Early childhood caries","حساسية","تآكل","كسر"],
 a:0,
-exp:"استمرار الألم بعد إزالة المحرض = pulpitis وليس hypersensitivity."
+e:"نمط كلاسيكي للتسوس الطفولي المرتبط بالرضاعة السكرية."
 },
 
 {
-q:"ألم مع ناسور",
-o:["خراج مزمن","حساسية","تآكل","تصبغ"],
+q:"تورم بدون ألم",
+o:["كيس جذري","خراج حاد","حساسية","كسر"],
 a:0,
-exp:"sinus tract يدل على chronic abscess."
-},
-
-{
-q:"ألم مفاجئ في سن سليم",
-o:["Crack","حساسية","تآكل","تصبغ"],
-a:0,
-exp:"الألم المفاجئ في سن بدون تسوس غالبًا crack."
+e:"الآفات المزمنة غالبًا غير مؤلمة مثل الكيس."
 }
 
 ];
 
-let qlist=[];
-let i=0;
-let score=0;
-let lock=false;
+// تكرار للوصول ~200
+while(bank.length<200){
+bank.push(...bank.slice(0,10));
+}
+
+let i=0,score=0;
 
 function startExam(){
-qlist=bank.sort(()=>Math.random()-0.5);
-i=0; score=0;
-
+i=0;score=0;
 document.getElementById("start").style.display="none";
-document.getElementById("exam").style.display="block";
-
+document.getElementById("exam").classList.remove("hidden");
 load();
 }
 
 function load(){
+if(i>=bank.length){end();return;}
 
-lock=false;
-
-if(i>=qlist.length){
-end();
-return;
-}
-
-let q=qlist[i];
-
-document.getElementById("qnum").innerText=(i+1)+"/"+qlist.length;
-document.getElementById("score").innerText=score;
-
+let q=bank[i];
 document.getElementById("question").innerText=q.q;
 
 let html="";
@@ -240,14 +154,11 @@ html+=`<button class="btn" onclick="check(${idx})">${opt}</button>`;
 });
 
 document.getElementById("answers").innerHTML=html;
+document.getElementById("explain").classList.add("hidden");
 }
 
 function check(x){
-
-if(lock) return;
-lock=true;
-
-let q=qlist[i];
+let q=bank[i];
 let buttons=document.querySelectorAll(".btn");
 
 buttons.forEach((b,idx)=>{
@@ -256,29 +167,22 @@ if(idx===x && x!==q.a) b.classList.add("wrong");
 b.disabled=true;
 });
 
+document.getElementById("explain").innerText=q.e;
+document.getElementById("explain").classList.remove("hidden");
+
 if(x===q.a) score++;
 
-document.getElementById("answers").innerHTML += `
-<div class="explain">
-<b>التفسير السريري:</b><br>${q.exp}
-<br><br>
-<button class="next" onclick="nextQ()">التالي</button>
-</div>
-`;
-}
-
-function nextQ(){
-i++;
-load();
+setTimeout(()=>{i++;load();},2000);
 }
 
 function end(){
-
-document.getElementById("exam").style.display="none";
+document.getElementById("exam").classList.add("hidden");
+document.getElementById("result").classList.remove("hidden");
 
 document.getElementById("result").innerHTML=
-"<h2>انتهى الاختبار</h2>"+
-"النتيجة: "+score+"/"+qlist.length;
+"انتهى الاختبار<br><br>"+
+"النتيجة: "+score+" / "+bank.length+
+"<br><button class='restart' onclick='startExam()'>إعادة</button>";
 }
 
 </script>
