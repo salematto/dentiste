@@ -7,85 +7,36 @@
 
 <style>
 body{margin:0;font-family:system-ui;background:#0b1220;color:#fff}
-
-/* Header */
 header{
-background:linear-gradient(90deg,#0f172a,#1e293b);
+background:#0f172a;
 padding:18px;
 text-align:center;
 border-bottom:3px solid #38bdf8;
-font-size:18px;
 font-weight:bold
 }
-
-/* Layout */
 .container{max-width:900px;margin:auto;padding:20px}
 
-/* Card */
-.card{
-background:#111827;
-padding:18px;
-border-radius:14px;
-margin-top:10px;
-border-left:4px solid #38bdf8
-}
-
-/* Buttons */
-.btn{
-display:block;width:100%;
-padding:12px;margin:6px 0;
-border:none;border-radius:10px;
-background:#1f2937;color:white;cursor:pointer
-}
+.card{background:#111827;padding:18px;border-radius:14px;margin-top:10px}
+.btn{display:block;width:100%;padding:12px;margin:6px 0;border:none;border-radius:10px;background:#1f2937;color:white;cursor:pointer}
 .correct{background:#16a34a !important}
 .wrong{background:#dc2626 !important}
 
-/* Meta */
-.meta{
-display:flex;justify-content:space-between;
-color:#93c5fd;font-size:13px
-}
+.meta{display:flex;justify-content:space-between;color:#93c5fd;font-size:13px}
 
-/* Progress bar */
-.progress-bar{
-height:6px;
-background:#1f2937;
-border-radius:10px;
-margin-top:10px;
-overflow:hidden
-}
-.progress{
-height:100%;
-background:#38bdf8;
-width:0%
-}
+.progress-bar{height:6px;background:#1f2937;border-radius:10px;margin-top:10px}
+.progress{height:100%;background:#38bdf8;width:0%}
 
-/* Explanation */
-.explanation{
-margin-top:10px;
-background:#0f172a;
-padding:12px;
-border-radius:10px;
-border-left:4px solid #facc15
-}
+.explanation{margin-top:10px;background:#0f172a;padding:12px;border-radius:10px;border-left:4px solid #facc15}
 
-/* Footer */
-footer{
-text-align:center;
-padding:14px;
-color:#64748b;
-font-size:13px;
-border-top:1px solid #1f2937;
-margin-top:20px
-}
+footer{text-align:center;padding:14px;color:#64748b;font-size:13px;margin-top:20px}
 </style>
 </head>
 
 <body>
 
 <header>
-🦷 Dental Clinical Exam Pro  
-<br><small style="color:#94a3b8">نظام تدريب سريري تفاعلي</small>
+🦷 Dental Clinical Exam Pro
+<br><small style="color:#94a3b8">50 Clinical Cases</small>
 </header>
 
 <div class="container">
@@ -109,7 +60,7 @@ margin-top:20px
 <div id="answers"></div>
 <div id="explanation"></div>
 
-<button class="btn" onclick="restartExam()">🔄 إعادة من البداية</button>
+<button class="btn" onclick="restartExam()">إعادة</button>
 
 </div>
 
@@ -117,18 +68,76 @@ margin-top:20px
 
 </div>
 
-<footer>
-تصميم وتطوير د. زكريا محمد عطوني  
-<br>Dental AI Training System
-</footer>
+<footer>تصميم وتطوير د. زكريا محمد عطوني</footer>
 
 <script>
 
-/* ⚠️ نفس البنك السابق بدون أي تعديل */
-const bank = [...bank || []]; 
-/* ملاحظة: اترك بنكك كما هو — لا تغيره */
+/* 🔴 50 حالة سريرية مضبوطة */
+const bank = [
 
-/* نفس الدوال بدون تغيير */
+/* Endo */
+{q:"ألم ليلي نابض يستمر بعد البارد",o:["التهاب لب غير عكوس","حساسية","تموت لبي","لثة"],a:0,e:"irreversible pulpitis"},
+{q:"ألم بارد يزول فوراً",o:["حساسية عاجية","تموت لبي","خراج","كسر"],a:0,e:"dentin hypersensitivity"},
+{q:"سن غير حي مع آفة ذروية",o:["تموت لبي","التهاب لب","حساسية","تآكل"],a:0,e:"necrosis"},
+{q:"ألم عند العض",o:["كسر سن","تسوس","لثة","حساسية"],a:0,e:"cracked tooth"},
+{q:"ألم عفوي مستمر",o:["التهاب لب غير عكوس","عكوس","حساسية","تآكل"],a:0,e:"pulpitis"},
+{q:"ألم حراري مستمر",o:["التهاب لب غير عكوس","حساسية","كسر","لثة"],a:0,e:"pulpal inflammation"},
+{q:"ألم عند القرع",o:["التهاب حول الذروة","لثة","تسوس","حساسية"],a:0,e:"apical periodontitis"},
+{q:"سن متغير اللون",o:["تموت لبي","تسوس","كسر","لثة"],a:0,e:"necrosis"},
+{q:"تورم ذروي حاد",o:["خراج","كيس","ورم","تآكل"],a:0,e:"acute abscess"},
+{q:"ألم بعد البارد فقط",o:["التهاب لب عكوس","غير عكوس","كسر","لثة"],a:0,e:"reversible pulpitis"},
+
+/* Perio */
+{q:"نزف لثوي فقط",o:["التهاب لثة","دواعم","كيس","خراج"],a:0,e:"gingivitis"},
+{q:"فقدان عظم + جيوب",o:["التهاب دواعم","لثة","تسوس","كسر"],a:0,e:"periodontitis"},
+{q:"قيح من اللثة",o:["خراج لثوي","كيس","تسوس","لثة سليمة"],a:0,e:"abscess"},
+{q:"رائحة فم",o:["مرض لثوي","تسوس","كسر","تآكل"],a:0,e:"halitosis"},
+{q:"حركة سنية",o:["فقدان دعم","تسوس","كسر","تصبغ"],a:0,e:"mobility"},
+{q:"انحسار لثوي",o:["recession","تسوس","كسر","ورم"],a:0,e:"root exposure"},
+{q:"نزف مع تفريش",o:["التهاب لثة","دواعم","كسر","خراج"],a:0,e:"gingivitis"},
+{q:"جيوب بدون ألم",o:["دواعم مزمن","خراج","كيس","تسوس"],a:0,e:"chronic perio"},
+{q:"تورم لثوي",o:["خراج لثوي","كيس","تآكل","تصبغ"],a:0,e:"localized abscess"},
+{q:"تراجع عام",o:["recession","تسوس","كسر","ورم"],a:0,e:"gingival recession"},
+
+/* Surgery */
+{q:"تورم حاد",o:["خراج","كيس","ورم","تآكل"],a:0,e:"acute infection"},
+{q:"تورم بطيء",o:["كيس","خراج","تسوس","لثة"],a:0,e:"cyst"},
+{q:"Dry socket",o:["Alveolar osteitis","خراج","كيس","تسوس"],a:0,e:"post extraction pain"},
+{q:"ضرس عقل ملتهب",o:["Pericoronitis","كسر","تسوس","حساسية"],a:0,e:"wisdom tooth infection"},
+{q:"تورم منتشر",o:["Cellulitis","كيس","تسوس","لثة"],a:0,e:"diffuse infection"},
+{q:"نزف بعد قلع",o:["Bleeding issue","كيس","تسوس","كسر"],a:0,e:"hemostasis problem"},
+{q:"ألم بعد جراحة",o:["Inflammation","كسر","تسوس","لثة"],a:0,e:"post op pain"},
+{q:"قيح",o:["Infection","كسر","تسوس","لثة"],a:0,e:"pus formation"},
+{q:"تورم مع حرارة",o:["Systemic infection","كيس","تآكل","ورم"],a:0,e:"fever + swelling"},
+{q:"ألم 48 ساعة بعد القلع",o:["Dry socket","كيس","خراج","تآكل"],a:0,e:"classic timing"},
+
+/* Pedo */
+{q:"ECC",o:["Early childhood caries","تآكل","كسر","تصبغ"],a:0,e:"child caries"},
+{q:"بقع بيضاء",o:["Demineralization","تسوس","كسر","تآكل"],a:0,e:"early lesion"},
+{q:"ألم سكريات",o:["Caries","كسر","لثة","تصبغ"],a:0,e:"caries"},
+{q:"طفل غير متعاون",o:["Behavior management","خلع","تخدير","تأجيل"],a:0,e:"behavior"},
+{q:"نخر متعدد",o:["ECC","كسر","تآكل","تصبغ"],a:0,e:"pattern"},
+{q:"ألم لبني",o:["Pulpitis","كسر","لثة","تصبغ"],a:0,e:"pulp involvement"},
+{q:"تسوس سطحي",o:["Preventive","خلع","جراحة","تاج"],a:0,e:"early"},
+{q:"بقع سوداء",o:["Caries","تصبغ","كسر","تآكل"],a:0,e:"decay"},
+{q:"حساسية طفل",o:["Caries","كسر","لثة","تصبغ"],a:0,e:"likely cause"},
+{q:"تسوس متقدم",o:["Restoration","خلع","تاج","وقاية"],a:0,e:"treatment"},
+
+/* Prostho */
+{q:"سقوط تاج",o:["Cement failure","تسوس","كسر","لثة"],a:0,e:"cement"},
+{q:"ألم تحت جسر",o:["Secondary caries","لثة","كسر","تآكل"],a:0,e:"decay under bridge"},
+{q:"طقم غير ثابت",o:["Retention issue","كسر","تسوس","لثة"],a:0,e:"fit"},
+{q:"تقرحات",o:["Pressure","كسر","تآكل","تسوس"],a:0,e:"trauma"},
+{q:"فراغات",o:["Design issue","كسر","تآكل","لثة"],a:0,e:"planning"},
+{q:"ألم بعد تاج",o:["High occlusion","كسر","تسوس","لثة"],a:0,e:"bite high"},
+{q:"كسر خزف",o:["Stress","تسوس","لثة","تآكل"],a:0,e:"fracture"},
+{q:"انفصال جسر",o:["Cement failure","كسر","تسوس","لثة"],a:0,e:"loss"},
+{q:"عدم راحة",o:["Pressure","كسر","تآكل","تسوس"],a:0,e:"fit issue"},
+{q:"احتكاك",o:["Occlusion issue","تسوس","كسر","لثة"],a:0,e:"bite problem"}
+
+];
+
+/* نفس النظام */
 function shuffle(q){
 let arr=q.o.map((t,i)=>({t,correct:i===q.a}));
 for(let i=arr.length-1;i>0;i--){
@@ -147,11 +156,6 @@ document.getElementById("exam").style.display="block";
 load();
 }
 
-function restartExam(){
-index=0;score=0;
-load();
-}
-
 function load(){
 
 if(index>=bank.length){
@@ -165,13 +169,11 @@ return;
 let q=bank[index];
 currentOptions=shuffle(q);
 
-/* تحديث النص */
 document.getElementById("progressText").innerText=`${index+1}/${bank.length}`;
 document.getElementById("score").innerText=score;
 
-/* تحديث الشريط */
-let percent = ((index)/bank.length)*100;
-document.getElementById("progressBar").style.width = percent + "%";
+let percent=(index/bank.length)*100;
+document.getElementById("progressBar").style.width=percent+"%";
 
 document.getElementById("question").innerText=q.q;
 document.getElementById("explanation").innerHTML="";
