@@ -15,12 +15,13 @@ header{background:#0f172a;padding:15px;text-align:center;border-bottom:3px solid
 .wrong{background:#dc2626 !important}
 .meta{display:flex;justify-content:space-between;color:#93c5fd}
 .explanation{margin-top:10px;background:#0f172a;padding:10px;border-radius:10px}
+footer{text-align:center;padding:10px;color:#64748b;font-size:12px}
 </style>
 </head>
 
 <body>
 
-<header>🦷 Dental Exam (Fixed Logic)</header>
+<header>🦷 Dental Clinical Exam</header>
 
 <div class="container">
 
@@ -43,52 +44,72 @@ header{background:#0f172a;padding:15px;text-align:center;border-bottom:3px solid
 
 </div>
 
+<footer>تصميم وتطوير د. زكريا محمد عطوني</footer>
+
 <script>
 
-/* ✔ بنك صغير لكن صحيح */
+/* ✅ بنك 30 حالة بدون توليد */
 const bank = [
-{
-q:"ألم ليلي يستمر بعد البارد",
-o:["التهاب لب غير عكوس","حساسية","تموت لبي","التهاب لثة"],
-a:0,
-e:"الألم المستمر يدل على irreversible pulpitis"
-},
-{
-q:"ألم بارد يزول فوراً",
-o:["حساسية عاجية","التهاب لب","خراج","تموت لبي"],
-a:0,
-e:"استجابة قصيرة = hypersensitivity"
-},
-{
-q:"سن لا يستجيب + آفة ذروية",
-o:["تموت لبي","التهاب لب","حساسية","كسر"],
-a:0,
-e:"necrotic pulp"
-}
+
+/* Endo */
+{q:"ألم ليلي يستمر بعد البارد",o:["التهاب لب غير عكوس","حساسية","تموت لبي","التهاب لثة"],a:0,e:"الألم المستمر يدل على irreversible pulpitis"},
+{q:"ألم بارد يزول فوراً",o:["حساسية عاجية","التهاب لب","خراج","تموت لبي"],a:0,e:"استجابة قصيرة = hypersensitivity"},
+{q:"سن لا يستجيب + آفة ذروية",o:["تموت لبي","التهاب لب","حساسية","كسر"],a:0,e:"necrotic pulp"},
+{q:"ألم عفوي دون محفز",o:["التهاب لب غير عكوس","تسوس سطحي","لثة","تصبغ"],a:0,e:"spontaneous pain → irreversible pulpitis"},
+{q:"ألم عند العض فقط",o:["كسر سن","تسوس","حساسية","لثة"],a:0,e:"pain on biting → crack"},
+{q:"ألم يستمر بعد الساخن",o:["التهاب لب غير عكوس","حساسية","تموت لبي","كسر"],a:0,e:"heat lingering → pulpitis"},
+{q:"سن مؤلم لا يستجيب للحيوية",o:["تموت لبي","التهاب لب عكوس","حساسية","لثة"],a:0,e:"non vital tooth"},
+{q:"ألم حاد مع تورم موضعي",o:["خراج ذروي حاد","كيس","تسوس","لثة"],a:0,e:"acute abscess"},
+{q:"ألم خفيف متقطع مع نخر متوسط",o:["التهاب لب عكوس","غير عكوس","تموت","خراج"],a:0,e:"reversible pulpitis"},
+{q:"ألم عند القرع",o:["التهاب حول الذروة","التهاب لثة","تسوس","حساسية"],a:0,e:"apical periodontitis"},
+
+/* Perio */
+{q:"نزف لثوي مع لويحة",o:["التهاب لثة","التهاب دواعم","كيس","خراج"],a:0,e:"gingivitis"},
+{q:"جيوب 6 ملم + فقدان عظم",o:["التهاب دواعم","لثة","تسوس","حساسية"],a:0,e:"periodontitis"},
+{q:"رائحة فم مزمنة",o:["مرض لثوي","تسوس","كسر","تآكل"],a:0,e:"common perio cause"},
+{q:"انحسار لثوي مع حساسية",o:["انحسار","تسوس","كسر","ورم"],a:0,e:"root exposure"},
+{q:"حركة سنية متزايدة",o:["فقدان دعم عظمي","تسوس","كسر","تصبغ"],a:0,e:"bone loss"},
+{q:"قيح من الجيب اللثوي",o:["خراج لثوي","كيس","تسوس","لثة سليمة"],a:0,e:"periodontal abscess"},
+
+/* Surgery */
+{q:"تورم حاد مؤلم",o:["خراج حاد","كيس","ورم","تآكل"],a:0,e:"acute infection"},
+{q:"تورم بطيء غير مؤلم",o:["كيس","خراج","تسوس","لثة"],a:0,e:"cyst"},
+{q:"ألم بعد القلع مع عظم مكشوف",o:["Dry socket","كيس","خراج","تسوس"],a:0,e:"alveolar osteitis"},
+{q:"صعوبة فتح الفم مع ضرس عقل",o:["Pericoronitis","كسر","تسوس","حساسية"],a:0,e:"pericoronitis"},
+{q:"تورم منتشر بدون حدود",o:["Cellulitis","كيس","تسوس","لثة"],a:0,e:"diffuse infection"},
+
+/* Pedo */
+{q:"تسوس متعدد عند طفل",o:["ECC","تآكل","كسر","تصبغ"],a:0,e:"early childhood caries"},
+{q:"بقع بيضاء طباشيرية",o:["نزع تمعدن","تسوس عميق","كسر","تآكل"],a:0,e:"early lesion"},
+{q:"ألم مع السكريات",o:["تسوس","كسر","لثة","تصبغ"],a:0,e:"caries"},
+{q:"نخر سريع في الأسنان اللبنية",o:["ECC","تآكل","كسر","تصبغ"],a:0,e:"rapid caries"},
+
+/* Prostho */
+{q:"سقوط تاج متكرر",o:["فشل إسمنتي","تسوس","كسر","لثة"],a:0,e:"cement failure"},
+{q:"ألم تحت جسر",o:["تسوس ثانوي","لثة","كسر","تآكل"],a:0,e:"secondary caries"},
+{q:"عدم ثبات طقم",o:["ضعف ارتكاز","كسر","تسوس","لثة"],a:0,e:"retention issue"},
+{q:"تقرحات تحت طقم",o:["ضغط زائد","كسر","تآكل","تسوس"],a:0,e:"trauma"},
+{q:"فراغات بعد تعويض",o:["سوء تصميم","كسر","تآكل","لثة"],a:0,e:"design issue"}
+
 ];
 
-/* ✔ خلط مع حفظ الإجابة */
+/* 🔒 خلط آمن */
 function shuffle(q){
 let arr=q.o.map((t,i)=>({t,correct:i===q.a}));
-
 for(let i=arr.length-1;i>0;i--){
 let j=Math.random()*(i+1)|0;
 [arr[i],arr[j]]=[arr[j],arr[i]];
 }
-
 return arr;
 }
 
-let index=0,score=0;
-let currentOptions=[];
+let index=0,score=0,currentOptions=[];
 
 function startExam(){
 index=0;
 score=0;
-
 document.getElementById("start").style.display="none";
 document.getElementById("exam").style.display="block";
-
 load();
 }
 
@@ -103,14 +124,13 @@ return;
 }
 
 let q=bank[index];
-currentOptions = shuffle(q);
+currentOptions=shuffle(q);
 
 document.getElementById("progress").innerText=`${index+1}/${bank.length}`;
 document.getElementById("score").innerText=score;
 document.getElementById("question").innerText=q.q;
 document.getElementById("explanation").innerHTML="";
 
-/* ✔ رسم الخيارات داخل answers فقط */
 let html="";
 currentOptions.forEach((opt,i)=>{
 html+=`<button class="btn" onclick="check(${i})">${opt.t}</button>`;
@@ -121,21 +141,14 @@ document.getElementById("answers").innerHTML=html;
 
 function check(i){
 
-let buttons = document.getElementById("answers").querySelectorAll(".btn");
+let buttons=document.getElementById("answers").querySelectorAll(".btn");
+let correctIndex=currentOptions.findIndex(x=>x.correct);
 
-/* ✔ الصحيح الحقيقي */
-let correctIndex = currentOptions.findIndex(x=>x.correct);
-
-/* ✔ تلوين مضبوط */
 buttons[correctIndex].classList.add("correct");
-if(i!==correctIndex){
-buttons[i].classList.add("wrong");
-}
+if(i!==correctIndex)buttons[i].classList.add("wrong");
 
-/* ✔ تعطيل */
 buttons.forEach(b=>b.disabled=true);
 
-/* ✔ شرح */
 document.getElementById("explanation").innerHTML=
 `<div class="explanation">${bank[index].e}</div>`;
 
@@ -145,7 +158,6 @@ setTimeout(()=>{
 index++;
 load();
 },1200);
-
 }
 
 </script>
