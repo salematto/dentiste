@@ -38,7 +38,6 @@ margin:auto;
 padding:22px;
 }
 
-/* ✅ CARD (محسن فعليًا) */
 .card{
 background: linear-gradient(145deg,#ffffff,#f8fafc);
 padding:24px;
@@ -74,9 +73,6 @@ font-size:15px;
 background:#cbd5e1;
 transform:scale(1.01);
 }
-
-.correct{background:#22c55e;color:white;}
-.wrong{background:#ef4444;color:white;}
 
 .explain{
 margin-top:12px;
@@ -247,15 +243,23 @@ let q = bank[i];
 let buttons=document.querySelectorAll(".btn");
 
 buttons.forEach((b,idx)=>{
-if(idx===q.a) b.classList.add("correct");
-if(idx===x && x!==q.a) b.classList.add("wrong");
-b.disabled=true;
+b.disabled = true;
+
+if(idx === q.a){
+b.style.background = "#22c55e";
+b.style.color = "white";
+}
+
+if(idx === x && x !== q.a){
+b.style.background = "#ef4444";
+b.style.color = "white";
+}
 });
 
-document.getElementById("explain").innerText=q.e;
-document.getElementById("explain").style.display="block";
+document.getElementById("explain").innerText = q.e;
+document.getElementById("explain").style.display = "block";
 
-if(x===q.a) score++;
+if(x === q.a) score++;
 
 setTimeout(()=>{i++;load();},1800);
 }
