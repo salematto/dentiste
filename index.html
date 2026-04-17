@@ -23,37 +23,14 @@ font-weight:bold;
 border-bottom:3px solid #06b6d4;
 }
 
-.logo{
-display:flex;
-align-items:center;
-justify-content:center;
-gap:10px;
-}
-
-.logo span{font-size:24px;}
-
-.container{
-max-width:850px;
-margin:auto;
-padding:22px;
-}
+.container{max-width:850px;margin:auto;padding:22px;}
 
 .card{
-background: linear-gradient(145deg,#ffffff,#f8fafc);
+background:#fff;
 padding:24px;
-border-radius:20px;
-box-shadow:
-0 10px 25px rgba(15,23,42,0.10),
-0 2px 6px rgba(15,23,42,0.05);
-line-height:1.7;
-border:1px solid #e2e8f0;
-transition:0.25s ease;
-}
-
-.card:hover{
-transform:translateY(-3px);
-box-shadow:
-0 15px 35px rgba(15,23,42,0.15);
+border-radius:18px;
+box-shadow:0 10px 25px rgba(0,0,0,0.08);
+margin-top:15px;
 }
 
 .btn{
@@ -62,17 +39,13 @@ width:100%;
 margin:10px 0;
 padding:14px;
 border:none;
-border-radius:12px;
+border-radius:10px;
 background:#e2e8f0;
 cursor:pointer;
-transition:0.2s;
 font-size:15px;
 }
 
-.btn:hover{
-background:#cbd5e1;
-transform:scale(1.01);
-}
+.btn:hover{background:#cbd5e1;}
 
 .explain{
 margin-top:12px;
@@ -82,19 +55,11 @@ border-right:4px solid #06b6d4;
 border-radius:10px;
 }
 
-.meta{
-display:flex;
-justify-content:space-between;
-font-size:13px;
-color:#64748b;
-margin-bottom:10px;
-}
-
 .start,.restart{
 padding:12px 16px;
 border:none;
-border-radius:12px;
-background:linear-gradient(90deg,#2563eb,#1e3a8a);
+border-radius:10px;
+background:#1e3a8a;
 color:white;
 cursor:pointer;
 font-weight:bold;
@@ -105,7 +70,6 @@ text-align:center;
 padding:18px;
 font-size:12px;
 color:#64748b;
-margin-top:30px;
 }
 </style>
 </head>
@@ -113,13 +77,7 @@ margin-top:30px;
 <body>
 
 <header>
-<div class="logo">
-<span>🦷</span>
-<div>
-امتحان طب الأسنان السريري<br>
-<small style="opacity:0.8;">نظام التدريب السريري التفاعلي</small>
-</div>
-</div>
+🦷 امتحان طب الأسنان السريري
 </header>
 
 <div class="container">
@@ -130,11 +88,7 @@ margin-top:30px;
 
 <div id="exam" style="display:none;">
 
-<div class="meta">
-<span id="qnum"></span>
-<span id="score"></span>
-</div>
-
+<div id="meta"></div>
 <div id="question" class="card"></div>
 <div id="answers"></div>
 <div id="explain" class="explain" style="display:none;"></div>
@@ -146,74 +100,74 @@ margin-top:30px;
 </div>
 
 <footer>
-تصميم وتطوير: د. زكريا محمد عطوني
+تصميم وتطوير: د. زكريا عطوني
 </footer>
 
 <script>
 
 /* =========================
-   120 حالة سريرية (عربية بالكامل)
+   بنك الحالات (أساس ثابت)
 ========================= */
 
 const baseCases = [
-
-/* لبّي */
-{case:"مريض يعاني من ألم ليلي نابض يوقظه من النوم مع تسوس عميق.",q:"التشخيص؟",o:["التهاب لب غير عكوس","التهاب لب عكوس","التهاب دواعم السن","تآكل سني"],a:0,e:"الألم الليلي يدل على التهاب لب غير عكوس"},
-
-{case:"ألم بارد يختفي فور إزالة المؤثر.",q:"التشخيص؟",o:["التهاب لب عكوس","تموت لبي","خراج ذروي","كسر سن"],a:0,e:"ألم قصير = لب عكوس"},
-
-{case:"ألم تلقائي بدون محفز.",q:"التشخيص؟",o:["التهاب لب غير عكوس","حساسية عاجية","تصبغ سني","تآكل"],a:0,e:"ألم عفوي = التهاب لب غير عكوس"},
-
-{case:"سن تغير لونه إلى الرمادي بعد رض سابق.",q:"التشخيص؟",o:["تموت لبي","تسوس","التهاب لثة","حساسية"],a:0,e:"تموت لبي بعد الرض"},
-
-{case:"وجود ناسور لثوي يفرغ قيحًا بشكل مزمن.",q:"التشخيص؟",o:["خراج مزمن","خراج حاد","تسوس سطحي","تآكل"],a:0,e:"ناسور = خراج مزمن"},
-
-{case:"ألم عند العض فقط دون ألم حراري.",q:"التشخيص؟",o:["كسر شعري في السن","التهاب لب","حساسية","تصبغ"],a:0,e:"كسر شعري محتمل"},
-
-/* لثة */
-{case:"نزف لثوي عند التفريش مع تراكم لويحة.",q:"التشخيص؟",o:["التهاب اللثة","التهاب دواعم السن","خراج","كسر"],a:0,e:"التهاب لثة"},
-
-{case:"جيوب لثوية عميقة مع حركة الأسنان.",q:"التشخيص؟",o:["التهاب دواعم السن","التهاب لثة","تآكل","تصبغ"],a:0,e:"فقدان عظم"},
-
-{case:"رائحة فم كريهة مزمنة.",q:"التشخيص؟",o:["التهاب دواعم السن","تسوس","حساسية","تآكل"],a:0,e:"بكتيريا لاهوائية"},
-
-{case:"انحسار لثة مع حساسية.",q:"التشخيص؟",o:["انحسار لثوي","خراج","كسر","تسوس"],a:0,e:"انكشاف الجذر"},
-
-/* جراحة */
-{case:"ألم شديد بعد قلع مع عظم مكشوف.",q:"التشخيص؟",o:["التهاب السنخ الجاف","خراج","كيس","تسوس"],a:0,e:"dry socket"},
-
-{case:"تورم سريع مؤلم.",q:"التشخيص؟",o:["خراج حاد","كيس","التهاب لثة","تصبغ"],a:0,e:"خراج حاد"},
-
-{case:"تورم بطيء غير مؤلم.",q:"التشخيص؟",o:["كيس سني المنشأ","خراج","تسوس","حساسية"],a:0,e:"كيس"},
-
-/* أطفال */
-{case:"طفل مع تسوس واسع في الأسنان اللبنية.",q:"التشخيص؟",o:["تسوس الطفولة المبكر","تصبغ","كسر","تآكل"],a:0,e:"ECC"},
-
-{case:"طفل غير متعاون في العيادة.",q:"التصرف؟",o:["تعديل سلوكي","خلع فوري","تجاهل","تأجيل"],a:0,e:"إدارة سلوكية"},
-
-/* تعويضات */
-{case:"ألم بعد حشوة مرتفعة.",q:"السبب؟",o:["ارتفاع إطباقي","تسوس","كسر","حساسية"],a:0,e:"occlusal trauma"},
-
-{case:"تاج يسقط بسرعة.",q:"السبب؟",o:["فشل الإسمنت","تسوس","كسر","التهاب لثة"],a:0,e:"فشل تثبيت"},
-
-{case:"حساسية بعد تركيب تاج.",q:"السبب؟",o:["انكشاف العاج","خراج","كيس","تآكل"],a:0,e:"dentin exposure"}
-
+{
+case:"ألم ليلي نابض مع تسوس عميق.",
+q:"التشخيص؟",
+o:["التهاب لب غير عكوس","التهاب لب عكوس","التهاب لثة","كسر سن"],
+a:0,
+e:"الألم الليلي يدل على التهاب لب غير عكوس"
+},
+{
+case:"ألم بارد يزول بسرعة.",
+q:"التشخيص؟",
+o:["التهاب لب عكوس","تموت لبي","خراج","تآكل"],
+a:0,
+e:"ألم قصير = حالة عكوسة"
+},
+{
+case:"تورم مع ناسور.",
+q:"التشخيص؟",
+o:["خراج مزمن","كيس","تسوس","حساسية"],
+a:0,
+e:"ناسور = خراج مزمن"
+},
+{
+case:"ألم عند العض فقط.",
+q:"التشخيص؟",
+o:["كسر شعري","التهاب لب","تآكل","لثة"],
+a:0,
+e:"ألم عض = كسر شعري محتمل"
+}
 ];
 
 /* =========================
-   بناء 120 حالة بدون تكرار
+   بناء 120 حالة بدون خطأ
+   + إصلاح مكان الإجابة الصحيحة
 ========================= */
 
 let bank = [];
 
 for(let i=0;i<120;i++){
+
 let b = baseCases[i % baseCases.length];
+
+// ننسخ الخيارات
+let options = [...b.o];
+
+// نحدد الإجابة الصحيحة
+let correct = options[b.a];
+
+// نخلط الخيارات
+options.sort(() => Math.random() - 0.5);
+
+// نعيد حساب مكان الإجابة الصحيحة بعد الخلط
+let newIndex = options.indexOf(correct);
 
 bank.push({
 case: b.case + " (حالة " + (i+1) + ")",
 q: b.q,
-o: [...b.o],
-a: b.a,
+o: options,
+a: newIndex,
 e: b.e
 });
 }
@@ -229,21 +183,24 @@ load();
 }
 
 function load(){
-if(i>=bank.length){end();return;}
+if(i>=bank.length){
+end();return;
+}
 
 let q=bank[i];
 
-document.getElementById("qnum").innerText="الحالة "+(i+1)+" / 120";
-document.getElementById("score").innerText="النقاط: "+score;
+document.getElementById("meta").innerHTML =
+"الحالة " + (i+1) + " / 120 | النقاط: " + score;
 
-document.getElementById("question").innerText=q.case+"\n\n"+q.q;
+document.getElementById("question").innerText =
+q.case + "\n\n" + q.q;
 
 let html="";
 q.o.forEach((opt,idx)=>{
-html+=`<button class="btn" onclick="check(${idx})">${opt}</button>`;
+html += `<button class="btn" onclick="check(${idx})">${opt}</button>`;
 });
 
-document.getElementById("answers").innerHTML=html;
+document.getElementById("answers").innerHTML = html;
 document.getElementById("explain").style.display="none";
 }
 
@@ -270,7 +227,7 @@ document.getElementById("explain").style.display="block";
 
 if(x===q.a) score++;
 
-setTimeout(()=>{i++;load();},1500);
+setTimeout(()=>{i++;load();},1200);
 }
 
 function end(){
@@ -278,11 +235,11 @@ document.getElementById("exam").style.display="none";
 document.getElementById("result").style.display="block";
 
 document.getElementById("result").innerHTML=
-"<div class='card'>" +
-"<h2>انتهى الامتحان</h2>" +
-"<p>النتيجة: "+score+" / 120</p>" +
-"<button class='restart' onclick='location.reload()'>إعادة الامتحان</button>" +
-"</div>";
+`<div class="card">
+<h2>انتهى الامتحان</h2>
+<p>النتيجة: ${score} / 120</p>
+<button class="restart" onclick="location.reload()">إعادة الامتحان</button>
+</div>`;
 }
 
 </script>
