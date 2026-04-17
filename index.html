@@ -3,79 +3,101 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>امتحان طب الأسنان السريري</title>
+<title>Clinical Exam Platform V1</title>
 
 <style>
 body{
 margin:0;
 font-family:system-ui;
-background:linear-gradient(135deg,#eef2ff,#f8fafc);
-color:#0f172a;
+background:#0b1220;
+color:#e5e7eb;
 }
 
+/* HEADER */
 header{
-background:#0f172a;
-color:white;
-padding:16px;
+background:linear-gradient(90deg,#0f172a,#1e3a8a);
+padding:18px;
 text-align:center;
 font-weight:bold;
+font-size:18px;
+border-bottom:2px solid #38bdf8;
 }
 
+/* LAYOUT */
 .container{
-max-width:900px;
+max-width:950px;
 margin:auto;
 padding:20px;
 }
 
+/* CARD */
 .card{
-background:white;
-padding:20px;
-border-radius:14px;
-box-shadow:0 6px 18px rgba(0,0,0,0.08);
+background:#111827;
+padding:22px;
+border-radius:16px;
+box-shadow:0 10px 30px rgba(0,0,0,0.4);
 margin-top:15px;
+border:1px solid #1f2937;
 }
 
+/* BUTTON */
 .btn{
 display:block;
 width:100%;
-padding:12px;
+padding:13px;
 margin:8px 0;
 border:none;
-border-radius:10px;
-background:#e2e8f0;
+border-radius:12px;
+background:#1f2937;
+color:#e5e7eb;
 cursor:pointer;
+transition:0.2s;
 }
 
-.btn:hover{background:#cbd5e1;}
+.btn:hover{background:#374151;}
 
-.correct{background:#22c55e !important;color:white;}
-.wrong{background:#ef4444 !important;color:white;}
+.correct{background:#16a34a !important;color:white;}
+.wrong{background:#dc2626 !important;color:white;}
 
+/* META */
 .meta{
 display:flex;
 justify-content:space-between;
 font-size:13px;
-color:#64748b;
-margin-bottom:10px;
+color:#93c5fd;
 }
 
+/* FOOTER */
 footer{
 text-align:center;
-padding:15px;
+padding:18px;
 font-size:12px;
 color:#64748b;
+margin-top:20px;
+}
+
+/* START */
+.startBtn{
+padding:14px;
+border:none;
+border-radius:14px;
+background:#38bdf8;
+color:#0b1220;
+font-weight:bold;
+cursor:pointer;
+width:100%;
 }
 </style>
 </head>
 
 <body>
 
-<header>🦷 Clinical Exam System PRO (120 Cases)</header>
+<header>🦷 Clinical Dentistry Exam Platform V1</header>
 
 <div class="container">
 
 <div id="start">
-<button class="btn" onclick="startExam()">ابدأ الامتحان</button>
+<button class="startBtn" onclick="startExam()">بدء الامتحان السريري</button>
 </div>
 
 <div id="exam" style="display:none;">
@@ -94,85 +116,60 @@ color:#64748b;
 
 </div>
 
-<footer>تصميم وتطوير نظام امتحان سريري متقدم</footer>
+<footer>Designed for clinical training use</footer>
 
 <script>
 
 /* =========================
-   120 CASES (حقيقية وغير مكررة)
+   120 CASES (نسخة علمية موحدة)
 ========================= */
 
 const bank = [
-/* ================= ENDODONTICS ================= */
-{c:"ألم ليلي نابض مع نخر عميق",o:["التهاب لب غير عكوس","التهاب لب عكوس","تسوس سطحي","لثة"],a:0},
-{c:"ألم بارد طويل بعد المؤثر",o:["التهاب لب غير عكوس","حساسية","تآكل","تصبغ"],a:0},
-{c:"ألم تلقائي بدون محفز",o:["التهاب لب غير عكوس","تآكل","تصبغ","حساسية"],a:0},
-{c:"سن داكن بعد رض",o:["تموت لبي","تسوس","كسر","تآكل"],a:0},
-{c:"ناسور مع إفراز مزمن",o:["خراج مزمن","كيس","تسوس","لثة"],a:0},
-{c:"ألم عند العض يزداد عند التحرير",o:["كسر شعري","تسوس","حساسية","لثة"],a:0},
-{c:"ألم بعد حشو عميق",o:["التهاب لب غير عكوس","تسوس","كسر","تآكل"],a:0},
-{c:"ألم حراري طويل",o:["التهاب لب غير عكوس","حساسية","تآكل","تصبغ"],a:0},
-{c:"ألم ليلي متكرر",o:["التهاب لب غير عكوس","لثة","كسر","تآكل"],a:0},
-{c:"تورم ذروي",o:["خراج ذروي","كيس","تسوس","حساسية"],a:0},
+/* Endodontics */
+{c:"ألم ليلي نابض مع تسوس عميق",o:["التهاب لب غير عكوس","التهاب لب عكوس","تسوس سطحي","حساسية عاجية"],a:0},
+{c:"ألم حراري يستمر بعد إزالة المؤثر",o:["التهاب لب غير عكوس","حساسية","تآكل","تصبغ"],a:0},
+{c:"ألم تلقائي بدون محفز",o:["التهاب لب غير عكوس","تسوس","كسر","تآكل"],a:0},
+{c:"سن متغير اللون بعد رض",o:["تموت لبي","تسوس","تآكل","التهاب لثة"],a:0},
+{c:"ناسور مع إفراز قيحي",o:["خراج مزمن","كيس","تسوس","حساسية"],a:0},
 
-/* ================= PERIODONTICS ================= */
-{c:"نزف لثوي مع لويحة",o:["التهاب لثة","تسوس","كسر","تآكل"],a:0},
-{c:"جيوب عميقة مع حركة سن",o:["التهاب دواعم السن","تسوس","كسر","تصبغ"],a:0},
+/* Periodontics */
+{c:"نزف لثوي مع تراكم لويحة",o:["التهاب لثة","التهاب دواعم السن","تآكل","كسر"],a:0},
+{c:"جيوب عميقة مع فقدان عظم",o:["التهاب دواعم السن","تسوس","كسر","تصبغ"],a:0},
 {c:"رائحة فم مزمنة",o:["التهاب دواعم السن","تسوس","كسر","تآكل"],a:0},
-{c:"انحسار لثة",o:["انحسار لثوي","تسوس","كسر","تآكل"],a:0},
-{c:"خراج لثوي موضعي",o:["خراج لثوي","كيس","تسوس","تآكل"],a:0},
-{c:"نزف تلقائي",o:["التهاب لثة","تسوس","كسر","تآكل"],a:0},
-{c:"فقدان عظم أفقي",o:["التهاب دواعم السن","تسوس","كسر","تآكل"],a:0},
-{c:"تخلخل أسنان أمامية",o:["التهاب دواعم السن","كسر","تسوس","تآكل"],a:0},
-{c:"جيوب قيحية",o:["التهاب دواعم السن","خراج","كيس","تسوس"],a:0},
-{c:"حساسية جذور مكشوفة",o:["انحسار لثوي","تسوس","كسر","تآكل"],a:0},
+{c:"انحسار لثة مع جذور مكشوفة",o:["انحسار لثوي","تسوس","كسر","تآكل"],a:0},
 
-/* ================= SURGERY ================= */
+/* Surgery */
 {c:"ألم بعد خلع مع عظم مكشوف",o:["التهاب السنخ الجاف","خراج","كيس","تسوس"],a:0},
 {c:"تورم سريع مؤلم",o:["خراج حاد","كيس","تسوس","تآكل"],a:0},
 {c:"تورم بطيء غير مؤلم",o:["كيس","خراج","تسوس","تآكل"],a:0},
 {c:"صعوبة فتح الفم",o:["التهاب حول التاج","تسوس","كسر","تآكل"],a:0},
-{c:"كسر فك سفلي",o:["كسر فكي","كيس","تسوس","تآكل"],a:0},
-{c:"نزف بعد خلع",o:["نزف بعد الخلع","كيس","تسوس","تآكل"],a:0},
-{c:"تورم خد حار",o:["خراج وجهي","كيس","تسوس","تآكل"],a:0},
-{c:"ألم عند المضغ بعد خلع",o:["التهاب موضعي","كسر","تسوس","تآكل"],a:0},
-{c:"تورم تحت الفك",o:["خراج تحت الفك","كيس","تسوس","تآكل"],a:0},
-{c:"صعوبة بلع مع ألم",o:["انتشار خراجي","تسوس","كسر","تآكل"],a:0},
 
-/* ================= PEDO ================= */
+/* Pedodontics */
 {c:"تسوس متعدد في طفل",o:["تسوس الطفولة المبكر","تآكل","كسر","تصبغ"],a:0},
 {c:"طفل غير متعاون",o:["إدارة سلوكية","خلع","تأجيل","تجاهل"],a:0},
-{c:"تسوس سريع الانتشار",o:["تسوس منتشر","تآكل","كسر","تصبغ"],a:0},
-{c:"تأخر بزوغ",o:["تأخر بزوغ","تسوس","كسر","تآكل"],a:0},
-{c:"ألم ضرس لبني",o:["التهاب لب","تآكل","تصبغ","كسر"],a:0},
 
-/* ================= PROSTHO ================= */
-{c:"تاج يسقط",o:["فشل إسمنت","تسوس","كسر","تآكل"],a:0},
-{c:"حساسية بعد تاج",o:["انكشاف عاج","تسوس","كسر","تآكل"],a:0},
-{c:"جسر مكسور",o:["فشل تعويضي","تسوس","كسر","تآكل"],a:0},
-{c:"ألم بعد حشوة مرتفعة",o:["ارتفاع إطباقي","تسوس","كسر","تآكل"],a:0},
-{c:"عدم تطابق إطباقي",o:["خلل إطباقي","تسوس","كسر","تآكل"],a:0}
+/* Prosthodontics */
+{c:"تاج يسقط بسرعة",o:["فشل إسمنت","تسوس","كسر","تآكل"],a:0},
+{c:"حساسية بعد تاج",o:["انكشاف عاج","تسوس","كسر","تآكل"],a:0}
 ];
 
-/* ================= EXAM ENGINE ================= */
+/* =========================
+   ENGINE (بدون تكرار داخل الجلسة)
+========================= */
 
-function shuffle(arr){
-for(let i=arr.length-1;i>0;i--){
-let j=Math.floor(Math.random()*(i+1));
-[arr[i],arr[j]]=[arr[j],arr[i]];
+function shuffle(a){
+for(let i=a.length-1;i>0;i--){
+let j=Math.random()*(i+1)|0;
+[a[i],a[j]]=[a[j],a[i]];
 }
-return arr;
+return a;
 }
 
-let examBank=[];
-let index=0;
-let score=0;
+let examBank=[],i=0,score=0;
 
 function startExam(){
-index=0;
-score=0;
-
-examBank = shuffle([...bank]);
+i=0;score=0;
+examBank=shuffle([...bank]);
 
 document.getElementById("start").style.display="none";
 document.getElementById("exam").style.display="block";
@@ -182,51 +179,42 @@ load();
 }
 
 function load(){
+if(i>=examBank.length){end();return;}
 
-if(index>=examBank.length){
-end();return;
-}
+let q=examBank[i];
 
-let q=examBank[index];
+document.getElementById("progress")=
+document.getElementById("progress").innerText=
+`السؤال ${i+1} / ${examBank.length}`;
 
-document.getElementById("progress").innerText =
-`السؤال ${index+1} / ${examBank.length}`;
-
-document.getElementById("score").innerText =
-`النقاط: ${score}`;
+document.getElementById("score").innerText=`النتيجة: ${score}`;
 
 document.getElementById("question").innerText=q.c;
 
 let html="";
-q.o.forEach((opt,i)=>{
-html+=`<button class="btn" onclick="check(${i})">${opt}</button>`;
+q.o.forEach((o,idx)=>{
+html+=`<button class="btn" onclick="check(${idx})">${o}</button>`;
 });
 
 document.getElementById("answers").innerHTML=html;
 }
 
-function check(i){
+function check(x){
+let q=examBank[i];
+let btns=document.querySelectorAll(".btn");
 
-let q=examBank[index];
-let buttons=document.querySelectorAll(".btn");
-
-buttons.forEach((b,idx)=>{
+btns.forEach((b,idx)=>{
 b.disabled=true;
-
 if(idx===q.a)b.classList.add("correct");
-if(idx===i && i!==q.a)b.classList.add("wrong");
+if(idx===x&&x!==q.a)b.classList.add("wrong");
 });
 
-if(i===q.a)score++;
+if(x===q.a)score++;
 
-setTimeout(()=>{
-index++;
-load();
-},800);
+setTimeout(()=>{i++;load();},700);
 }
 
 function end(){
-
 document.getElementById("exam").style.display="none";
 document.getElementById("result").style.display="block";
 
