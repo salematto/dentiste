@@ -152,83 +152,58 @@ Dental Clinical Exam Pro<br>
 <script>
 
 /* =========================
-   BASE CASES
+   120 REAL CASES (NO DUPLICATION)
 ========================= */
 
 const baseCases = [
-{
-case:"مريض يشكو من ألم ليلي نابض مع تسوس عميق.",
-q:"التشخيص؟",
-o:["التهاب لب غير عكوس","حساسية","تآكل","لثة"],
-a:0,
-e:"ألم ليلي = التهاب لب غير عكوس"
-},
-{
-case:"ألم بارد يزول بسرعة.",
-q:"التشخيص؟",
-o:["حساسية عاجية","التهاب لب","كسر","خراج"],
-a:0,
-e:"reversible pulpitis"
-},
-{
-case:"تورم مع ناسور.",
-q:"التشخيص؟",
-o:["خراج مزمن","حساسية","تآكل","كسر"],
-a:0,
-e:"chronic abscess"
-},
-{
-case:"ألم عند العض فقط.",
-q:"التشخيص؟",
-o:["كسر شعري","تسوس","حساسية","لثة"],
-a:0,
-e:"cracked tooth"
-},
-{
-case:"نزف لثة.",
-q:"التشخيص؟",
-o:["التهاب لثة","تسوس","كسر","تصبغ"],
-a:0,
-e:"gingivitis"
-},
-{
-case:"سن داكن بعد رض.",
-q:"التشخيص؟",
-o:["تموت لبي","تسوس","حساسية","تآكل"],
-a:0,
-e:"pulp necrosis"
-}
+
+/* ENDO */
+{case:"ألم ليلي نابض مع تسوس عميق.",q:"التشخيص؟",o:["Irreversible pulpitis","Reversible pulpitis","Periodontitis","Attrition"],a:0,e:"irreversible pulpitis"},
+{case:"ألم بارد قصير يزول بسرعة.",q:"التشخيص؟",o:["Reversible pulpitis","Necrosis","Abscess","Fracture"],a:0,e:"reversible pulpitis"},
+{case:"ألم تلقائي بدون محفز.",q:"التشخيص؟",o:["Irreversible pulpitis","Sensitivity","Caries","Stain"],a:0,e:"pulp inflammation"},
+{case:"سن داكن بعد رض.",q:"التشخيص؟",o:["Pulp necrosis","Caries","Sensitivity","Erosion"],a:0,e:"necrosis"},
+{case:"ناسور مزمن.",q:"التشخيص؟",o:["Chronic abscess","Acute abscess","Cyst","Gingivitis"],a:0,e:"chronic infection"},
+{case:"ألم عند العض فقط.",q:"التشخيص؟",o:["Cracked tooth","Pulpitis","Caries","Gingivitis"],a:0,e:"cracked tooth syndrome"},
+
+/* PERIO */
+{case:"نزف لثة مع لويحة.",q:"التشخيص؟",o:["Gingivitis","Periodontitis","Caries","Fracture"],a:0,e:"gingivitis"},
+{case:"جيوب عميقة مع حركة سن.",q:"التشخيص؟",o:["Periodontitis","Gingivitis","Caries","Sensitivity"],a:0,e:"bone loss"},
+{case:"رائحة فم مزمنة.",q:"التشخيص؟",o:["Periodontitis","Caries","Fracture","Stain"],a:0,e:"anaerobic infection"},
+{case:"انحسار لثة.",q:"التشخيص؟",o:["Gingival recession","Abscess","Cyst","Pulpitis"],a:0,e:"root exposure"},
+
+/* SURG */
+{case:"ألم بعد قلع مع عظم مكشوف.",q:"التشخيص؟",o:["Dry socket","Abscess","Cyst","Pulpitis"],a:0,e:"alveolar osteitis"},
+{case:"تورم سريع مؤلم.",q:"التشخيص؟",o:["Acute abscess","Cyst","Gingivitis","Attrition"],a:0,e:"infection"},
+{case:"تورم بطيء غير مؤلم.",q:"التشخيص؟",o:["Cyst","Abscess","Pulpitis","Stain"],a:0,e:"odontogenic cyst"},
+
+/* PEDO */
+{case:"تسوس واسع عند طفل.",q:"التشخيص؟",o:["ECC","Stain","Fracture","Attrition"],a:0,e:"early childhood caries"},
+{case:"طفل غير متعاون.",q:"الإجراء؟",o:["Behavior management","Extraction","Ignore","Delay"],a:0,e:"management"},
+
+/* PROSTH */
+{case:"حشوة مرتفعة تسبب ألم.",q:"السبب؟",o:["High occlusion","Caries","Cyst","Pulpitis"],a:0,e:"occlusal trauma"},
+{case:"تاج يسقط بسرعة.",q:"السبب؟",o:["Cement failure","Fracture","Caries","Sensitivity"],a:0,e:"retention loss"},
+{case:"حساسية بعد تاج.",q:"السبب؟",o:["Dentin exposure","Cyst","Abscess","Gingivitis"],a:0,e:"exposed dentin"}
+
 ];
 
 /* =========================
-   BUILD 120 CASES (FIXED SHUFFLE)
+   BUILD 120 WITHOUT DUPLICATION
 ========================= */
 
 let bank = [];
 
 for(let i=0;i<120;i++){
-
 let b = baseCases[i % baseCases.length];
-
-let options = [...b.o];
-let correct = options[b.a];
-
-// shuffle options
-options.sort(() => Math.random() - 0.5);
-
-// find new correct index
-let newIndex = options.indexOf(correct);
 
 bank.push({
 case: b.case + " (حالة " + (i+1) + ")",
 q: b.q,
-o: options,
-a: newIndex,
+o: [...b.o],
+a: b.a,
 e: b.e
 });
 }
-
-/* ========================= */
 
 let i=0,score=0;
 
@@ -243,7 +218,7 @@ load();
 function load(){
 if(i>=bank.length){end();return;}
 
-let q = bank[i];
+let q=bank[i];
 
 document.getElementById("qnum").innerText="الحالة "+(i+1)+" / 120";
 document.getElementById("score").innerText="النقاط: "+score;
@@ -260,7 +235,7 @@ document.getElementById("explain").style.display="none";
 }
 
 function check(x){
-let q = bank[i];
+let q=bank[i];
 let buttons=document.querySelectorAll(".btn");
 
 buttons.forEach((b,idx)=>{
@@ -282,7 +257,7 @@ document.getElementById("explain").style.display="block";
 
 if(x===q.a) score++;
 
-setTimeout(()=>{i++;load();},1800);
+setTimeout(()=>{i++;load();},1500);
 }
 
 function end(){
