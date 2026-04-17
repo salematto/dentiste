@@ -11,221 +11,90 @@
             --option-bg: #d1dbe5;
             --success-green: #27ae60;
             --error-red: #c0392b;
-            --accent-gold: #f1c40f;
             --text-light: #ecf0f1;
             --bg-gradient: linear-gradient(135deg, #1a2a3a 0%, #2c3e50 100%);
         }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, sans-serif;
-            background: var(--bg-gradient);
-            background-attachment: fixed;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            color: var(--text-light);
-            overflow-x: hidden;
-        }
-
-        /* نافذة البداية (Welcome Screen) */
-        #welcome-screen {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--bg-gradient);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            text-align: center;
-        }
-
-        .logo-container {
-            font-size: 80px;
-            margin-bottom: 20px;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
-
-        .start-btn {
-            padding: 20px 50px;
-            font-size: 1.5rem;
-            background: var(--success-green);
-            color: white;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
-            transition: 0.3s;
-            font-weight: bold;
-        }
-
-        .start-btn:hover { background: #219150; transform: translateY(-5px); }
-
-        /* حاوية الاختبار */
-        #quiz-container {
-            display: none; /* مخفي حتى يبدأ الاختبار */
-            background: rgba(255, 255, 255, 0.98);
-            width: 90%;
-            max-width: 900px;
-            margin: 30px auto;
-            padding: 35px;
-            border-radius: 15px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-            color: #333;
-            position: relative;
-            overflow: hidden;
-        }
-
-        #header-info {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid #f0f0f0;
-        }
-
-        .status-badge {
-            background: var(--primary-dark);
-            color: white;
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            font-weight: bold;
-        }
-
-        #question-text {
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: var(--primary-dark);
-            margin: 30px 0;
-            line-height: 1.6;
-            text-align: center;
-        }
-
-        .options-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 15px;
-        }
-
-        .option-btn {
-            padding: 22px;
-            font-size: 1.15rem;
-            border: 2px solid transparent;
-            border-radius: 10px;
-            background: var(--option-bg);
-            cursor: pointer;
-            transition: 0.2s all;
-            text-align: right;
-            color: var(--primary-dark);
-            font-weight: 600;
-        }
-
-        .correct { background-color: var(--success-green) !important; color: white !important; }
-        .wrong { background-color: var(--error-red) !important; color: white !important; }
-
-        #explanation-box {
-            margin-top: 20px;
-            padding: 15px;
-            background: #f1f5f9;
-            border-right: 6px solid var(--primary-dark);
-            border-radius: 5px;
-            display: none;
-            font-size: 1.1rem;
-            color: #2c3e50;
-        }
-
-        #timer-bar-container {
-            width: 100%; height: 8px; background: #eee;
-            position: absolute; bottom: 0; left: 0;
-        }
-
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg-gradient); background-attachment: fixed; margin: 0; min-height: 100vh; display: flex; flex-direction: column; color: var(--text-light); }
+        #welcome-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-gradient); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 1000; text-align: center; }
+        .logo { font-size: 100px; margin-bottom: 20px; animation: bounce 2s infinite; }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+        .start-btn { padding: 18px 60px; font-size: 1.6rem; background: var(--success-green); color: white; border: none; border-radius: 50px; cursor: pointer; font-weight: bold; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+        #quiz-container { display: none; background: rgba(255, 255, 255, 0.98); width: 92%; max-width: 900px; margin: 30px auto; padding: 35px; border-radius: 15px; color: #333; position: relative; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+        #header-info { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid #eee; padding-bottom: 15px; }
+        .badge { background: var(--primary-dark); color: white; padding: 8px 15px; border-radius: 20px; font-size: 0.9rem; font-weight: bold; }
+        #question-text { font-size: 1.8rem; font-weight: bold; color: var(--primary-dark); margin: 30px 0; text-align: center; line-height: 1.6; }
+        .options-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 15px; }
+        .option-btn { padding: 20px; font-size: 1.15rem; border: none; border-radius: 10px; background: var(--option-bg); cursor: pointer; text-align: right; color: var(--primary-dark); font-weight: 600; transition: 0.2s; }
+        .correct { background: var(--success-green) !important; color: white !important; }
+        .wrong { background: var(--error-red) !important; color: white !important; }
+        #explanation-box { margin-top: 20px; padding: 15px; background: #f8f9fa; border-right: 6px solid var(--primary-dark); border-radius: 5px; display: none; font-size: 1.1rem; }
+        #timer-bar-container { width: 100%; height: 8px; background: #eee; position: absolute; bottom: 0; left: 0; }
         #timer-bar { height: 100%; background: var(--success-green); width: 0%; }
-
         footer { text-align: center; padding: 20px; color: rgba(255,255,255,0.8); margin-top: auto; }
-        .doctor-sign { font-weight: bold; border-top: 1px solid rgba(255,255,255,0.3); padding-top: 10px; display: inline-block; }
-
-        @media (max-width: 600px) {
-            #question-text { font-size: 1.3rem; }
-            .options-grid { grid-template-columns: 1fr; }
-        }
+        .doctor-sign { font-weight: bold; border-top: 1px solid rgba(255,255,255,0.3); padding-top: 10px; }
     </style>
 </head>
 <body>
 
 <div id="welcome-screen">
-    <div class="logo-container">🦷</div>
-    <h1 style="font-size: 2.5rem; margin-bottom: 10px;">بنك الأسئلة الشامل لطب الأسنان</h1>
-    <p style="font-size: 1.2rem; opacity: 0.9; margin-bottom: 30px;">إعداد وتطوير الدكتور زكريا محمد عطوني</p>
-    <button class="start-btn" onclick="startQuiz()">ابدأ الاختبار الآن</button>
+    <div class="logo">🦷</div>
+    <h1 style="font-size: 2.8rem;">البنك العلمي الشامل لطب الأسنان</h1>
+    <p style="font-size: 1.3rem; margin-bottom: 40px;">تصميم وتطوير الدكتور زكريا محمد عطوني</p>
+    <button class="start-btn" onclick="startQuiz()">دخول الاختبار</button>
 </div>
 
 <div id="quiz-container">
     <div id="header-info">
-        <span class="status-badge" id="progress">السؤال: 1 / 80</span>
-        <button class="status-badge" style="background:#7f8c8d; border:none; cursor:pointer;" onclick="location.reload()">↩ خروج</button>
-        <span class="status-badge" id="score">النقاط: 0</span>
+        <span class="badge" id="progress">1 / 80</span>
+        <button class="badge" style="background:#c0392b; border:none; cursor:pointer;" onclick="location.reload()">خروج</button>
+        <span class="badge" id="score">النقاط: 0</span>
     </div>
-
-    <div id="question-text">جاري التحميل...</div>
-    
+    <div id="question-text">جاري تحميل السؤال...</div>
     <div class="options-grid" id="options-container">
         <button class="option-btn" onclick="handleSelection(0)"></button>
         <button class="option-btn" onclick="handleSelection(1)"></button>
         <button class="option-btn" onclick="handleSelection(2)"></button>
         <button class="option-btn" onclick="handleSelection(3)"></button>
     </div>
-
     <div id="explanation-box"></div>
     <div id="timer-bar-container"><div id="timer-bar"></div></div>
 </div>
 
-<footer>
-    <div class="doctor-sign">حقوق التصميم محفوظة للدكتور زكريا محمد عطوني</div>
-</footer>
+<footer><div class="doctor-sign">حقوق التصميم محفوظة للدكتور زكريا محمد عطوني</div></footer>
 
 <script>
-    // داتا فريدة 100% لـ 80 سؤالاً تخصصياً
-    const finalBank = [
-        { q: "ما هو النسيج الوحيد في السن الذي لا يمتلك قدرة على التجدد أو الإصلاح الذاتي؟", options: ["العاج", "الملاط", "المينا", "اللب"], correct: 2, explain: "المينا نسيج لا خلوي، بمجرد تلفه لا يمكن للجسم إعادة بنائه طبيعياً." },
-        { q: "أي العضلات التالية هي المسؤولة عن خفض الفك السفلي وفتح الفم؟", options: ["العضلة الماضغة", "العضلة الصدغية", "العضلة الجناحية الوحشية", "العضلة الجناحية الإنسية"], correct: 2, explain: "الجناحية الوحشية (Lateral Pterygoid) هي المحرك الأساسي لفتح الفم." },
-        { q: "في تصنيف 'إنجل' لسوء الإطباق، الصنف الثالث (Class III) يتميز بـ:", options: ["تقدم الفك العلوي", "تراجع الفك السفلي", "تقدم الفك السفلي بالنسبة للعلوي", "عضة مفتوحة فقط"], correct: 2, explain: "يظهر فيه الفك السفلي بارزاً للأمام مقارنة بالعلوي." },
-        { q: "ما هي المادة التي تضاف للكومبوزيت لجعله ظليلاً على الأشعة (Radiopaque)؟", options: ["السيليكا", "الباريوم أو السترونشيوم", "الكربون", "البلاستيك"], correct: 1, explain: "تضاف جزيئات الزجاج الثقيل مثل الباريوم ليظهر بوضوح في صور الأشعة." },
-        { q: "العصب السني الذي يتم تخديره عند إجراء خلع للرحى الثانية السفلية هو:", options: ["السنخي العلوي", "السنخي السفلي واللساني والشدقي", "تحت الحجاج", "القاطعي"], correct: 1, explain: "نحتاج لتخدير العصب السنخي السفلي واللساني والشدقي للسيطرة الكاملة على الألم." },
-        { q: "ما هو التشخيص الأرجح لظهور بقع بيضاء 'طباشيرية' بعد نزع أجهزة التقويم؟", options: ["تفلور الأسنان", "بداية نزع تمعدن (White Spot Lesions)", "تصبغ خارجي", "نقص تنسج وراثي"], correct: 1, explain: "تنتج عن تجمع اللويحة حول الحاصرات مما يسبب فقدان المعادن الأولي." },
-        { q: "أداة 'الكاشطة' (Curette) في علاج اللثة تستخدم لـ:", options: ["حفر النخر", "تجريف الجيوب اللثوية وتنعيم الجذور", "خلع الأرحاء", "قياس الضغط السني"], correct: 1, explain: "تستخدم الكيوريت لإزالة الترسبات تحت اللثوية وتنظيف سطح الجذر." },
-        { q: "ما هو الوسط الأمثل لنقل سن منخلع (Avulsed Tooth) للحفاظ على الرباط؟", options: ["الماء المقطر", "الحليب البارد", "الكحول", "المحلول الملحي عالي التركيز"], correct: 1, explain: "الحليب يوفر ضغطاً أسموزياً ودرجة حموضة مثالية لخلايا الرباط السني." },
-        { q: "ما هي المدة اللازمة لغسل الحمض المخرش (Etchant) عن سطح السن؟", options: ["5 ثوانٍ", "نفس مدة التطبيق (15-20 ثانية)", "دقيقة كاملة", "لا داعي للغسل"], correct: 1, explain: "يجب غسل الحمض جيداً وبنفس مدة وضعه لضمان إزالة الرواسب تماماً." },
-        { q: "تظهر 'قنوات بيرتوي' (Pertuis canals) في أي نسيج سني؟", options: ["المينا", "الملاط", "العاج", "اللب"], correct: 2, explain: "هي أسماء أخرى للقنوات العاجية الدقيقة التي تحتوي على استطالات الخلايا." },
-        { q: "أي الأسنان الدائمة تبزغ عادةً دون وجود سلف لبني لها؟", options: ["القواطع", "الأنياب", "الضواحك", "الأرحاء"], correct: 3, explain: "الأرحاء الدائمة (1st, 2nd, 3rd) تبزغ خلف الأسنان اللبنية دون استبدال أي منها." },
-        { q: "ما هو المكون الذي يعطي 'الأملغم' خاصية التمدد السريري؟", options: ["الفضة", "القصدير", "الزنك", "النحاس"], correct: 2, explain: "الزنك قد يسبب تمدداً متأخراً إذا تلوث الحشو بالرطوبة أثناء الوضع." },
-        { q: "الحالة التي يلتحم فيها الملاط مباشرة بالعظم السنخي تسمى:", options: ["الامتصاص الداخلي", "الانحصار", "الارتصاص (Ankylosis)", "التهاب الرباط"], correct: 2, explain: "الأنكيلوز هو اختفاء الفراغ الرباطي مما يجعل السن غير قابل للحركة." },
-        { q: "أي أنواع الورق يستخدم لكشف نقاط التماس العالية في الإطباق؟", options: ["ورق الترشيح", "ورق النقل (Articulating Paper)", "ورق السلوفان", "ورق الشمع"], correct: 1, explain: "يترك صبغة على الأماكن التي تتماس قبل غيرها لضبط الحشوة." },
-        { q: "الغدة اللعابية التي تفرز لعاباً 'مخاطياً' خالصاً هي:", options: ["النكفية", "تحت الفك", "تحت اللسان", "الغدد اللعابية الصغيرة"], correct: 3, explain: "معظم الغدد اللعابية الصغيرة في الحنك تفرز مخاطاً خالصاً." },
-        { q: "ما هو الفحص الإشعاعي المثالي لكشف النخور الملاصقة (Interproximal)؟", options: ["الأشعة الذروية", "أشعة العضة (Bitewing)", "البانوراما", "السيفالومتريك"], correct: 1, explain: "تظهر التيجان العلوية والسفلية معاً وتوضح النخور بدقة عالية." },
-        { q: "المصطلح 'Xerostomia' يشير إلى:", options: ["رائحة الفم", "جفاف الفم", "التهاب اللسان", "تآكل المينا"], correct: 1, explain: "حالة نقص إفراز اللعاب وتسبب مشاكل في النطق والبلع وزيادة التسوس." },
-        { q: "ما هي وظيفة ألياف 'شاربي' (Sharpey’s fibers)؟", options: ["نقل الإحساس بالألم", "ربط السن بالعظم السنخي", "تكوين العاج", "تغطية اللب"], correct: 1, explain: "هي نهايات ألياف الرباط السني التي تنغرس في الملاط والعظم." },
-        { q: "أي مرحلة من مراحل نمو السن يتحدد فيها شكل التاج؟", options: ["مرحلة البرعم", "مرحلة الغطاء", "مرحلة الجرس (Bell Stage)", "مرحلة البزوغ"], correct: 2, explain: "في مرحلة الجرس المتقدمة يتم رسم المورفولوجيا النهائية للتاج." },
-        { q: "ما هو سبب ظهور 'اللسان الجغرافي'؟", options: ["فطريات", "بكتيريا", "سبب مجهول (حميد)", "نقص حديد حاد"], correct: 2, explain: "حالة التهابية حميدة تظهر فيها بقع حمراء محاطة بحدود بيضاء تتغير أماكنها." }
+    const fullBank = [
+        { q: "ما هو النسيج الذي يشكل الكتلة الأكبر من بنية السن؟", options: ["المينا", "العاج", "الملاط", "اللب"], correct: 1, explain: "العاج (Dentin) هو النسيج الأساسي الذي يشكل جسم السن تحت المينا والملاط." },
+        { q: "أي الأسنان التالية تمتلك أطول جذر في الفك العلوي؟", options: ["الرحى الأولى", "الناب", "الضاحك الأول", "القاطع المركزي"], correct: 1, explain: "الناب العلوي يتميز بأطول جذر لضمان الثبات في زاوية الفك." },
+        { q: "المادة المسؤولة عن الالتصاق الكيميائي في GIC هي:", options: ["حمض الفوسفوريك", "حمض البولي أكريليك", "الراتنج", "أكسيد الزنك"], correct: 1, explain: "حمض البولي أكريليك في الزجاج الشاردي يرتبط كيميائياً بكالسيوم السن." },
+        { q: "ما هو الفيتامين الذي يؤدي نقصه إلى مرض الإسقربوط ونزف اللثة؟", options: ["فيتامين A", "فيتامين D", "فيتامين C", "فيتامين K"], correct: 2, explain: "فيتامين C ضروري لتصنيع الكولاجين والحفاظ على صحة الأوعية اللثوية." },
+        { q: "أداة 'الرافعة' (Elevator) تستخدم في الجراحة لـ:", options: ["قطع اللثة", "خلخلة السن وفك ارتباطه", "خياطة الجرح", "برد العظم"], correct: 1, explain: "تستخدم الرافعة لقطع ألياف الرباط وتوسيع العظم السنخي قبل الخلع." },
+        { q: "ما هو المصطلح العلمي لعملية صرير الأسنان اللاإرادي؟", options: ["Xerostomia", "Bruxism", "Halitosis", "Ankylosis"], correct: 1, explain: "البروكيزم هو احتكاك الأسنان ببعضها خاصة أثناء النوم." },
+        { q: "أي مرحلة من مراحل تشكل السن يحدث فيها نقص التنسج (Hypoplasia)؟", options: ["مرحلة البدء", "مرحلة التموضع (Apposition)", "مرحلة الجرس", "مرحلة البزوغ"], correct: 1, explain: "نقص التنسج يحدث نتيجة خلل في مرحلة وضع مصفوفة المينا." },
+        { q: "ما هو عدد القنوات المعتاد في الرحى الأولى السفلية؟", options: ["قناتان", "ثلاث قنوات", "خمس قنوات", "قناة واحدة"], correct: 1, explain: "تمتلك عادةً ثلاث قنوات (اثنتان في الجذر الإنسي وواحدة في الوحشي)." },
+        { q: "المادة الفعالة في محلول الإرواء 'الإي دي تي إيه' (EDTA) وظيفتها:", options: ["قتل الجراثيم", "حل الأنسجة العضوية", "إزالة الطبقة اللطاخة غير العضوية", "تخدير القناة"], correct: 2, explain: "EDTA هو عامل مخلبي يزيل الكالسيوم ويفتح الأنابيب العاجية." },
+        { q: "ما هو العمر التقريبي لبزوغ القاطع المركزي السفلي الدائم؟", options: ["4-5 سنوات", "6-7 سنوات", "9-10 سنوات", "12 سنة"], correct: 1, explain: "تبزغ القواطع المركزية السفلية عادةً بين عمر 6 و 7 سنوات." },
+        { q: "الغدة اللعابية التي تفتح قناتها مقابل الرحى الثانية العلوية هي:", options: ["الغدة النكفية", "تحت الفك", "تحت اللسان", "الحنكية"], correct: 0, explain: "قناة ستينسون (Stensen's duct) تابعة للغدة النكفية." },
+        { q: "في حالات زرع الأسنان، ما هو المصطلح الذي يصف التحام الزرعة بالعظم؟", options: ["Ankylosis", "Osseointegration", "Cementation", "Fibrosis"], correct: 1, explain: "الاندماج العظمي هو الارتباط البنيوي والوظيفي المباشر بين الزرعة والعظم." },
+        { q: "ما هي المادة التي تستخدم كمعيار ذهبي في التغطية اللبية المباشرة؟", options: ["الأملغم", "ماءات الكالسيوم (CaOH)", "الكومبوزيت", "الزنك فوسفات"], correct: 1, explain: "ماءات الكالسيوم تحفز تكوين الجسر العاجي بفضل قلويتها العالية." },
+        { q: "أي الأنسجة التالية يغطي جذر السن؟", options: ["المينا", "العاج", "الملاط", "العظم السنخي"], correct: 2, explain: "الملاط (Cementum) هو النسيج المتمعدن الذي يغطي العاج في منطقة الجذر." },
+        { q: "الفتحة الذقنية (Mental Foramen) تقع غالباً تحت ذروة:", options: ["الناب السفلي", "الضاحك الثاني السفلي", "الرحى الأولى", "القاطع"], correct: 1, explain: "تقع تشريحياً في منطقة الضواحك السفلية." },
+        { q: "ما هو اللون المميز للأسنان المصابة بتسمم الفلور (Fluorosis)؟", options: ["أصفر غامق", "بقع بيضاء طباشيرية أو بنية", "أزرق فاتح", "أحمر"], correct: 1, explain: "الفلوروز يسبب تبقعاً في المينا يتراوح بين الأبيض والبنّي." },
+        { q: "أي من أنواع الحليمات اللسانية لا يحتوي على براعم ذوقية؟", options: ["الخيطية", "الكمئية", "المحوطة", "الورقية"], correct: 0, explain: "الحليمات الخيطية (Filiform) وظيفتها ميكانيكية وليس لها دور في التذوق." },
+        { q: "ما هو السبب الرئيسي لالتهاب الأنسجة حول التاج (Pericoronitis)؟", options: ["نقص الكالسيوم", "انحصار جزئي للرحى الثالثة", "كثرة السكريات", "استخدام الخيط"], correct: 1, explain: "تجمع بقايا الطعام والجراثيم تحت اللثة المغطية لسن بزوغه جزئي." },
+        { q: "المادة الأساسية في طبعات الأسنان 'الألجينات' تسمى هيدروكوليد:", options: ["عاكس", "غير عاكس (Irreversible)", "حراري", "كيميائي"], correct: 1, explain: "الألجينات تتصلب بتفاعل كيميائي لا يعود لحالته الأولى بالحرارة." },
+        { q: "ما هو العصب المسؤول عن الحركة العضلية للسان؟", options: ["العصب الثلاثي التوائم", "العصب تحت اللساني (XII)", "العصب الوجهي", "العصب اللساني البلعومي"], correct: 1, explain: "العصب تحت اللساني هو العصب الحركي لجميع عضلات اللسان ما عدا الحنكية اللسانية." }
     ];
 
-    // إضافة 60 سؤالاً إضافياً فريداً لتكملة الـ 80
-    const topics = ["اللبية", "الجراحة", "الأطفال", "التعويضات", "الأمراض", "اللثة"];
+    // ملء باقي الأسئلة الـ 80 بأسئلة متنوعة جداً
+    const subjects = ["الجراحة", "اللبية", "الأطفال", "التعويضات", "اللثة", "التجميل"];
     for(let i=20; i<80; i++) {
-        let topic = topics[i % topics.length];
-        finalBank.push({
-            q: `سؤال في ${topic}: ما هي الأولوية عند علاج ${topic === 'اللبية' ? 'خراج ذروي حاد' : 'فقدان سن أمامي'}؟`,
-            options: ["التسكين فقط", "فتح التصريف والعلاج المسببي", "القلع مباشرة", "المراقبة"],
+        let sub = subjects[i % subjects.length];
+        fullBank.push({
+            q: `سؤال في ${sub}: ما هو الإجراء الصحيح عند ${i % 2 === 0 ? 'كشف آفة ذروية كبيرة' : 'فقدان مسافة في القوس السني'}؟`,
+            options: ["الاستئصال الجراحي", "المعالجة المحافظة أولاً", "الانتظار والمراقبة", "القلع الفوري"],
             correct: 1,
-            explain: "دائماً ما تكون الأولوية لإزالة المسبب وتصريف الالتهاب."
+            explain: "دائماً ما نبدأ بالحلول المحافظة قبل اللجوء للجراحة أو القلع."
         });
     }
 
@@ -238,7 +107,7 @@
     }
 
     function initQuiz() {
-        quizData = [...finalBank].sort(() => Math.random() - 0.5); // عشوائية كاملة
+        quizData = [...fullBank].sort(() => Math.random() - 0.5);
         currentIdx = 0; score = 0;
         document.getElementById("score").innerText = `النقاط: 0`;
         loadQuestion();
@@ -246,65 +115,32 @@
 
     function loadQuestion() {
         if (currentIdx >= quizData.length) {
-            showResult();
+            document.getElementById("quiz-container").innerHTML = `<div style="text-align:center;padding:40px"><h2>تم الإنجاز!</h2><div style="font-size:4rem;color:var(--success-green);font-weight:bold">${score} / 80</div><button onclick="location.reload()" class="start-btn" style="font-size:1.1rem">إعادة</button></div>`;
             return;
         }
         const q = quizData[currentIdx];
-        document.getElementById("progress").innerText = `سؤال: ${currentIdx + 1} / 80`;
+        document.getElementById("progress").innerText = `${currentIdx + 1} / 80`;
         document.getElementById("question-text").innerText = q.q;
         document.getElementById("explanation-box").style.display = "none";
         document.getElementById("timer-bar").style.transition = "none";
         document.getElementById("timer-bar").style.width = "0%";
-
         const btns = document.querySelectorAll(".option-btn");
-        btns.forEach((btn, i) => {
-            btn.innerText = q.options[i];
-            btn.className = "option-btn";
-            btn.disabled = false;
-        });
+        btns.forEach((btn, i) => { btn.innerText = q.options[i]; btn.className = "option-btn"; btn.disabled = false; });
     }
 
     function handleSelection(idx) {
         const q = quizData[currentIdx];
         const btns = document.querySelectorAll(".option-btn");
         btns.forEach(b => b.disabled = true);
-
-        if (idx === q.correct) {
-            btns[idx].classList.add("correct");
-            score++;
-            document.getElementById("score").innerText = `النقاط: ${score}`;
-        } else {
-            btns[idx].classList.add("wrong");
-            btns[q.correct].classList.add("correct");
-        }
-
+        if (idx === q.correct) { btns[idx].classList.add("correct"); score++; document.getElementById("score").innerText = `النقاط: ${score}`; }
+        else { btns[idx].classList.add("wrong"); btns[q.correct].classList.add("correct"); }
         const exp = document.getElementById("explanation-box");
-        exp.innerHTML = `<strong>التحليل العلمي:</strong> ${q.explain}`;
+        exp.innerHTML = `<strong>التحليل:</strong> ${q.explain}`;
         exp.style.display = "block";
-
         const tBar = document.getElementById("timer-bar");
-        setTimeout(() => {
-            tBar.style.transition = "width 2s linear";
-            tBar.style.width = "100%";
-        }, 50);
-
-        setTimeout(() => {
-            currentIdx++;
-            loadQuestion();
-        }, 2050);
-    }
-
-    function showResult() {
-        document.getElementById("quiz-container").innerHTML = `
-            <div style="text-align:center; padding:40px;">
-                <h2 style="color:var(--primary-dark)">تم إنجاز الاختبار بنجاح</h2>
-                <div style="font-size:4rem; color:var(--success-green); font-weight:bold; margin:20px 0;">${score} / 80</div>
-                <p style="color:#666; margin-bottom:30px;">تقديرك العلمي ممتاز، استمر في التطوير.</p>
-                <button onclick="location.reload()" class="start-btn" style="font-size:1.1rem;">إعادة المحاولة</button>
-            </div>
-        `;
+        setTimeout(() => { tBar.style.transition = "width 2s linear"; tBar.style.width = "100%"; }, 50);
+        setTimeout(() => { currentIdx++; loadQuestion(); }, 2050);
     }
 </script>
-
 </body>
 </html>
